@@ -1,0 +1,33 @@
+:
+:
+CONTENIR_CAPTEUR, 0N MICROCONTROLEUR, 11 CAPTEUR
+CAPTEUR: id, type, statut, last_seen
+PRODUIRE, 0N CAPTEUR, 11 DONNEES
+DONNEES: id, type_mesure, valeur, unite, date_arrivee
+
+ACTIONNEUR: id, type, statut, last_seen
+CONTENIR_ACTIONNEUR, 0N MICROCONTROLEUR, 11 ACTIONNEUR
+MICROCONTROLEUR: id, nom, mac_address, reference, statut, last_connexion, date_installation, passkey
+Conserver, 1N MICROCONTROLEUR, 01 SEUIL
+SEUIL: id, type_mesure, valeur, updated_at
+:
+
+CIBLER, 0N ACTIONNEUR, 11 INSTRUCTION
+APPLIQUER, 0N MICROCONTROLEUR, 11 INSTRUCTION
+POSSEDER, 0N UTILISATEUR, 11 MICROCONTROLEUR
+UTILISATEUR: id, email, nom, prenom, password, role, status, created_at, updated_at
+DEFINIR, 0N UTILISATEUR, 11 SEUIL
+
+:
+INSTRUCTION: id, type, duree, statut, date_arrivee
+ENVOYER, 0N UTILISATEUR, 11 INSTRUCTION
+CONSULTER, 0N UTILISATEUR, 0N LOG
+VOIR, 0N UTILISATEUR, 01 ALERTE
+ALERTE: id, type, message, statut, date_arrivee
+
+:
+:
+:
+LOG: id, type, description, date, source_type, source_id, gravite
+:
+:
