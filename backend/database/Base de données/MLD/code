@@ -1,0 +1,129 @@
+Table utilisateurs {
+  id integer [primary key]
+  email string [unique]
+  nom string
+  prenom string
+  password string
+  role string
+  status string
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table logs {
+  id integer [primary key]
+  type string
+  description string
+  date timestamp
+  source_type string
+  source_id string
+  gravite string
+}
+
+Table consultation_logs {
+  user integer
+  log integer
+  indexes {
+    (log, user) [unique]
+  }
+}
+
+ref:  utilisateurs.id > consultation_logs.user
+ref: logs.id > consultation_logs.log
+
+Table alertes {
+  id integer [primary key]
+  type string
+  message string
+  vu bool
+  date_arrivee timestamp
+  date_lu timestamp
+  user integer
+}
+
+ref: utilisateurs.id > alertes.user
+
+Table seuils {
+  id integer [primary key]
+  type_mesure integer
+  valeur_max float
+  valeur_min float
+  updated_at timestamp
+  user integer
+  microcontroleur integer
+}
+
+ref: utilisateurs.id > seuils.user
+
+Table microcontroleurs {
+  id integer [primary key]
+  nom string
+  mac_address string
+  reference string
+  allume bool
+  last_connexion timestamp
+  date_installation timestamp
+  passkey string
+  user integer
+}
+
+ref: utilisateurs.id > microcontroleurs.user
+ref: microcontroleurs.id > seuils.microcontroleur
+
+Table instructions {
+  id integer [primary key]
+  action string
+  duree integer
+  statut string
+  date_arrivee timestamp
+  user integer
+  actionneur integer
+}
+
+ref: utilisateurs.id > instructions.user
+
+Table actionneurs {
+  id integer [primary key]
+  etat string
+  last_seen timestamp
+  modele string
+  microcontroleur integer
+}
+
+ref: microcontroleurs.id > actionneurs.microcontroleur
+ref: actionneurs.id > instructions.actionneur
+
+Table capteurs {
+  id integer [primary key]
+  type_mesure integer
+  etat string
+  last_seen timestamp
+  modele string
+  microcontroleur integer
+}
+
+ref: microcontroleurs.id > capteurs.microcontroleur
+
+Table donnees {
+  id integer [primary key]
+  valeur float
+  date_arrivee timestamp
+  capteur integer
+}
+
+ref: capteurs.id > donnees.capteur
+
+Table unites {
+  id integer
+  name string
+  grandeur_physique integer
+}
+
+Table grandeurs {
+  id integer
+  name string
+}
+
+ref: grandeurs.id > unites.grandeur_physique
+ref: grandeurs.id > seuils.type_mesure
+ref: grandeurs.id > capteurs.type_mesure
