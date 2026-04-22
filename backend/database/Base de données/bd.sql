@@ -133,15 +133,17 @@ CREATE TABLE microcontroleurs (
   id dom_uuid NOT NULL DEFAULT uuid_generate_v4(),
   nom dom_string NOT NULL,
   mac_address dom_mac_address NOT NULL,
+  identifiant_user dom_string NOT NULL,
   reference dom_string NOT NULL,
   allume dom_bool NOT NULL,
   last_connexion dom_timestamp NULL,
   date_installation dom_timestamp NOT NULL,
   passkey dom_string NOT NULL,
-  user_id dom_uuid NOT NULL,
+  user_id dom_uuid,
 
   CONSTRAINT microcontroleurs_pk001 PRIMARY KEY (id),
-  CONSTRAINT microcontroleurs_mac_unique UNIQUE (mac_address),
+  CONSTRAINT microcontroleurs_mac_unique001 UNIQUE (mac_address),
+  CONSTRAINT microcontroleurs_nom_user_unique001 UNIQUE (nom, user_id),
 
   CONSTRAINT microcontroleurs_fk001 FOREIGN KEY (user_id)
     REFERENCES utilisateurs(id)
@@ -274,4 +276,61 @@ CREATE TABLE instructions (
 
   CONSTRAINT instructions_fk002 FOREIGN KEY (actionneur_id)
     REFERENCES actionneurs(id)
+);
+
+-- =========================================
+-- TABLE TOKENS MICROCONTROLEURS
+-- =========================================
+
+CREATE TABLE microcontroleur_tokens (
+  id dom_uuid NOT NULL DEFAULT uuid_generate_v4(),
+  token dom_string NOT NULL,
+  microcontroleur_id dom_uuid NOT NULL,
+  created_at dom_timestamp NOT NULL,
+  expires_at dom_timestamp NOT NULL,
+  is_revoked dom_bool NOT NULL DEFAULT FALSE,
+
+  CONSTRAINT micro_tokens_pk001 PRIMARY KEY (id),
+  CONSTRAINT micro_tokens_unique UNIQUE (token),
+
+  CONSTRAINT micro_tokens_fk001 FOREIGN KEY (microcontroleur_id)
+    REFERENCES microcontroleurs(id)
+);
+
+-- =========================================
+-- TABLE SESSIONS UTILISATEURS
+-- =========================================
+
+CREATE TABLE sessions (
+  id dom_uuid NOT NULL DEFAULT uuid_generate_v4(),
+  token dom_string NOT NULL,
+  user_id dom_uuid NOT NULL,
+  role dom_role NOT NULL,
+  created_at dom_timestamp NOT NULL,
+  expires_at dom_timestamp NOT NULL,
+  is_revoked dom_bool NOT NULL DEFAULT FALSE,
+
+  CONSTRAINT sessions_pk001 PRIMARY KEY (id),
+  CONSTRAINT sessions_token_unique UNIQUE (token),
+
+  CONSTRAINT sessions_fk001 FOREIGN KEY (user_id)
+    REFERENCES utilisateurs(id)
+);
+
+-- =========================================
+-- TABLE RESET PASSWORD (CODE 15 MIN)
+-- =========================================
+
+CREATE TABLE reset_password_codes (
+  id dom_uuid NOT NULL DEFAULT uuid_generate_v4(),
+  email dom_email NOT NULL,
+  code dom_string NOT NULL,
+  created_at dom_timestamp NOT NULL,
+  expires_at dom_timestamp NOT NULL,
+  is_used dom_bool NOT NULL DEFAULT FALSE,
+
+  CONSTRAINT reset_password_pk001 PRIMARY KEY (id),
+
+  CONSTRAINT reset_password_expiration_check
+    CHECK (expires_at <= created_at + INTERVAL '15 minutes')
 );
