@@ -323,7 +323,7 @@ CREATE TABLE sessions (
 
 CREATE TABLE reset_password_codes (
   id dom_uuid NOT NULL DEFAULT uuid_generate_v4(),
-  email dom_email NOT NULL,
+  user_id dom_uuid NOT NULL,
   code dom_string NOT NULL,
   created_at dom_timestamp NOT NULL,
   expires_at dom_timestamp NOT NULL,
@@ -332,5 +332,8 @@ CREATE TABLE reset_password_codes (
   CONSTRAINT reset_password_pk001 PRIMARY KEY (id),
 
   CONSTRAINT reset_password_expiration_check
-    CHECK (expires_at <= created_at + INTERVAL '15 minutes')
+    CHECK (expires_at <= created_at + INTERVAL '15 minutes'),
+
+  CONSTRAINT reset_password_fk001 FOREIGN KEY (user_id)
+    REFERENCES utilisateurs(id)
 );
