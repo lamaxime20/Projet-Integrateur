@@ -82,7 +82,7 @@ function Principale() {
                         const isActive = activeHighlight === index;
 
                         return (
-                            <button
+                            <div
                                 key={highlight.text}
                                 type="button"
                                 role="listitem"
@@ -96,7 +96,7 @@ function Principale() {
                                     {highlight.icon}
                                 </span>
                                 <span className='principale-solution-reveal-text'>{highlight.text}</span>
-                            </button>
+                            </div>
                         );
                     })}
                 </div>

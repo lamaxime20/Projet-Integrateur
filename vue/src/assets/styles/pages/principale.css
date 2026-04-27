@@ -230,17 +230,19 @@
 
 .principale-solution-reveal-list {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: var(--space-sm);
     width: 100%;
+    height: 200px;
 }
 
 .principale-solution-reveal-item {
-    display: grid;
-    grid-template-columns: 3rem minmax(0, 1fr);
+    display: flex;
+    flex-direction: column;
     align-items: center;
     gap: var(--space-md);
-    width: 100%;
+    width: 25%;
+    height: 100%;
     padding: var(--space-sm) 0;
     border: none;
     border-radius: 0;
@@ -268,7 +270,6 @@
     max-width: 0;
     overflow: hidden;
     opacity: 0.2;
-    white-space: nowrap;
     color: rgba(20, 32, 19, 0.78);
     font-size: 1rem;
     line-height: 1.55;
