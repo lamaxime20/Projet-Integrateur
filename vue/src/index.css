@@ -1,5 +1,6 @@
 :root {
   --primary-color: #F9FAFB;
+  --primary-color-transparent: #F9FAFB80;
   --secondary-color: #2E7D32;
   --accent-color: #0288D1;
   --alertes-critique: #D32F2F;
@@ -18,6 +19,8 @@ body {
   padding: 0;
   font-family: 'Inter', sans-serif;
   background-color: var(--primary-color);
+  max-width: 100vw;
+  max-height: 100vh;
 }
 
 #root {
