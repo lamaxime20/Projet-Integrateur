@@ -82,7 +82,7 @@ function Principale() {
                         const isActive = activeHighlight === index;
 
                         return (
-                            <div
+                            <button
                                 key={highlight.text}
                                 type="button"
                                 role="listitem"
@@ -96,7 +96,7 @@ function Principale() {
                                     {highlight.icon}
                                 </span>
                                 <span className='principale-solution-reveal-text'>{highlight.text}</span>
-                            </div>
+                            </button>
                         );
                     })}
                 </div>
@@ -138,20 +138,25 @@ function Principale() {
                 </div>
             </section>
             <section className='principale-final-cta'>
-                <h2 className='principale-section-title principale-section-title-inverse'>
-                    <span className="material-symbols-outlined" aria-hidden="true">spa</span>
-                    Tu peux continuer de laisser tes cultures périr
-                </h2>
-                <p>Ou bien les sauver maintenant</p>
-                <button
-                    type="button"
-                    className='principale-final-cta-primary'
-                    onClick={() => {
-                        window.location.href = '/manager';
-                    }}
-                >
-                    Commander mon kit
-                </button>
+                <div className='principale-final-cta-content'>
+                    <span className='principale-final-cta-kicker'>Passe à une gestion agricole plus sereine</span>
+                    <h2 className='principale-section-title principale-section-title-inverse'>
+                        <span className="material-symbols-outlined" aria-hidden="true">spa</span>
+                        Tu peux continuer de laisser tes cultures périr
+                    </h2>
+                    <p>Ou bien reprendre le contrôle maintenant, avec un suivi plus clair, plus rapide et plus fiable.</p>
+                </div>
+                <div className='principale-final-cta-action'>
+                    <button
+                        type="button"
+                        className='principale-final-cta-primary'
+                        onClick={() => {
+                            window.location.href = '/manager';
+                        }}
+                    >
+                        Commander mon kit
+                    </button>
+                </div>
             </section>
         </main>
     )
