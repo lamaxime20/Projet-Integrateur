@@ -42,6 +42,15 @@
   box-sizing: border-box;
 }
 
+* {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE et Edge */
+}
+
+*::-webkit-scrollbar {
+  display: none; /* Chrome, Safari et Opera */
+}
+
 body {
   margin: 0;
   padding: 0;
