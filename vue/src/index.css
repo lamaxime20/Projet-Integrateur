@@ -1,13 +1,41 @@
 :root {
   --primary-color: #F9FAFB;
   --primary-color-transparent: #F9FAFB80;
+  --primary-color-strong-transparent: #F9FAFBD9;
   --secondary-color: #2E7D32;
+  --secondary-color-dark: #1f5a23;
+  --secondary-color-soft: #e7f3e8;
   --accent-color: #0288D1;
+  --accent-color-soft: #e0f2fb;
+  --text-color: #142013;
+  --text-color-inverse: #F9FAFB;
+  --overlay-dark: rgba(8, 24, 11, 0.64);
+  --overlay-soft: rgba(8, 24, 11, 0.3);
   --alertes-critique: #D32F2F;
   --alertes-moyen: #FBC02D;
 
   --typography-title: 'Poppins', sans-serif;
   --typography-common: 'Inter', sans-serif;
+
+  --space-2xs: 0.25rem;
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4rem;
+
+  --radius-sm: 0.5rem;
+  --radius-md: 0.875rem;
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.5rem;
+  --shadow-soft: 0 18px 40px rgba(8, 24, 11, 0.18);
+
+  --container-sm: 40rem;
+  --container-lg: 76rem;
+  --hero-copy-max: 36rem;
+  --button-height: 3rem;
 }
 
 * {
@@ -17,10 +45,12 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--typography-common);
   background-color: var(--primary-color);
+  color: var(--text-color);
   max-width: 100vw;
-  max-height: 100vh;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
 #root {

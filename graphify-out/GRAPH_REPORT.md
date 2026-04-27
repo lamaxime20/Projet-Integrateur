@@ -1,7 +1,7 @@
 # Graph Report - D:\Desktop\X2\Projet Integrateur  (2026-04-27)
 
 ## Corpus Check
-- 7769 files · ~4,065,704 words
+- 7769 files · ~4,065,949 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -18099,11 +18099,9 @@ Nodes (0):
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `get()` connect `Community 0` to `Community 1`, `Community 2`, `Community 3`, `Community 4`, `Community 5`, `Community 6`, `Community 7`, `Community 8`, `Community 9`, `Community 10`, `Community 11`, `Community 12`, `Community 13`, `Community 14`, `Community 15`, `Community 16`, `Community 17`, `Community 18`, `Community 19`, `Community 20`, `Community 22`, `Community 23`, `Community 24`, `Community 26`, `Community 27`, `Community 28`, `Community 29`, `Community 30`, `Community 32`, `Community 34`, `Community 36`, `Community 37`, `Community 39`, `Community 41`, `Community 42`, `Community 43`, `Community 44`?**
-  _High betweenness centrality (0.061) - this node is a cross-community bridge._
-- **Why does `Arr` connect `Community 14` to `Community 0`, `Community 1`, `Community 2`, `Community 3`, `Community 4`, `Community 5`, `Community 6`, `Community 7`, `Community 9`, `Community 11`, `Community 12`, `Community 13`, `Community 15`, `Community 16`, `Community 17`, `Community 18`, `Community 19`, `Community 23`, `Community 25`, `Community 26`, `Community 27`, `Community 28`, `Community 29`, `Community 30`, `Community 32`, `Community 34`, `Community 36`, `Community 37`, `Community 39`, `Community 41`, `Community 42`, `Community 43`, `Community 44`, `Community 57`, `Community 59`, `Community 71`?**
-  _High betweenness centrality (0.033) - this node is a cross-community bridge._
+  _High betweenness centrality (0.041) - this node is a cross-community bridge._
 - **Why does `Str` connect `Community 19` to `Community 0`, `Community 1`, `Community 2`, `Community 3`, `Community 4`, `Community 5`, `Community 6`, `Community 7`, `Community 8`, `Community 9`, `Community 11`, `Community 13`, `Community 14`, `Community 15`, `Community 16`, `Community 18`, `Community 20`, `Community 21`, `Community 22`, `Community 23`, `Community 25`, `Community 26`, `Community 27`, `Community 29`, `Community 32`, `Community 36`, `Community 37`, `Community 38`, `Community 39`, `Community 43`, `Community 44`, `Community 51`, `Community 57`, `Community 59`?**
-  _High betweenness centrality (0.025) - this node is a cross-community bridge._
+  _High betweenness centrality (0.028) - this node is a cross-community bridge._
 - **Are the 454 inferred relationships involving `Str` (e.g. with `.definition()` and `.cycleRememberToken()`) actually correct?**
   _`Str` has 454 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 501 inferred relationships involving `get()` (e.g. with `.test_the_application_returns_a_successful_response()` and `.ext()`) actually correct?**
@@ -18112,3 +18110,5 @@ _Questions this graph is uniquely positioned to answer:_
   _`Configuration` has 3 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 407 inferred relationships involving `Arr` (e.g. with `.shouldLogin()` and `.raw()`) actually correct?**
   _`Arr` has 407 INFERRED edges - model-reasoned connections that need verification._
+- **What connects `NegativeNumberException`, `CarbonImmutableType`, `CarbonType` to the rest of the system?**
+  _311 weakly-connected nodes found - possible documentation gaps or missing edges._
