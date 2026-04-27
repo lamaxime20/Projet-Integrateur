@@ -50,7 +50,16 @@ body {
   color: var(--text-color);
   max-width: 100vw;
   min-height: 100vh;
-  overflow-x: hidden;
+  
+  /* Masquer la barre pour Firefox */
+  scrollbar-width: none;
+  /* Masquer la barre pour Internet Explorer et Edge */
+  -ms-overflow-style: none;
+}
+
+/* Masquer la barre pour Chrome, Safari et Opera */
+body::-webkit-scrollbar {
+  display: none;
 }
 
 #root {
