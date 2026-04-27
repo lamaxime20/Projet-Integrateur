@@ -1,34 +1,42 @@
 .constatElement-root {
     display: flex;
     flex-direction: column;
-    gap: var(--space-lg);
     width: 100%;
     margin: 0;
-    padding: var(--space-sm);
-    border-radius: var(--radius-md);
+    padding: var(--space-xs) 0;
 }
 
 .constatElement-left {
     border-left: var(--secondary-color) 4px solid;
+    padding-left: var(--space-md);
 }
 
 .constatElement-right {
     border-right: var(--secondary-color) 4px solid;
+    padding-right: var(--space-md);
 }
 
-.constatElement-left p {
+.constatElement-left p,
+.constatElement-right p {
     color: var(--secondary-color);
     font-family: var(--typography-common);
     font-size: 1.1rem;
     font-weight: 500;
-    line-height: 1.4;
-    margin-right: 50%;
+    line-height: 1.65;
+    margin: 0;
+    max-width: 42rem;
 }
 
-.constatElement-right p {
-    color: var(--secondary-color);
-    font-size: 1.1rem;
-    font-weight: 500;
-    line-height: 1.4;
-    margin-left: 50%;
+@media (min-width: 768px) {
+    .constatElement-left p {
+        margin-right: 22%;
+    }
+
+    .constatElement-right {
+        align-items: flex-end;
+    }
+
+    .constatElement-right p {
+        margin-left: 22%;
+    }
 }

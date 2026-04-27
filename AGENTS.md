@@ -14,7 +14,8 @@ Every file .jsx component are on /vue/src/components*
 All logic function who will be used must be in .js file
 on /vue/src/utils
 - Respecter la modularité, que ce soit .jsx .js ou .css
-- Respecte le mobile-first
+- Respecte le mobile-first, le user-friendly, les principes UX/UI
+- Diminues grandement la charge cognitive du visiteur lors de sa visite
 - Ne mets pas les emojis, mieux tu utilises les font-awesome
 - Mets les accents et les caractères spéciaux pour respecter la langue
 - Les interfaces doivent respirer tout en gardant le branding, le copywrite et l'impact recherché 
