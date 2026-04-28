@@ -7,13 +7,14 @@ use App\Models\Alerte;
 use App\Models\Instruction;
 use App\Models\Log;
 use App\Models\Microcontroleur;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class Utilisateur extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, HasUuids, Notifiable;
 
     protected $table = 'utilisateurs';
     protected $keyType = 'string';

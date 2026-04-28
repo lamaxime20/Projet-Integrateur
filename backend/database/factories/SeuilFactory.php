@@ -18,12 +18,12 @@ class SeuilFactory extends Factory
         $max = fake()->randomFloat(2, $min + 1, 100);
 
         return [
-            'type_mesure' => Grandeur::factory(),
+            'type_mesure' => Grandeur::factory()->create()->id,
             'valeur_max' => $max,
             'valeur_min' => $min,
             'updated_at' => now(),
-            'user_id' => Utilisateur::factory(),
-            'microcontroleur_id' => Microcontroleur::factory(),
+            'user_id' => Utilisateur::factory()->create()->id,
+            'microcontroleur_id' => Microcontroleur::factory()->create()->id,
         ];
     }
 }

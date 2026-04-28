@@ -14,7 +14,7 @@ class SessionFactory extends Factory
     {
         return [
             'token' => fake()->unique()->sha256(),
-            'user_id' => Utilisateur::factory(),
+            'user_id' => Utilisateur::factory()->create()->id,
             'role' => fake()->randomElement(['admin', 'user']),
             'created_at' => now(),
             'expires_at' => now()->addHours(24),

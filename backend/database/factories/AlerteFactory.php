@@ -18,7 +18,7 @@ class AlerteFactory extends Factory
             'vu' => fake()->boolean(),
             'date_arrivee' => now(),
             'date_lu' => fake()->boolean() ? now() : null,
-            'user_id' => Utilisateur::factory(),
+            'user_id' => Utilisateur::factory()->create()->id,
         ];
     }
 }

@@ -14,7 +14,7 @@ class UniteFactory extends Factory
     {
         return [
             'name' => fake()->word(),
-            'grandeur_physique' => Grandeur::factory(),
+            'grandeur_physique' => Grandeur::factory()->create()->id,
         ];
     }
 }

@@ -18,8 +18,8 @@ class InstructionFactory extends Factory
             'duree' => fake()->boolean() ? fake()->randomNumber(3) : null,
             'statut' => fake()->randomElement(['en_attente', 'executee', 'echouee']),
             'date_arrivee' => now(),
-            'user_id' => Utilisateur::factory(),
-            'actionneur_id' => Actionneur::factory(),
+            'user_id' => Utilisateur::factory()->create()->id,
+            'actionneur_id' => Actionneur::factory()->create()->id,
         ];
     }
 }

@@ -8,13 +8,14 @@ use App\Models\Seuil;
 use App\Models\Actionneur;
 use App\Models\Capteur;
 use App\Models\MicrocontroleurToken;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Microcontroleur extends Model
 {
-    use HasFactory;
+    use HasFactory, HasUuids;
 
     protected $table = 'microcontroleurs';
     protected $keyType = 'string';

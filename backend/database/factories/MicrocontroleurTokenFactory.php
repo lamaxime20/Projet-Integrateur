@@ -14,7 +14,7 @@ class MicrocontroleurTokenFactory extends Factory
     {
         return [
             'token' => fake()->unique()->sha256(),
-            'microcontroleur_id' => Microcontroleur::factory(),
+            'microcontroleur_id' => Microcontroleur::factory()->create()->id,
             'created_at' => now(),
             'expires_at' => now()->addHours(24),
             'is_revoked' => false,

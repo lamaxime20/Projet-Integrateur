@@ -13,7 +13,7 @@ class ResetPasswordCodeFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => Utilisateur::factory(),
+            'user_id' => Utilisateur::factory()->create()->id,
             'code' => fake()->numerify('######'),
             'created_at' => now(),
             'expires_at' => now()->addMinutes(15),

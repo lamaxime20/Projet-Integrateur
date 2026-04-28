@@ -14,11 +14,11 @@ class CapteurFactory extends Factory
     public function definition(): array
     {
         return [
-            'type_mesure' => Grandeur::factory(),
+            'type_mesure' => Grandeur::factory()->create()->id,
             'etat' => fake()->randomElement(['actif', 'inactif', 'defaillant']),
             'last_seen' => fake()->boolean() ? now() : null,
             'modele' => fake()->word(),
-            'microcontroleur_id' => Microcontroleur::factory(),
+            'microcontroleur_id' => Microcontroleur::factory()->create()->id,
         ];
     }
 }

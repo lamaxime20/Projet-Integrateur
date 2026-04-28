@@ -30,6 +30,8 @@ class DatabaseSeeder extends Seeder
             Grandeur::create($grandeur);
         }
 
+        $grandeursCollection = Grandeur::all();
+
         // Créer des utilisateurs
         $utilisateurs = Utilisateur::factory(5)->create();
 
@@ -43,13 +45,15 @@ class DatabaseSeeder extends Seeder
             ->create();
 
         // Créer des capteurs
-        $capteurs = Capteur::factory(20)
-            ->state(function () use ($microcontroleurs) {
-                return [
+        $capteurs = collect();
+        foreach (range(1, 20) as $_) {
+            $capteurs->push(
+                Capteur::factory()->create([
                     'microcontroleur_id' => $microcontroleurs->random()->id,
-                ];
-            })
-            ->create();
+                    'type_mesure' => $grandeursCollection->random()->id,
+                ])
+            );
+        }
 
         // Créer des actionneurs
         $actionneurs = Actionneur::factory(15)
@@ -61,14 +65,16 @@ class DatabaseSeeder extends Seeder
             ->create();
 
         // Créer des seuils
-        Seuil::factory(15)
-            ->state(function () use ($utilisateurs, $microcontroleurs) {
-                return [
+        $seuils = collect();
+        foreach (range(1, 15) as $_) {
+            $seuils->push(
+                Seuil::factory()->create([
                     'user_id' => $utilisateurs->random()->id,
                     'microcontroleur_id' => $microcontroleurs->random()->id,
-                ];
-            })
-            ->create();
+                    'type_mesure' => $grandeursCollection->random()->id,
+                ])
+            );
+        }
 
         // Créer des alertes
         Alerte::factory(30)

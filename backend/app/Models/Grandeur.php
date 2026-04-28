@@ -6,12 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Unite;
 use App\Models\Seuil;
 use App\Models\Capteur;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Grandeur extends Model
 {
-    use HasFactory;
+    use HasFactory, HasUuids;
 
     protected $table = 'grandeurs';
     protected $keyType = 'string';

@@ -16,7 +16,7 @@ class ActionneurFactory extends Factory
             'etat' => fake()->randomElement(['actif', 'inactif', 'defaillant']),
             'last_seen' => fake()->boolean() ? now() : null,
             'modele' => fake()->word(),
-            'microcontroleur_id' => Microcontroleur::factory(),
+            'microcontroleur_id' => Microcontroleur::factory()->create()->id,
         ];
     }
 }

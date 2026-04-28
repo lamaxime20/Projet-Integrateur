@@ -15,7 +15,7 @@ class DonneeFactory extends Factory
         return [
             'valeur' => fake()->randomFloat(2, 0, 100),
             'date_arrivee' => now(),
-            'capteur_id' => Capteur::factory(),
+            'capteur_id' => Capteur::factory()->create()->id,
         ];
     }
 }

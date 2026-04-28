@@ -6,13 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Grandeur;
 use App\Models\Microcontroleur;
 use App\Models\Donnee;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Capteur extends Model
 {
-    use HasFactory;
+    use HasFactory, HasUuids;
 
     protected $table = 'capteurs';
     protected $keyType = 'string';
