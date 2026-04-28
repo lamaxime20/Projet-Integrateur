@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -9,11 +10,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('sessions', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->uuid('id')->primary()->default(DB::raw('uuid_generate_v4()'));
             $table->string('token')->unique();
             $table->uuid('user_id');
             $table->enum('role', ['admin', 'user']);
-            $table->timestamp('created_at');
+            $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('expires_at');
             $table->boolean('is_revoked')->default(false);
 

@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -9,7 +10,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('instructions', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->uuid('id')->primary()->default(DB::raw('uuid_generate_v4()'));
             $table->string('action');
             $table->integer('duree')->nullable();
             $table->enum('statut', ['en_attente', 'executee', 'echouee']);
