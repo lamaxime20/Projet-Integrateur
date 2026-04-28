@@ -101,7 +101,7 @@ function Login() {
 
                             <a
                                 className="login-forgot-password-link"
-                                href="#"
+                                href="/verification-password"
                             >
                                 Mot de passe oublié ?
                             </a>

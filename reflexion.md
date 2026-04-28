@@ -110,3 +110,16 @@ quand on clique sur créer son compte, on appelle un lien API pour créer le com
 Quand on clique sur précédent, ça doit renvoyer vers le premier form et la logique d'envoi d'email doit être appliqué
 
 - Tout le long de la création de compte, on stocke les infos que l'utilisateur remplit dans le localStorage et on efface tout dans le localStorage à la fin pour que l'utilisateur n'ait pas à recommencer à chaque fois
+
+### Logique vérification mot de passe
+Même logique que dans signup,
+Un form pour l'email, dès qu'il clique sur suivant, on appelle un lien API pour vérifier l'existence de l'email, créer un code avec expiration dans 01 heure et le renvoyer
+Le deuxième form sera là pour confirmer le code avec un bouton précédent et un bouton suivant
+Quand on clique sur précédent, on rentre au form 1
+Quand on clique sur suivant, on appelle un lien API pour vérifier le code et si tout est ok, on envoit au form 3
+Le form 3 aura entrer le nouveau mot de passe, confirmer le mot de passe
+Avec un bouton précédent et un bouton changer le mot de passe
+Quand on clique sur précédent, on rentre au form 1
+Quand on clique sur changer le mot de passe, on appelle un lien API pour changer le mot de passe et si tout est ok, on renvoit vers login
+Au form 2, il y a possibilité de renvoyer le code, mais uniquement selon un timer
+Lorsqu'on rentre au form 1 après l'envoit du premier code, on ne rappelle le lien API que dans deux conditions : soit, on a changé l'email, soit le code a expiré
