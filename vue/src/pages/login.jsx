@@ -73,7 +73,9 @@ function Login() {
             </section>
             <section className="login-right">
                 <form className="login-form" onSubmit={handleSubmit}>
-                    <h1 className="login-title">Se connecter</h1>
+                    <header className="login-header">
+                        <h1 className="login-title">Se connecter</h1>
+                    </header>
                     <div className="login-main">
                         <div className="login-input">
                             <input
@@ -114,7 +116,15 @@ function Login() {
                         <div className="login-footer">
                             <p>Ou connecte toi avec</p>
                             <div className="login-social-links">
-
+                                <button
+                                    type="button"
+                                    className="login-social-button"
+                                    aria-label="Continuer avec Google"
+                                >
+                                    <span className="login-social-icon" aria-hidden="true">
+                                        <span className="login-social-icon-g">G</span>
+                                    </span>
+                                </button>
                             </div>
                             <a
                                 className="login-policy"
