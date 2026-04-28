@@ -1,55 +1,111 @@
-import { createContext } from "react";
-import Cookies from "js-cookie";
-import { loginFromDatabase, logoutFromDatabase } from "../src/utils/user";
+import { createContext, useCallback, useEffect, useRef, useState } from "react";
+import {
+    clearSession,
+    createSessionTimeout,
+    getSessionSnapshot,
+    isSessionExpired,
+    loginFromDatabase,
+    logoutFromDatabase,
+    restoreSessionFromDatabase,
+} from "../src/utils/user";
 
 const AuthContext = createContext({
     isAuthenticated: false,
+    isLoading: true,
     user: null,
-    token: null,
-    login: () => {},
-    logout: () => {},
+    login: async () => false,
+    logout: async () => false,
 });
 
-export const AuthProvider = ({ children }) => {
+export function AuthProvider({ children }) {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [user, setUser] = useState(null);
-    const [token, setToken] = useState(null);
+    const sessionTimeoutRef = useRef(null);
 
-    useEffect(() => {
-        const savedToken = Cookies.get("token");
-
-        if (savedToken) {
-            setToken(savedToken);
-            setIsAuthenticated(true);
-            setUser(JSON.parse(Cookies.get("user")));
+    const clearAuthState = useCallback(() => {
+        if (sessionTimeoutRef.current) {
+            window.clearTimeout(sessionTimeoutRef.current);
+            sessionTimeoutRef.current = null;
         }
+
+        clearSession();
+        setIsAuthenticated(false);
+        setUser(null);
     }, []);
 
-    const login = async (userData, token) => {
-        const result = await loginFromDatabase(userData, token);
-        if (!result) {
+    const applyAuthenticatedSession = useCallback((session) => {
+        if (!session || isSessionExpired(session.expiresAt)) {
+            clearAuthState();
             return false;
         }
+
+        if (sessionTimeoutRef.current) {
+            window.clearTimeout(sessionTimeoutRef.current);
+        }
+
+        sessionTimeoutRef.current = createSessionTimeout(session.expiresAt, () => {
+            clearAuthState();
+        });
+
+        setUser(session.user);
         setIsAuthenticated(true);
-        setUser(result.user);
-        setToken(result.token);
         return true;
+    }, [clearAuthState]);
+
+    useEffect(() => {
+        let isMounted = true;
+
+        const restoreSession = async () => {
+            const restoredSession = await restoreSessionFromDatabase();
+
+            if (!isMounted) {
+                return;
+            }
+
+            applyAuthenticatedSession(restoredSession);
+            setIsLoading(false);
+        };
+
+        restoreSession();
+
+        return () => {
+            isMounted = false;
+
+            if (sessionTimeoutRef.current) {
+                window.clearTimeout(sessionTimeoutRef.current);
+            }
+        };
+    }, [applyAuthenticatedSession]);
+
+    const login = async (credentials) => {
+        const result = await loginFromDatabase(credentials);
+
+        if (!result) {
+            clearAuthState();
+            return false;
+        }
+
+        return applyAuthenticatedSession(result);
     };
 
     const logout = async () => {
-        const success = await logoutFromDatabase(token);
-        if (!success) {
-            return false;
+        if (!getSessionSnapshot()) {
+            clearAuthState();
+            return true;
         }
-        setIsAuthenticated(false);
-        setUser(null);
-        setToken(null);
-        return true;
+
+        const success = await logoutFromDatabase();
+
+        clearAuthState();
+        return success;
     };
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, user, token, login, logout }}>
+        <AuthContext.Provider value={{ isAuthenticated, isLoading, user, login, logout }}>
             {children}
         </AuthContext.Provider>
     );
-};
+}
+
+export default AuthContext;

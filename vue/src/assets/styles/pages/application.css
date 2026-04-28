@@ -1,0 +1,119 @@
+.application-root {
+    min-height: 100vh;
+    padding: var(--space-lg);
+    background:
+        linear-gradient(180deg, rgba(46, 125, 50, 0.08) 0%, rgba(249, 250, 251, 0) 32%),
+        linear-gradient(180deg, #f8fbf6 0%, #eef5ef 100%);
+}
+
+.application-panel {
+    width: min(100%, 56rem);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: var(--shadow-soft);
+}
+
+.application-panel-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.application-kicker {
+    margin: 0;
+    color: var(--secondary-color);
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.application-panel-header h1 {
+    margin: 0;
+    font-family: var(--typography-title);
+    font-size: clamp(2rem, 6vw, 3rem);
+}
+
+.application-copy {
+    margin: 0;
+    line-height: 1.6;
+    color: rgba(20, 32, 19, 0.8);
+}
+
+.application-user-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+    margin: 0;
+}
+
+.application-user-grid div {
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    background-color: var(--secondary-color-soft);
+}
+
+.application-user-grid dt {
+    margin-bottom: var(--space-xs);
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: rgba(20, 32, 19, 0.7);
+}
+
+.application-user-grid dd {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.application-actions {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: var(--space-sm);
+}
+
+.application-actions button {
+    min-height: 3.25rem;
+    border: none;
+    border-radius: var(--radius-md);
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.application-primary {
+    background-color: var(--secondary-color);
+    color: var(--text-color-inverse);
+}
+
+.application-secondary {
+    background-color: var(--accent-color-soft);
+    color: var(--text-color);
+}
+
+@media (min-width: 48rem) {
+    .application-root {
+        padding: var(--space-2xl);
+    }
+
+    .application-panel {
+        padding: var(--space-2xl);
+    }
+
+    .application-user-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .application-actions {
+        flex-direction: row;
+        justify-content: flex-end;
+    }
+
+    .application-actions button {
+        min-width: 12rem;
+    }
+}

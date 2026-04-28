@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import heroImage from '../assets/images/accueil/hero.png';
 import ConstatElement from '../components/principale/constatElement';
 import FaqCard from '../components/principale/faqCard';
@@ -7,6 +8,7 @@ import '../assets/styles/pages/principale.css';
 
 function Principale() {
     const [activeHighlight, setActiveHighlight] = useState(0);
+    const navigate = useNavigate();
 
     return (
         <main className="principale-root">
@@ -25,9 +27,7 @@ function Principale() {
                             <button
                                 type="button"
                                 className='principale-hero-cta-secondary'
-                                onClick={() => {
-                                    window.location.href = '/manager';
-                                }}
+                                onClick={() => navigate('/application')}
                             >
                                 Gérer ma serre
                             </button>
@@ -104,9 +104,7 @@ function Principale() {
                     <button
                         type="button"
                         className='principale-solution-cta-primary'
-                        onClick={() => {
-                            window.location.href = '/manager';
-                        }}
+                        onClick={() => navigate('/application')}
                     >
                         Gérer ma serre
                     </button>
