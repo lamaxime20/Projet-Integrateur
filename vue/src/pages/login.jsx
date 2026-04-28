@@ -3,6 +3,7 @@ import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { buildRedirectTarget } from "../utils/auth";
 import { useAuth } from "../hooks/useAuth";
 import "../assets/styles/pages/login.css";
+import googleLogo from '../assets/images/googleLogo.svg'
 
 function Login() {
     const { isAuthenticated, isLoading, login } = useAuth();
@@ -121,9 +122,11 @@ function Login() {
                                     className="login-social-button"
                                     aria-label="Continuer avec Google"
                                 >
-                                    <span className="login-social-icon" aria-hidden="true">
-                                        <span className="login-social-icon-g">G</span>
-                                    </span>
+                                    <img
+                                        className="login-social-button-image"
+                                        src={googleLogo}
+                                        alt="Continuer avec Google"
+                                    />
                                 </button>
                             </div>
                             <a
