@@ -199,7 +199,7 @@ function Signup() {
                             isSubmitting={isSubmitting}
                             onChange={handleFormDataChange}
                             onPrevious={() => {
-                                setCurrentStep(2);
+                                setCurrentStep(1);
                                 setGlobalError("");
                             }}
                             onSubmit={handlePasswordSubmit}
