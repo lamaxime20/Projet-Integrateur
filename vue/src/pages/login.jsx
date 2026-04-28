@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { buildRedirectTarget } from "../utils/auth";
 import { useAuth } from "../hooks/useAuth";
 import "../assets/styles/pages/login.css";
@@ -135,6 +135,9 @@ function Login() {
                             >
                                 Politique de confidentialité
                             </a>
+                            <p className="login-create-account">
+                                Pas encore de compte ? <Link to="/signup">Créer mon accès</Link>
+                            </p>
                         </div>
                     </div>
                 </form>

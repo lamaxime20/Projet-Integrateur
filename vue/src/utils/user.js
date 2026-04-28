@@ -1,5 +1,6 @@
 const SESSION_STORAGE_KEY = "agrico-tech-session";
 const SIMULATED_DAY_IN_MS = 60 * 1000;
+const REGISTERED_USERS_KEY = "agrico-tech-registered-users";
 
 function wait(duration) {
     return new Promise((resolve) => {
@@ -18,6 +19,21 @@ function buildSession(user) {
 
 function saveSession(session) {
     window.localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(session));
+}
+
+function getRegisteredUsers() {
+    const rawUsers = window.localStorage.getItem(REGISTERED_USERS_KEY);
+
+    if (!rawUsers) {
+        return [];
+    }
+
+    try {
+        return JSON.parse(rawUsers);
+    } catch {
+        window.localStorage.removeItem(REGISTERED_USERS_KEY);
+        return [];
+    }
 }
 
 export function clearSession() {
@@ -63,13 +79,26 @@ export async function loginFromDatabase(credentials) {
         return null;
     }
 
-    const user = {
-        id: "12345",
-        email: "example@mail.com",
-        name: "John Doe",
-        role: "user",
-        jour_expiration: 7,
-    };
+    const normalizedEmail = credentials.email.trim().toLowerCase();
+    const registeredUser = getRegisteredUsers().find((user) => (
+        user.email === normalizedEmail && user.password === credentials.password
+    ));
+
+    const user = registeredUser
+        ? {
+            id: registeredUser.id,
+            email: registeredUser.email,
+            name: registeredUser.name,
+            role: registeredUser.role,
+            jour_expiration: registeredUser.jour_expiration,
+        }
+        : {
+            id: "12345",
+            email: normalizedEmail,
+            name: "John Doe",
+            role: "user",
+            jour_expiration: 7,
+        };
 
     const session = buildSession(user);
 
