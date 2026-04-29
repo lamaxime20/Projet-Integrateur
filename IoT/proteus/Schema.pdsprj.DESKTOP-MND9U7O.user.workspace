@@ -38,7 +38,7 @@
      <ITEM name="HexMode">0</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="322" x="372" flags="00000008" y="319" h="312" pid="3" iid="6">
+   <POPUP w="30" x="372" flags="00000008" y="319" h="16" pid="3" iid="6">
     <PROPERTIES/>
    </POPUP>
    <POPUP w="8" x="392" flags="0000000a" y="339" h="1" pid="10" iid="6">
@@ -101,7 +101,7 @@
      <ITEM name="TopLineAddress">00000020</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="322" x="512" flags="00000008" y="459" h="312" pid="3" iid="4">
+   <POPUP w="30" x="512" flags="00000008" y="459" h="16" pid="3" iid="4">
     <PROPERTIES/>
    </POPUP>
    <POPUP w="8" x="532" flags="0000000a" y="479" h="1" pid="10" iid="4">
@@ -164,7 +164,7 @@
      <ITEM name="TopLineAddress">00000020</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="542" x="652" flags="00000048" y="599" h="248" pid="3" iid="1">
+   <POPUP w="52" x="652" flags="00000048" y="599" h="12" pid="3" iid="1">
     <PROPERTIES/>
    </POPUP>
    <POPUP w="16" x="672" flags="0000000a" y="619" h="32" pid="7" iid="1">
@@ -227,7 +227,7 @@
      <ITEM name="TopLineAddress">00300000</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="202" x="792" flags="00000008" y="739" h="568" pid="10" iid="1">
+   <POPUP w="18" x="792" flags="00000008" y="739" h="32" pid="10" iid="1">
     <PROPERTIES/>
    </POPUP>
    <POPUP w="8" x="812" flags="00000002" y="759" h="8" pid="13" iid="1">
@@ -240,7 +240,7 @@
      <ITEM name="TopLineAddress">00000000</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="542" x="832" flags="00000048" y="779" h="248" pid="3" iid="3">
+   <POPUP w="52" x="832" flags="00000048" y="779" h="12" pid="3" iid="3">
     <PROPERTIES/>
    </POPUP>
    <POPUP w="16" x="852" flags="0000000a" y="799" h="32" pid="7" iid="3">
@@ -303,7 +303,7 @@
      <ITEM name="TopLineAddress">00300000</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="202" x="972" flags="00000008" y="919" h="568" pid="10" iid="3">
+   <POPUP w="18" x="972" flags="00000008" y="919" h="32" pid="10" iid="3">
     <PROPERTIES/>
    </POPUP>
    <POPUP w="8" x="992" flags="00000002" y="939" h="8" pid="13" iid="3">

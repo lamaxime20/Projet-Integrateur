@@ -5,8 +5,8 @@
 #include <ArduinoJson.h>
 
 // ===== WIFI =====
-const char* ssid = "TON_WIFI";
-const char* password = "TON_PASSWORD";
+const char* ssid = "Avengers";
+const char* password = "Lamine19yamal";
 
 // ===== API =====
 const char* apiUrl = "https://projet-integrateur-do3r.onrender.com/api/device/token";
@@ -16,8 +16,8 @@ String identifiant_user = "user_123";
 const char* mqtt_server = "b1d946f5edb84d23ade6058bd316610b.s1.eu.hivemq.cloud";
 const int mqtt_port = 8883;
 
-const char* mqtt_user = "TON_USERNAME_HIVEMQ";
-const char* mqtt_pass = "TON_PASSWORD_HIVEMQ";
+const char* mqtt_user = "agrico-tech";
+const char* mqtt_pass = "Max123456";
 
 WiFiClientSecure espClient;
 PubSubClient client(espClient);
@@ -38,7 +38,15 @@ void setup_wifi() {
 
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
+    Serial.print(".");
   }
+
+  Serial.println("");
+  Serial.println("WiFi connecté !");
+
+  // ✅ Ligne ajoutée pour vérifier la connexion Internet
+  Serial.print("Connexion Internet OK | IP: ");
+  Serial.println(WiFi.localIP());
 }
 
 // ===== GET TOKEN =====

@@ -90,8 +90,8 @@ class DeviceController extends Controller
         $mqtt = new MqttClient($server, $port, $clientId);
 
         $connectionSettings = (new ConnectionSettings)
-            ->setUsername('TON_USERNAME_HIVEMQ')
-            ->setPassword('TON_PASSWORD_HIVEMQ')
+            ->setUsername(env('HIVEMQ_USERNAME'))
+            ->setPassword(env('HIVEMQ_PASSWORD'))
             ->setUseTls(true)
             ->setTlsSelfSignedAllowed(true);
 
