@@ -144,6 +144,8 @@ CREATE TABLE microcontroleurs (
   CONSTRAINT microcontroleurs_pk001 PRIMARY KEY (id),
   CONSTRAINT microcontroleurs_mac_unique001 UNIQUE (mac_address),
   CONSTRAINT microcontroleurs_nom_user_unique001 UNIQUE (nom, user_id),
+  CONSTRAINT microcontroleurs_passkey_unique001 UNIQUE (passkey),
+  CONSTRAINT microcontroleurs_identifiant_unique001 UNIQUE (identifiant_user),
 
   CONSTRAINT microcontroleurs_fk001 FOREIGN KEY (user_id)
     REFERENCES utilisateurs(id)

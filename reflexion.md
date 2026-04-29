@@ -201,3 +201,5 @@ Le microcontrôleur doit également gérer :
 
 la reconnexion automatique au broker
 un buffer local en cas de perte de connexion
+
+Lors de sa première connexion au backend, le microcontrolleur doit envoyer (identifiant_user) pour recevoir son token
