@@ -125,10 +125,79 @@ Au form 2, il y a possibilité de renvoyer le code, mais uniquement selon un tim
 Lorsqu'on rentre au form 1 après l'envoit du premier code, on ne rappelle le lien API que dans deux conditions : soit, on a changé l'email, soit le code a expiré
 
 ### Flow pour la communication MQTT
-Un microcontrolleur quand on vient de l'allumer, doit aller prendre un token via un lien api HTTPS
+Lorsqu’un microcontrôleur démarre, il effectue une requête vers une API HTTPS afin de récupérer ses informations d’authentification (token ou credentials).
 
-Ayant son token, il publie sur le topic "agriculture/données", les données de ses capteurs, si et seulement si la donnée change de +- 10% de sa valeur (histoire de ne pas remplir la base de données inutilement)
-Il envoit une donnée à la fois, pas les données de tous les capteurs en même temps, et il envoit avec son token
-Laravel aura soucrit également au topic "agriculture/données" et donc, recevra automatiquement les données des microcontrolleurs, et les stockera dans la base de données, pour reconnaitre de quel microcontrolleur vient la donnée, il va regarder le token qui sera envoyé avec la donnée et comparer.
-Quand le backend veut envoyer les nouveaux seuils définit par l'utilisateur, il va les envoyer sur le topic agriculture/seuils/token_microcontrolleur, et quand le microncontrolleur va vouloir prendre ces données, il va aller sur "agriculture/seuils/token_microcontrolleur"
-Même chose pour les instructions sauf que le topic sera "agriculture/instructions/token_microcontrolleur"
+Ce token n’est pas utilisé dans les messages MQTT, mais sert à s’authentifier lors de la connexion au broker MQTT :
+
+username = token_microcontroleur
+password = secret
+
+Ainsi, chaque microcontrôleur est identifié dès la connexion, sans avoir besoin d’envoyer son token dans chaque message.
+
+Une fois connecté au broker MQTT, le microcontrôleur publie les données de ses capteurs sur un topic structuré de manière claire et scalable :
+
+agriculture/{device_id}/data
+
+Exemple :
+
+agriculture/esp32_01/data
+
+Les données sont envoyées uniquement si une variation de ±10% est détectée, afin d’éviter de surcharger inutilement la base de données.
+
+Contrairement à l’approche initiale, les données ne sont pas envoyées une par une, mais sous forme d’un JSON structuré :
+
+{
+  "temperature": 28,
+  "humidite": 65,
+  "co2": 400,
+  "luminosite": 300
+}
+
+Cela permet de réduire le nombre de messages et d’optimiser les performances globales du système.
+
+Côté backend, Laravel est abonné au topic :
+
+agriculture/+/data
+
+Ainsi, il reçoit automatiquement toutes les données envoyées par les microcontrôleurs.
+
+L’identification du microcontrôleur ne se fait plus via un token dans le message, mais via :
+
+soit le client ID MQTT
+soit le username utilisé lors de la connexion
+
+Laravel stocke ensuite les données dans la base de données.
+
+Lorsque l’utilisateur définit de nouveaux seuils, le backend les publie sur un topic dédié :
+
+agriculture/{device_id}/seuils
+
+Exemple :
+
+agriculture/esp32_01/seuils
+
+Le microcontrôleur ne vient pas “chercher” ces données, mais s’abonne à ce topic :
+
+client.subscribe("agriculture/esp32_01/seuils");
+
+Ainsi, dès qu’un nouveau seuil est publié, il est reçu automatiquement.
+
+👉 Ces messages sont envoyés avec l’option retain = true, ce qui permet au microcontrôleur de récupérer immédiatement les derniers seuils même après un redémarrage.
+
+Le même principe est utilisé pour les instructions :
+
+agriculture/{device_id}/instructions
+
+Exemple :
+
+allumer pompe
+activer ventilateur
+allumer lumière
+⚙️ Paramètres importants ajoutés
+QoS 1 → pour garantir la réception des données importantes
+QoS 0 → pour les données fréquentes
+
+Le microcontrôleur doit également gérer :
+
+la reconnexion automatique au broker
+un buffer local en cas de perte de connexion
