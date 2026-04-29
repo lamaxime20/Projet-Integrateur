@@ -123,3 +123,12 @@ Quand on clique sur précédent, on rentre au form 1
 Quand on clique sur changer le mot de passe, on appelle un lien API pour changer le mot de passe et si tout est ok, on renvoit vers login
 Au form 2, il y a possibilité de renvoyer le code, mais uniquement selon un timer
 Lorsqu'on rentre au form 1 après l'envoit du premier code, on ne rappelle le lien API que dans deux conditions : soit, on a changé l'email, soit le code a expiré
+
+### Flow pour la communication MQTT
+Un microcontrolleur quand on vient de l'allumer, doit aller prendre un token via un lien api HTTPS
+
+Ayant son token, il publie sur le topic "agriculture/données", les données de ses capteurs, si et seulement si la donnée change de +- 10% de sa valeur (histoire de ne pas remplir la base de données inutilement)
+Il envoit une donnée à la fois, pas les données de tous les capteurs en même temps, et il envoit avec son token
+Laravel aura soucrit également au topic "agriculture/données" et donc, recevra automatiquement les données des microcontrolleurs, et les stockera dans la base de données, pour reconnaitre de quel microcontrolleur vient la donnée, il va regarder le token qui sera envoyé avec la donnée et comparer.
+Quand le backend veut envoyer les nouveaux seuils définit par l'utilisateur, il va les envoyer sur le topic agriculture/seuils/token_microcontrolleur, et quand le microncontrolleur va vouloir prendre ces données, il va aller sur "agriculture/seuils/token_microcontrolleur"
+Même chose pour les instructions sauf que le topic sera "agriculture/instructions/token_microcontrolleur"
