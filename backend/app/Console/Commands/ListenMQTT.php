@@ -21,8 +21,8 @@ class ListenMQTT extends Command
         $mqtt = new MqttClient($server, $port, $clientId);
 
         $connectionSettings = (new ConnectionSettings)
-            ->setUsername(env('MQTT_USERNAME'))
-            ->setPassword(env('MQTT_PASSWORD'))
+            ->setUsername(env('HIVEMQ_USERNAME'))
+            ->setPassword(env('HIVEMQ_PASSWORD'))
             ->setUseTls(true)
             ->setTlsSelfSignedAllowed(true);
 
