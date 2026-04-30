@@ -14,6 +14,7 @@ Route::post('/send-message', [DeviceController::class, 'sendMessage']);
 
 // Auth routes
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout']);
 
 // Signup routes
 Route::post('/signup/check-email', [SignupController::class, 'checkEmail']);

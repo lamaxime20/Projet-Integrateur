@@ -29,11 +29,10 @@ class AuthController extends Controller
             return response()->json(['error' => 'Account is not active'], 403);
         }
 
-        // Create session
         $token = Str::uuid();
-        $expiresAt = Carbon::now()->addDays(7); // 7 days as in reflexion.md
+        $expiresAt = Carbon::now()->addDays(7);
 
-        $session = Session::create([
+        Session::create([
             'token' => $token,
             'user_id' => $user->id,
             'role' => $user->role,
@@ -49,10 +48,22 @@ class AuthController extends Controller
             'email' => $user->email,
             'name' => $user->nom . ' ' . $user->prenom,
             'role' => $user->role,
-            'jour_expiration' => 7, // as simulated
+            'jour_expiration' => 7,
         ];
 
         return response()->json($userData)
-            ->cookie('auth_token', $token, 60*24*7, '/', null, false, true); // HttpOnly
+            ->withCookie(cookie('auth_token', $token, 60 * 24 * 7, '/', null, false, true));
+    }
+
+    public function logout(Request $request)
+    {
+        $token = $request->cookie('auth_token');
+
+        if ($token) {
+            Session::where('token', $token)->update(['is_revoked' => true]);
+        }
+
+        return response()->json(['message' => 'Logged out'])
+            ->withCookie(cookie()->forget('auth_token'));
     }
 }

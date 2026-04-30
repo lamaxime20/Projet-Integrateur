@@ -95,8 +95,16 @@ export async function restoreSessionFromDatabase() {
 }
 
 export async function logoutFromDatabase() {
+    try {
+        await fetch(`${API_BASE_URL}/logout`, {
+            method: 'POST',
+            credentials: 'include',
+        });
+    } catch {
+        // ignore network errors — session is cleared locally regardless
+    }
+
     clearSession();
-    // Optionally, call logout endpoint
     return true;
 }
 

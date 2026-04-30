@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\PasswordResetMail;
 use App\Models\Utilisateur;
 use App\Models\ResetPasswordCode;
+use App\Models\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
-use Illuminate\Support\Str;
 
 class PasswordResetController extends Controller
 {
@@ -23,8 +25,12 @@ class PasswordResetController extends Controller
             return response()->json(['error' => 'Email not found'], 404);
         }
 
-        // Generate code
-        $code = strtoupper(Str::random(6));
+        // Invalidate any previous unused codes for this user
+        ResetPasswordCode::where('user_id', $user->id)
+            ->where('is_used', false)
+            ->update(['expires_at' => Carbon::now()]);
+
+        $code = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
 
         ResetPasswordCode::create([
             'user_id' => $user->id,
@@ -34,7 +40,7 @@ class PasswordResetController extends Controller
             'is_used' => false,
         ]);
 
-        // TODO: Send email with code
+        Mail::to($user->email)->send(new PasswordResetMail($user->prenom, $code));
 
         return response()->json(['message' => 'Code sent to email']);
     }
@@ -62,8 +68,11 @@ class PasswordResetController extends Controller
             return response()->json(['error' => 'Invalid or expired code'], 400);
         }
 
-        // Mark as used
-        $resetCode->update(['is_used' => true]);
+        // Mark as used and extend expiry to allow time to complete password change
+        $resetCode->update([
+            'is_used' => true,
+            'expires_at' => Carbon::now()->addMinutes(30),
+        ]);
 
         return response()->json(['message' => 'Code verified']);
     }
@@ -81,24 +90,26 @@ class PasswordResetController extends Controller
             return response()->json(['error' => 'Email not found'], 404);
         }
 
-        // Check if code was verified
         $resetCode = ResetPasswordCode::where('user_id', $user->id)
             ->where('is_used', true)
-            ->where('expires_at', '>', Carbon::now()->subMinutes(15))
+            ->where('expires_at', '>', Carbon::now())
             ->first();
 
         if (!$resetCode) {
             return response()->json(['error' => 'Verification required'], 400);
         }
 
-        // Update password
         $user->update([
             'password' => Hash::make($request->password),
             'updated_at' => Carbon::now(),
         ]);
 
-        // Delete reset code
         $resetCode->delete();
+
+        // Revoke all active sessions so compromised sessions are invalidated
+        Session::where('user_id', $user->id)
+            ->where('is_revoked', false)
+            ->update(['is_revoked' => true]);
 
         return response()->json(['message' => 'Password changed successfully']);
     }

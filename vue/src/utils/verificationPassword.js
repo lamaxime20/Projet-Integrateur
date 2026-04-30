@@ -201,7 +201,7 @@ export async function submitPasswordResetEmail(emailValue) {
 
         const verification = {
             email,
-            expiresAt: Date.now() + 60 * 60 * 1000, // 1 hour
+            expiresAt: Date.now() + 15 * 60 * 1000, // 15 min — must match backend
             lastSentAt: Date.now(),
             isVerified: false,
         };
@@ -338,7 +338,7 @@ export async function resendPasswordResetCode() {
 
         const refreshedVerification = {
             ...verification,
-            expiresAt: Date.now() + 60 * 60 * 1000,
+            expiresAt: Date.now() + 15 * 60 * 1000,
             lastSentAt: Date.now(),
             isVerified: false,
         };
