@@ -16,6 +16,8 @@ return new class extends Migration
             $table->enum('role', ['admin', 'user']);
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('expires_at');
+            $table->timestamp('last_used_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->boolean('is_revoked')->default(false);
 
             $table->foreign('user_id')->references('id')->on('utilisateurs');

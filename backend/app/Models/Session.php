@@ -22,6 +22,8 @@ class Session extends Model
         'role',
         'created_at',
         'expires_at',
+        'last_used_at',
+        'updated_at',
         'is_revoked',
     ];
 
@@ -29,6 +31,8 @@ class Session extends Model
         'is_revoked' => 'boolean',
         'created_at' => 'datetime',
         'expires_at' => 'datetime',
+        'last_used_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
     public function utilisateur(): BelongsTo

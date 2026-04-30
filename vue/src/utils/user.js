@@ -1,15 +1,9 @@
-const SESSION_STORAGE_KEY = "agrico-tech-session";
-const SIMULATED_DAY_IN_MS = 60 * 1000;
-const REGISTERED_USERS_KEY = "agrico-tech-registered-users";
+import API_BASE_URL from './config.js';
 
-function wait(duration) {
-    return new Promise((resolve) => {
-        window.setTimeout(resolve, duration);
-    });
-}
+const SESSION_STORAGE_KEY = "agrico-tech-session";
 
 function buildSession(user) {
-    const expiresAt = Date.now() + (user.jour_expiration * SIMULATED_DAY_IN_MS);
+    const expiresAt = Date.now() + (user.jour_expiration * 24 * 60 * 60 * 1000); // real days
 
     return {
         user,
@@ -19,21 +13,6 @@ function buildSession(user) {
 
 function saveSession(session) {
     window.localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(session));
-}
-
-function getRegisteredUsers() {
-    const rawUsers = window.localStorage.getItem(REGISTERED_USERS_KEY);
-
-    if (!rawUsers) {
-        return [];
-    }
-
-    try {
-        return JSON.parse(rawUsers);
-    } catch {
-        window.localStorage.removeItem(REGISTERED_USERS_KEY);
-        return [];
-    }
 }
 
 export function clearSession() {
@@ -73,43 +52,31 @@ export function createSessionTimeout(expiresAt, onExpire) {
 }
 
 export async function loginFromDatabase(credentials) {
-    await wait(700);
+    try {
+        const response = await fetch(`${API_BASE_URL}/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(credentials),
+            credentials: 'include', // to include cookies
+        });
 
-    if (!credentials?.email || !credentials?.password) {
-        return null;
-    }
-
-    const normalizedEmail = credentials.email.trim().toLowerCase();
-    const registeredUser = getRegisteredUsers().find((user) => (
-        user.email === normalizedEmail && user.password === credentials.password
-    ));
-
-    const user = registeredUser
-        ? {
-            id: registeredUser.id,
-            email: registeredUser.email,
-            name: registeredUser.name,
-            role: registeredUser.role,
-            jour_expiration: registeredUser.jour_expiration,
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'Login failed');
         }
-        : {
-            id: "12345",
-            email: normalizedEmail,
-            name: "John Doe",
-            role: "user",
-            jour_expiration: 7,
-        };
 
-    const session = buildSession(user);
-
-    saveSession(session);
-
-    return session;
+        const user = await response.json();
+        const session = buildSession(user);
+        saveSession(session);
+        return session;
+    } catch (error) {
+        throw error;
+    }
 }
 
 export async function restoreSessionFromDatabase() {
-    await wait(250);
-
     const session = getSessionSnapshot();
 
     if (!session) {
@@ -121,18 +88,19 @@ export async function restoreSessionFromDatabase() {
         return null;
     }
 
+    // Optionally, verify with backend
+    // For now, assume local is sufficient
+
     return session;
 }
 
 export async function logoutFromDatabase() {
-    await wait(250);
     clearSession();
+    // Optionally, call logout endpoint
     return true;
 }
 
 export async function authenticatedRequest(callback) {
-    await wait(150);
-
     const session = getSessionSnapshot();
 
     if (!session || isSessionExpired(session.expiresAt)) {

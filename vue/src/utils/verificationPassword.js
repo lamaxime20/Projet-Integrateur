@@ -1,18 +1,8 @@
+import API_BASE_URL from './config.js';
+
 const PASSWORD_RESET_DRAFT_KEY = "agrico-tech-password-reset-draft";
 const PASSWORD_RESET_VERIFICATION_KEY = "agrico-tech-password-reset-verification";
-const REGISTERED_USERS_KEY = "agrico-tech-registered-users";
-const VERIFICATION_DURATION_MS = 60 * 60 * 1000;
 const RESEND_COOLDOWN_MS = 60 * 1000;
-
-function wait(duration) {
-    return new Promise((resolve) => {
-        window.setTimeout(resolve, duration);
-    });
-}
-
-function generateVerificationCode() {
-    return "999999";
-}
 
 function setStorageValue(key, value) {
     window.localStorage.setItem(key, JSON.stringify(value));
@@ -31,14 +21,6 @@ function getStorageValue(key) {
         window.localStorage.removeItem(key);
         return null;
     }
-}
-
-function getRegisteredUsers() {
-    return getStorageValue(REGISTERED_USERS_KEY) ?? [];
-}
-
-function saveRegisteredUsers(users) {
-    setStorageValue(REGISTERED_USERS_KEY, users);
 }
 
 function sanitizeResetDraft(draft) {
@@ -197,57 +179,51 @@ export async function submitPasswordResetEmail(emailValue) {
         };
     }
 
-    const registeredUsers = getRegisteredUsers();
-    let matchedUser = false;
-    if(email == "example@gmail.com") {
-        matchedUser = true;
-    }
+    try {
+        const response = await fetch(`${API_BASE_URL}/password-reset/check-email`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email }),
+        });
 
-    await wait(650);
+        if (!response.ok) {
+            const error = await response.json();
+            return {
+                ok: false,
+                fieldError: error.error || "Erreur lors de l'envoi du code",
+                globalError: "",
+                verification: null,
+                reused: false,
+            };
+        }
 
-    if (!matchedUser) {
-        return {
-            ok: false,
-            fieldError: "Aucun compte n'est associé à cet email.",
-            globalError: "",
-            verification: null,
-            reused: false,
+        const verification = {
+            email,
+            expiresAt: Date.now() + 60 * 60 * 1000, // 1 hour
+            lastSentAt: Date.now(),
+            isVerified: false,
         };
-    }
 
-    const existingVerification = getStoredPasswordResetVerification();
+        setStorageValue(PASSWORD_RESET_VERIFICATION_KEY, verification);
 
-    if (
-        existingVerification
-        && existingVerification.email === email
-        && !isPasswordResetCodeExpired(existingVerification.expiresAt)
-    ) {
         return {
             ok: true,
             fieldError: "",
             globalError: "",
-            verification: existingVerification,
-            reused: true,
+            verification,
+            reused: false,
+        };
+    } catch (error) {
+        return {
+            ok: false,
+            fieldError: "",
+            globalError: "Erreur réseau. Réessaie.",
+            verification: null,
+            reused: false,
         };
     }
-
-    const verification = {
-        email,
-        code: generateVerificationCode(),
-        expiresAt: Date.now() + VERIFICATION_DURATION_MS,
-        lastSentAt: Date.now(),
-        isVerified: false,
-    };
-
-    setStorageValue(PASSWORD_RESET_VERIFICATION_KEY, verification);
-
-    return {
-        ok: true,
-        fieldError: "",
-        globalError: "",
-        verification,
-        reused: false,
-    };
 }
 
 export async function verifyPasswordResetCode(codeDigits) {
@@ -280,28 +256,46 @@ export async function verifyPasswordResetCode(codeDigits) {
         };
     }
 
-    await wait(450);
+    try {
+        const response = await fetch(`${API_BASE_URL}/password-reset/verify-code`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: verification.email,
+                code,
+            }),
+        });
 
-    if (verification.code !== code) {
+        if (!response.ok) {
+            const error = await response.json();
+            return {
+                ok: false,
+                globalError: error.error || "Code incorrect",
+                verification,
+            };
+        }
+
+        const verifiedSession = {
+            ...verification,
+            isVerified: true,
+        };
+
+        setStorageValue(PASSWORD_RESET_VERIFICATION_KEY, verifiedSession);
+
+        return {
+            ok: true,
+            globalError: "",
+            verification: verifiedSession,
+        };
+    } catch (error) {
         return {
             ok: false,
-            globalError: "Le code est incorrect.",
+            globalError: "Erreur réseau. Réessaie.",
             verification,
         };
     }
-
-    const verifiedSession = {
-        ...verification,
-        isVerified: true,
-    };
-
-    setStorageValue(PASSWORD_RESET_VERIFICATION_KEY, verifiedSession);
-
-    return {
-        ok: true,
-        globalError: "",
-        verification: verifiedSession,
-    };
 }
 
 export async function resendPasswordResetCode() {
@@ -323,23 +317,46 @@ export async function resendPasswordResetCode() {
         };
     }
 
-    await wait(500);
+    // Resend by calling check-email again
+    try {
+        const response = await fetch(`${API_BASE_URL}/password-reset/check-email`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email: verification.email }),
+        });
 
-    const refreshedVerification = {
-        ...verification,
-        code: generateVerificationCode(),
-        expiresAt: Date.now() + VERIFICATION_DURATION_MS,
-        lastSentAt: Date.now(),
-        isVerified: false,
-    };
+        if (!response.ok) {
+            const error = await response.json();
+            return {
+                ok: false,
+                globalError: error.error || "Erreur lors du renvoi",
+                verification,
+            };
+        }
 
-    setStorageValue(PASSWORD_RESET_VERIFICATION_KEY, refreshedVerification);
+        const refreshedVerification = {
+            ...verification,
+            expiresAt: Date.now() + 60 * 60 * 1000,
+            lastSentAt: Date.now(),
+            isVerified: false,
+        };
 
-    return {
-        ok: true,
-        globalError: "",
-        verification: refreshedVerification,
-    };
+        setStorageValue(PASSWORD_RESET_VERIFICATION_KEY, refreshedVerification);
+
+        return {
+            ok: true,
+            globalError: "",
+            verification: refreshedVerification,
+        };
+    } catch (error) {
+        return {
+            ok: false,
+            globalError: "Erreur réseau. Réessaie.",
+            verification,
+        };
+    }
 }
 
 export async function completePasswordReset(passwordValues) {
@@ -366,31 +383,40 @@ export async function completePasswordReset(passwordValues) {
         };
     }
 
-    await wait(700);
+    try {
+        const response = await fetch(`${API_BASE_URL}/password-reset/change`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: draft.email,
+                password: passwordValues.password,
+                password_confirmation: passwordValues.confirmPassword,
+            }),
+        });
 
-    const registeredUsers = getRegisteredUsers();
-    const userIndex = 1;
+        if (!response.ok) {
+            const error = await response.json();
+            return {
+                ok: false,
+                fieldErrors,
+                globalError: error.error || "Erreur lors du changement",
+            };
+        }
 
-    if (userIndex === -1) {
+        clearPasswordResetStorage();
+
+        return {
+            ok: true,
+            fieldErrors,
+            globalError: "",
+        };
+    } catch (error) {
         return {
             ok: false,
             fieldErrors,
-            globalError: "Aucun compte n'est associé à cet email.",
+            globalError: "Erreur réseau. Réessaie.",
         };
     }
-
-    const updatedUsers = [...registeredUsers];
-    updatedUsers[userIndex] = {
-        ...updatedUsers[userIndex],
-        password: passwordValues.password,
-    };
-
-    saveRegisteredUsers(updatedUsers);
-    clearPasswordResetStorage();
-
-    return {
-        ok: true,
-        fieldErrors,
-        globalError: "",
-    };
 }

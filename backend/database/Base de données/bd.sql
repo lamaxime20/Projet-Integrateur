@@ -341,3 +341,23 @@ CREATE TABLE reset_password_codes (
   CONSTRAINT reset_password_fk001 FOREIGN KEY (user_id)
     REFERENCES utilisateurs(id)
 );
+
+
+CREATE TABLE verification_codes (
+  id dom_uuid NOT NULL DEFAULT uuid_generate_v4(),
+  email dom_email NOT NULL,
+  code dom_string NOT NULL,
+  created_at dom_timestamp NOT NULL,
+  expired_at dom_timestamp NOT NULL,
+  is_used dom_bool NOT NULL DEFAULT FALSE,
+
+  CONSTRAINT verification_codes_pk001 PRIMARY KEY (id),
+
+  CONSTRAINT verification_codes_expiration_check
+    CHECK (expired_at <= created_at + INTERVAL '15 minutes'),
+
+  CONSTRAINT verification_codes_fk001 FOREIGN KEY (email)
+    REFERENCES utilisateurs(email)
+);
+
+--

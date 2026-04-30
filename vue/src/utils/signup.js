@@ -1,25 +1,7 @@
+import API_BASE_URL from './config.js';
+
 const SIGNUP_DRAFT_KEY = "agrico-tech-signup-draft";
 const SIGNUP_VERIFICATION_KEY = "agrico-tech-signup-verification";
-const REGISTERED_USERS_KEY = "agrico-tech-registered-users";
-const VERIFICATION_DURATION_MS = 5 * 60 * 1000;
-
-function wait(duration) {
-    return new Promise((resolve) => {
-        window.setTimeout(resolve, duration);
-    });
-}
-
-function generateVerificationCode() {
-    return "999999";
-}
-
-function generateUserId() {
-    if (window.crypto?.randomUUID) {
-        return window.crypto.randomUUID();
-    }
-
-    return `user-${Date.now()}`;
-}
 
 function sanitizeIdentityDraft(draft) {
     return {
@@ -48,14 +30,6 @@ function getStorageValue(key) {
         window.localStorage.removeItem(key);
         return null;
     }
-}
-
-function getRegisteredUsers() {
-    return getStorageValue(REGISTERED_USERS_KEY) ?? [];
-}
-
-function saveRegisteredUsers(users) {
-    setStorageValue(REGISTERED_USERS_KEY, users);
 }
 
 export function loadSignupDraft() {
@@ -208,56 +182,53 @@ export async function submitSignupIdentity(values) {
         };
     }
 
-    const existingVerification = getStoredVerification();
+    try {
+        const response = await fetch(`${API_BASE_URL}/signup/check-email`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(trimmedValues),
+        });
 
-    if (
-        existingVerification
-        && existingVerification.email === trimmedValues.email
-        && !isVerificationExpired(existingVerification.expiresAt)
-    ) {
+        if (!response.ok) {
+            const error = await response.json();
+            return {
+                ok: false,
+                fieldErrors: {
+                    ...fieldErrors,
+                    email: error.error || "Erreur lors de l'envoi du code",
+                },
+                globalError: "",
+                verification: null,
+                reused: false,
+            };
+        }
+
+        const verification = {
+            email: trimmedValues.email,
+            expiresAt: Date.now() + 15 * 60 * 1000, // 15 min
+            isVerified: false,
+        };
+
+        setStorageValue(SIGNUP_VERIFICATION_KEY, verification);
+
         return {
             ok: true,
             fieldErrors,
             globalError: "",
-            verification: existingVerification,
-            reused: true,
+            verification,
+            reused: false,
         };
-    }
-
-    await wait(700);
-
-    const registeredUsers = getRegisteredUsers();
-    const isEmailAlreadyUsed = registeredUsers.some((user) => user.email === trimmedValues.email);
-
-    if (isEmailAlreadyUsed) {
+    } catch (error) {
         return {
             ok: false,
-            fieldErrors: {
-                ...fieldErrors,
-                email: "Cet email est déjà utilisé.",
-            },
-            globalError: "",
+            fieldErrors,
+            globalError: "Erreur réseau. Réessaie.",
             verification: null,
             reused: false,
         };
     }
-
-    const verification = {
-        email: trimmedValues.email,
-        code: generateVerificationCode(),
-        expiresAt: Date.now() + VERIFICATION_DURATION_MS,
-        isVerified: false,
-    };
-
-    setStorageValue(SIGNUP_VERIFICATION_KEY, verification);
-
-    return {
-        ok: true,
-        fieldErrors,
-        globalError: "",
-        verification,
-        reused: false,
-    };
 }
 
 export async function verifySignupCode(codeDigits) {
@@ -290,28 +261,46 @@ export async function verifySignupCode(codeDigits) {
         };
     }
 
-    await wait(450);
+    try {
+        const response = await fetch(`${API_BASE_URL}/signup/verify-code`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: verification.email,
+                code,
+            }),
+        });
 
-    if (verification.code !== code) {
+        if (!response.ok) {
+            const error = await response.json();
+            return {
+                ok: false,
+                globalError: error.error || "Code incorrect",
+                verification,
+            };
+        }
+
+        const verifiedSession = {
+            ...verification,
+            isVerified: true,
+        };
+
+        setStorageValue(SIGNUP_VERIFICATION_KEY, verifiedSession);
+
+        return {
+            ok: true,
+            globalError: "",
+            verification: verifiedSession,
+        };
+    } catch (error) {
         return {
             ok: false,
-            globalError: "Le code est incorrect.",
+            globalError: "Erreur réseau. Réessaie.",
             verification,
         };
     }
-
-    const verifiedSession = {
-        ...verification,
-        isVerified: true,
-    };
-
-    setStorageValue(SIGNUP_VERIFICATION_KEY, verifiedSession);
-
-    return {
-        ok: true,
-        globalError: "",
-        verification: verifiedSession,
-    };
 }
 
 export async function completeSignup(passwordValues) {
@@ -340,42 +329,49 @@ export async function completeSignup(passwordValues) {
         };
     }
 
-    await wait(700);
+    try {
+        const response = await fetch(`${API_BASE_URL}/signup/create`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: draft.email,
+                nom: draft.nom,
+                prenom: draft.prenom,
+                password: passwordValues.password,
+                password_confirmation: passwordValues.confirmPassword,
+            }),
+            credentials: 'include',
+        });
 
-    const registeredUsers = getRegisteredUsers();
-    const isEmailAlreadyUsed = registeredUsers.some((user) => user.email === draft.email);
+        if (!response.ok) {
+            const error = await response.json();
+            return {
+                ok: false,
+                fieldErrors,
+                globalError: error.error || "Erreur lors de la création du compte",
+                credentials: null,
+            };
+        }
 
-    if (isEmailAlreadyUsed) {
+        clearSignupStorage();
+
+        return {
+            ok: true,
+            fieldErrors,
+            globalError: "",
+            credentials: {
+                email: draft.email,
+                password: passwordValues.password,
+            },
+        };
+    } catch (error) {
         return {
             ok: false,
             fieldErrors,
-            globalError: "Cet email est déjà utilisé.",
+            globalError: "Erreur réseau. Réessaie.",
             credentials: null,
         };
     }
-
-    const createdUser = {
-        id: generateUserId(),
-        email: draft.email,
-        name: `${draft.prenom} ${draft.nom}`.trim(),
-        nom: draft.nom,
-        prenom: draft.prenom,
-        password: passwordValues.password,
-        role: "user",
-        status: "actif",
-        jour_expiration: 7,
-    };
-
-    saveRegisteredUsers([...registeredUsers, createdUser]);
-    clearSignupStorage();
-
-    return {
-        ok: true,
-        fieldErrors,
-        globalError: "",
-        credentials: {
-            email: createdUser.email,
-            password: passwordValues.password,
-        },
-    };
 }
