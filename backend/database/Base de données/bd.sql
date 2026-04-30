@@ -310,6 +310,8 @@ CREATE TABLE sessions (
   role dom_role NOT NULL,
   created_at dom_timestamp NOT NULL,
   expires_at dom_timestamp NOT NULL,
+  last_used_at dom_timestamp NOT NULL,
+  updated_at dom_timestamp NOT NULL,
   is_revoked dom_bool NOT NULL DEFAULT FALSE,
 
   CONSTRAINT sessions_pk001 PRIMARY KEY (id),
