@@ -6,6 +6,7 @@ import Login from "./pages/login";
 import Principale from "./pages/principale";
 import Signup from "./pages/signup";
 import VerificationPassword from "./pages/verificationPassword";
+import Microcontroleur from "./pages/microcontroleur";
 import "./App.css";
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
                     <Route path="/verification-password" element={<VerificationPassword />} />
                     <Route element={<ProtectedRoute />}>
                         <Route path="/application" element={<Application />} />
+                        <Route path="/microcontroleur" element={<Microcontroleur />} />
                     </Route>
                 </Routes>
             </AuthProvider>

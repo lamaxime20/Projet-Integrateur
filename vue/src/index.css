@@ -34,9 +34,14 @@
   --shadow-soft: 0 18px 40px rgba(8, 24, 11, 0.18);
 
   --container-sm: 40rem;
+  --container-md: 52rem;
   --container-lg: 76rem;
+  --container-xl: 90rem;
   --hero-copy-max: 36rem;
   --button-height: 3rem;
+  --section-gap: clamp(1.5rem, 3vw, 3rem);
+  --surface-quiet: rgba(255, 255, 255, 0.58);
+  --surface-tech: rgba(2, 136, 209, 0.06);
 }
 
 * {

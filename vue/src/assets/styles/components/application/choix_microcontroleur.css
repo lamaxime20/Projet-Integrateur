@@ -1,0 +1,165 @@
+.choix_microcontroleur-root {
+    width: min(100%, var(--container-lg));
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
+    padding: var(--space-lg) 0;
+}
+
+.choix_microcontroleur-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.choix_microcontroleur-kicker {
+    margin: 0;
+    color: var(--secondary-color);
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.choix_microcontroleur-header h1 {
+    margin: 0;
+    font-family: var(--typography-title);
+    font-size: clamp(2rem, 6vw, 3.2rem);
+    line-height: 1.04;
+    text-wrap: balance;
+}
+
+.choix_microcontroleur-header p,
+.choix_microcontroleur-footer p {
+    margin: 0;
+    max-width: 42rem;
+    color: rgba(20, 32, 19, 0.74);
+    line-height: 1.65;
+}
+
+.choix_microcontroleur-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.choix_microcontroleur-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-md);
+    width: 100%;
+    min-height: 4.25rem;
+    padding: 0 var(--space-md);
+    border: none;
+    border-radius: 999px;
+    background-color: var(--surface-quiet);
+    color: var(--text-color);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.92),
+        0 10px 22px rgba(20, 32, 19, 0.06);
+    transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+}
+
+.choix_microcontroleur-item:hover:not(:disabled),
+.choix_microcontroleur-item:focus-visible:not(:disabled) {
+    transform: translateY(-1px);
+    background-color: rgba(255, 255, 255, 0.86);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.96),
+        0 14px 26px rgba(20, 32, 19, 0.08);
+    outline: none;
+}
+
+.choix_microcontroleur-item:disabled {
+    opacity: 0.72;
+    cursor: progress;
+}
+
+.choix_microcontroleur-item-name {
+    font-weight: 700;
+}
+
+.choix_microcontroleur-item-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    color: rgba(20, 32, 19, 0.68);
+    font-size: 0.92rem;
+}
+
+.choix-microcontroleur-point {
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 999px;
+    flex-shrink: 0;
+}
+
+.choix-microcontroleur-point.vert {
+    background-color: var(--secondary-color);
+}
+
+.choix-microcontroleur-point.rouge {
+    background-color: var(--alertes-critique);
+}
+
+.choix_microcontroleur-empty,
+.choix_microcontroleur-footer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.choix_microcontroleur-root:has(.choix_microcontroleur-empty) {
+    min-height: calc(100vh - (var(--space-lg) * 2));
+    justify-content: center;
+}
+
+.choix_microcontroleur-root:has(.choix_microcontroleur-empty) .choix_microcontroleur-header,
+.choix_microcontroleur-root:has(.choix_microcontroleur-empty) .choix_microcontroleur-empty {
+    align-items: center;
+    text-align: center;
+}
+
+.choix_microcontroleur-empty button,
+.choix_microcontroleur-secondary {
+    width: fit-content;
+    min-height: 3.2rem;
+    padding: 0 var(--space-lg);
+    border: none;
+    border-radius: 999px;
+    background: linear-gradient(145deg, #2e7d32 0%, #1f5a23 100%);
+    color: var(--text-color-inverse);
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 16px 28px rgba(46, 125, 50, 0.18);
+}
+
+.choix_microcontroleur-secondary {
+    background: rgba(2, 136, 209, 0.1);
+    color: var(--accent-color);
+    box-shadow: none;
+}
+
+.choix_microcontroleur-empty button:hover,
+.choix_microcontroleur-empty button:focus-visible,
+.choix_microcontroleur-secondary:hover,
+.choix_microcontroleur-secondary:focus-visible {
+    transform: translateY(-1px);
+    outline: none;
+}
+
+@media (min-width: 48rem) {
+    .choix_microcontroleur-root {
+        padding: var(--space-2xl) 0;
+    }
+
+    .choix_microcontroleur-root:has(.choix_microcontroleur-empty) {
+        min-height: calc(100vh - (var(--space-2xl) * 2));
+    }
+}
