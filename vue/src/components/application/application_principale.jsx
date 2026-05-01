@@ -1,5 +1,6 @@
 import Sidebar from "./sidebar";
 import { DASHBOARD, ACTIONNEUR, SEUIL, STATISTIQUE, NOTIFICATION } from "./sidebar-constants";
+import '../../assets/styles/components/application/application_principale.css'
 
 function Application_pricipale({onglet = DASHBOARD}) {
     return (

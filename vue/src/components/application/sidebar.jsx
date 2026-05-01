@@ -1,13 +1,40 @@
+import { Link } from "react-router-dom";
+import { useState } from "react";
 import { charger_microcontroleur_local } from "../../utils/microcontroleur";
 import { changer_microcontroleur_user } from "../../utils/microcontroleur";
 import { logoutFromDatabase } from "../../utils/user";
 import { DASHBOARD, ACTIONNEUR, SEUIL, STATISTIQUE, NOTIFICATION } from "./sidebar-constants";
+import '../../assets/styles/components/application/sidebar.css'
 
 function Sidebar({ongletActif}) {
     const microcontroleur = charger_microcontroleur_local();
+    const [sidebarEpinglee, setSidebarEpinglee] = useState(false);
+    const basculerSidebarEpinglee = (event) => {
+        setSidebarEpinglee((epinglee) => !epinglee);
+        event.currentTarget.blur();
+    };
+    const onglets = [
+        { id: DASHBOARD, label: "Dashboard", href: "/application/dashboard", icon: "dashboard" },
+        { id: ACTIONNEUR, label: "Actionneur", href: "/application/actionneur", icon: "toggle_on" },
+        { id: SEUIL, label: "Seuil", href: "/application/seuil", icon: "tune" },
+        { id: STATISTIQUE, label: "Statistique", href: "/application/statistique", icon: "monitoring" },
+        { id: NOTIFICATION, label: "Notification", href: "/application/notification", icon: "notifications" },
+    ];
+
     return (
-        <nav className="sidebar-root">
+        <nav className={`sidebar-root ${sidebarEpinglee ? "is-pinned" : ""}`} aria-label="Navigation de l'application">
             <section className="sidebar-ongletClassique">
+                <button
+                    type="button"
+                    className="sidebar-toggle"
+                    onClick={basculerSidebarEpinglee}
+                    aria-label={sidebarEpinglee ? "Réduire la barre latérale" : "Épingler la barre latérale"}
+                    aria-pressed={sidebarEpinglee}
+                >
+                    <span className="material-symbols-outlined" aria-hidden="true">
+                        {sidebarEpinglee ? "left_panel_close" : "left_panel_open"}
+                    </span>
+                </button>
                 <div className="sidebar-header">
                     <h1>{microcontroleur.nom}</h1>
                     <div className="sidebar-connecte">
@@ -22,21 +49,14 @@ function Sidebar({ongletActif}) {
                     </button>
                 </div>
                 <ul className="sidebar-menu">
-                    <li className={ongletActif === DASHBOARD ? "is-active" : ""}>
-                        <a href="application/dashboard">Dashboard</a>
-                    </li>
-                    <li className={ongletActif === ACTIONNEUR ? "is-active" : ""}>
-                        <a href="application/actionneur">Actionneur</a>
-                    </li>
-                    <li className={ongletActif === SEUIL ? "is-active" : ""}>
-                        <a href="application/seuil">Seuil</a>
-                    </li>
-                    <li className={ongletActif === STATISTIQUE ? "is-active" : ""}>
-                        <a href="application/statistique">Statistique</a>
-                    </li>
-                    <li className={ongletActif === STATISTIQUE ? "is-active" : ""}>
-                        <a href="application/parametre">Paramètres</a>
-                    </li>
+                    {onglets.map((onglet) => (
+                        <li className={ongletActif === onglet.id ? "is-active" : ""} key={onglet.id}>
+                            <Link to={onglet.href} aria-current={ongletActif === onglet.id ? "page" : undefined}>
+                                <span className="material-symbols-outlined sidebar-icon" aria-hidden="true">{onglet.icon}</span>
+                                <span className="sidebar-label">{onglet.label}</span>
+                            </Link>
+                        </li>
+                    ))}
                 </ul>
             </section>
             <section className="sidebar-otherPages">
@@ -45,19 +65,22 @@ function Sidebar({ongletActif}) {
                     href="/help"
                 >
                     <span className="material-symbols-outlined" aria-hidden="true">help</span>
-                    Aide
+                    <span className="sidebar-label">Aide</span>
                 </a>
                 <a
                     className="sidebar-otherPages-settings"
                     href="/settings"
                 >
-                    Parametres
+                    <span className="material-symbols-outlined" aria-hidden="true">settings</span>
+                    <span className="sidebar-label">Paramètres</span>
                 </a>
                 <button
+                    type="button"
                     className="sidebar-otherPages-logout"
                     onClick={() => logoutFromDatabase()}
                 >
-                    Deconnexion
+                    <span className="material-symbols-outlined" aria-hidden="true">logout</span>
+                    <span className="sidebar-label">Déconnexion</span>
                 </button>
             </section>
         </nav>

@@ -20,7 +20,7 @@ function App() {
                     <Route path="/signup" element={<Signup />} />
                     <Route path="/verification-password" element={<VerificationPassword />} />
                     <Route element={<ProtectedRoute />}>
-                        <Route path="/application" element={<Application onglet="none"/>} />
+                        <Route path="/application" element={<Application onglet={DASHBOARD}/>} />
                         <Route path="/microcontroleur" element={<Microcontroleur />} />
                         <Route path="/application/dashboard" element={<Application onglet={DASHBOARD} />} />
                         <Route path="/application/actionneur" element={<Application onglet={ACTIONNEUR} />} />

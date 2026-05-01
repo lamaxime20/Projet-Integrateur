@@ -1,6 +1,7 @@
 .application-root {
     min-height: 100vh;
-    padding: var(--space-lg);
+    padding: 0;
+    margin: 0;
     background:
         radial-gradient(circle at top left, rgba(46, 125, 50, 0.08), transparent 24%),
         radial-gradient(circle at bottom right, rgba(2, 136, 209, 0.06), transparent 26%),
@@ -192,7 +193,8 @@
 
 @media (min-width: 48rem) {
     .application-root {
-        padding: var(--space-2xl);
+        padding: 0;
+        margin: 0;
     }
 
     .application-hero {
