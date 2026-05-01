@@ -3,7 +3,7 @@ import { useState } from "react";
 import { charger_microcontroleur_local } from "../../utils/microcontroleur";
 import { changer_microcontroleur_user } from "../../utils/microcontroleur";
 import { logoutFromDatabase } from "../../utils/user";
-import { DASHBOARD, ACTIONNEUR, SEUIL, STATISTIQUE, NOTIFICATION } from "./sidebar-constants";
+import { DASHBOARD, ACTIONNEUR, SEUIL, STATISTIQUE, NOTIFICATION } from "../../utils/sidebar-constants";
 import '../../assets/styles/components/application/sidebar.css'
 
 function Sidebar({ongletActif}) {
@@ -89,4 +89,4 @@ function Sidebar({ongletActif}) {
 
 export default Sidebar;
 
-export { DASHBOARD, ACTIONNEUR, SEUIL, STATISTIQUE, NOTIFICATION } from "./sidebar-constants";
+export { DASHBOARD, ACTIONNEUR, SEUIL, STATISTIQUE, NOTIFICATION } from "../../utils/sidebar-constants";
