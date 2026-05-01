@@ -46,4 +46,10 @@
         margin-left: 4.75rem;
         padding: clamp(2rem, 5vw, 4rem);
     }
+
+    .sidebar-root:hover + .application_principale-content,
+    .sidebar-root:focus-within + .application_principale-content,
+    .sidebar-root.is-pinned + .application_principale-content {
+        margin-left: 18.5rem;
+    }
 }
