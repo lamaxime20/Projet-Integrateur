@@ -34,7 +34,7 @@ function Choix_microcontroleur() {
         setIsLoading(false);
 
         if (success) {
-            navigate("/application", { replace: true });
+            window.location.href = "/application";
         }else {
             setErreur("Erreur réseau, réessaie plus tard.");
         }

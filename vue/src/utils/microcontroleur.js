@@ -106,3 +106,8 @@ export async function charger_microcontroleur_user(nom_microcontroleur) {
 
     return result.success;
 }
+
+export function changer_microcontroleur_user() {
+    supprimer_microcontroleur_local();
+    window.location.reload();
+}
