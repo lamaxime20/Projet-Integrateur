@@ -19,8 +19,6 @@ return new class extends Migration
             $table->timestamp('created_at');
             $table->timestamp('expired_at');
             $table->boolean('is_used')->default(false);
-
-            $table->foreign('email')->references('email')->on('utilisateurs');
         });
 
         DB::statement("ALTER TABLE verification_codes ADD CONSTRAINT verification_codes_expiration_check CHECK (expired_at <= created_at + INTERVAL '15 minutes')");
