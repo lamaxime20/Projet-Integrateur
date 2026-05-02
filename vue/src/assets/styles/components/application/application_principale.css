@@ -21,26 +21,6 @@
     transition: margin-left 220ms ease;
 }
 
-.application_principale-content h1 {
-    margin: 0;
-    max-width: 52rem;
-    color: var(--secondary-color-dark);
-    font-family: var(--typography-title);
-    font-size: clamp(1.9rem, 7vw, 3.4rem);
-    line-height: 1.04;
-    text-wrap: balance;
-}
-
-.application_principale-content h1::after {
-    content: "";
-    display: block;
-    width: min(8rem, 32vw);
-    height: 0.28rem;
-    margin-top: var(--space-sm);
-    border-radius: 999px;
-    background: linear-gradient(90deg, var(--secondary-color) 0 72%, var(--accent-color) 72% 100%);
-}
-
 @media (min-width: 48rem) {
     .application_principale-content {
         margin-left: 4.75rem;
