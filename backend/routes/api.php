@@ -5,6 +5,7 @@ use App\Http\Controllers\DeviceController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SignupController;
 use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\MicrocontroleurController;
 
 Route::post('/device/token', [DeviceController::class, 'getToken']);
 
@@ -25,3 +26,10 @@ Route::post('/signup/create', [SignupController::class, 'createAccount']);
 Route::post('/password-reset/check-email', [PasswordResetController::class, 'checkEmail']);
 Route::post('/password-reset/verify-code', [PasswordResetController::class, 'verifyCode']);
 Route::post('/password-reset/change', [PasswordResetController::class, 'changePassword']);
+
+// Microcontroleur routes (cookie auth required)
+Route::middleware('cookie.user')->group(function () {
+    Route::post('/microcontroleurs', [MicrocontroleurController::class, 'enregistrer']);
+    Route::get('/microcontroleurs', [MicrocontroleurController::class, 'liste']);
+    Route::get('/microcontroleurs/{nom}', [MicrocontroleurController::class, 'charger']);
+});
