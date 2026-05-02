@@ -1,0 +1,244 @@
+.pompeDetails-root {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1.25rem, 3vw, 2.25rem);
+    width: min(100%, var(--container-lg));
+    min-height: 100dvh;
+    margin: 0 auto;
+    color: var(--text-color);
+}
+
+.pompeDetails-header,
+.pompeDetails-content,
+.pompeDetails-state-graph {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.pompeDetails-header {
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.pompeDetails-titre {
+    width: 100%;
+    margin-top: 2rem;
+    color: var(--secondary-color-dark);
+    font-family: var(--typography-title);
+    font-size: clamp(1.9rem, 7vw, 3.4rem);
+    line-height: 1.04;
+    text-align: center;
+}
+
+.pompeDetails-titre::after {
+    display: none;
+}
+
+.pompeDetails-retour {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    min-height: 2.65rem;
+    padding: 0 var(--space-md);
+    margin-right: auto;
+    border: none;
+    border-radius: 999px;
+    background-color: rgba(46, 125, 50, 0.1);
+    color: var(--secondary-color-dark);
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.pompeDetails-content {
+    align-items: center;
+    gap: clamp(1.35rem, 4vw, 2.5rem);
+}
+
+.pompeDetails-state-graph {
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.pompeDetails-state-graph a {
+    margin-left: auto;
+    color: var(--accent-color);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.pompeDetails-graph {
+    display: flex;
+    width: 100%;
+    min-height: 18rem;
+    padding: var(--space-md) 0 0;
+    border-radius: var(--radius-md);
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.55), rgba(249, 250, 251, 0.22)),
+        linear-gradient(90deg, rgba(46, 125, 50, 0.08), rgba(2, 136, 209, 0.04));
+}
+
+.pompeDetails-legende {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+    gap: var(--space-xs);
+}
+
+.pompeDetails-item-legende {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.pompeDetails-item-legende p {
+    margin: 0;
+    color: rgba(20, 32, 19, 0.7);
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.pompeDetails-point {
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 999px;
+}
+
+.pompeDetails-point.vert {
+    background-color: var(--secondary-color);
+    box-shadow: 0 0 0 0.28rem rgba(46, 125, 50, 0.12);
+}
+
+.pompeDetails-point.orange {
+    background-color: var(--alertes-moyen);
+    box-shadow: 0 0 0 0.28rem rgba(251, 192, 45, 0.14);
+}
+
+.pompeDetails-point.rouge {
+    background-color: var(--alertes-critique);
+    box-shadow: 0 0 0 0.28rem rgba(211, 47, 47, 0.12);
+}
+
+.pompeDetails-other {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    gap: clamp(1rem, 4vw, 2rem);
+}
+
+.pompeDetails-instruction,
+.pompeDetails-mesures {
+    display: flex;
+    flex: 1 1 0;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+}
+
+.pompeDetails-instruction {
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.pompeDetails-instruction p {
+    margin: 0;
+    color: rgba(20, 32, 19, 0.76);
+    font-weight: 700;
+    line-height: 1.45;
+    text-align: center;
+}
+
+.pompeDetails-instruction button {
+    min-height: 2.75rem;
+    padding: 0 var(--space-lg);
+    border: none;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--secondary-color), var(--secondary-color-dark));
+    color: var(--text-color-inverse);
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.pompeDetails-instruction button:disabled {
+    background: rgba(211, 47, 47, 0.14);
+    color: var(--alertes-critique);
+    cursor: not-allowed;
+}
+
+.pompeDetails-other hr {
+    align-self: stretch;
+    width: 0.18rem;
+    min-height: 8rem;
+    margin: 0;
+    border: 0;
+    border-radius: 999px;
+    background: linear-gradient(180deg, transparent, rgba(46, 125, 50, 0.3), rgba(2, 136, 209, 0.18), transparent);
+}
+
+.pompeDetails-mesures {
+    gap: var(--space-md);
+}
+
+.pompeDetails-humidite,
+.pompeDetails-reservoir {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: clamp(6.6rem, 27vw, 9rem);
+    aspect-ratio: 0.82;
+    overflow: hidden;
+    border-radius: 999px;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(249, 250, 251, 0.58)),
+        linear-gradient(180deg, rgba(46, 125, 50, 0.14), rgba(2, 136, 209, 0.08));
+    text-align: center;
+}
+
+.pompeDetails-humidite strong,
+.pompeDetails-reservoir strong {
+    z-index: 1;
+    color: var(--secondary-color-dark);
+    font-family: var(--typography-title);
+    font-size: clamp(1.5rem, 6vw, 2.15rem);
+    line-height: 1;
+}
+
+.pompeDetails-mesure-label,
+.pompeDetails-humidite span:last-child,
+.pompeDetails-reservoir span:last-child {
+    z-index: 1;
+    color: rgba(20, 32, 19, 0.68);
+    font-size: 0.76rem;
+    font-weight: 700;
+}
+
+.pompeDetails-reservoir-eau {
+    position: absolute;
+    inset: auto 0 0;
+    z-index: 0;
+    background: linear-gradient(180deg, rgba(2, 136, 209, 0.18), rgba(2, 136, 209, 0.28));
+}
+
+.humidite-orange strong,
+.niveau-orange strong {
+    color: #7d5b00;
+}
+
+.humidite-rouge strong,
+.niveau-rouge strong {
+    color: var(--alertes-critique);
+}
+
+@media (min-width: 38rem) {
+    .pompeDetails-legende {
+        grid-template-columns: repeat(3, max-content);
+        justify-content: center;
+        gap: var(--space-lg);
+    }
+}

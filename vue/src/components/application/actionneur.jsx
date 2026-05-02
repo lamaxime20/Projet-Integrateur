@@ -1,5 +1,8 @@
 import { useState } from "react";
 import VentilateurDetails from "./actionneur/ventilateurDetails";
+import PompeDetails from "./actionneur/pompeDetails";
+import AmpouleDetails from "./actionneur/ampouleDetails";
+import ServoMoteurDetails from "./actionneur/servoMoteurDetails";
 import {
     enregistrer_actionneur_choisi,
     charger_actionneur_choisi,
@@ -52,56 +55,25 @@ function Actionneur() {
 
     if(actionneurChoisi === POMPE) {
         return (
-            <div className="actionneur-root">
-                <button
-                    className="actionneur-retour"
-                    onClick={() => {
-                        setActionneurChoisi(AUCUN);
-                        enregistrer_actionneur_choisi(AUCUN)
-                    }}
-                >
-                    Retour
-                </button>
-                <h1>Pompe choisi</h1>
-            </div>
+            <PompeDetails
+                retourner={() => choisirActionneur(AUCUN)}
+            />
         )
     }
 
     if(actionneurChoisi === AMPOULE) {
         return (
-            <div className="actionneur-root">
-                <button
-                    className="actionneur-retour"
-                    onClick={() => {
-                        setActionneurChoisi(AUCUN);
-                        enregistrer_actionneur_choisi(AUCUN)
-                    }}
-                >
-                    Retour
-                </button>
-                <h1>
-                    Ampoule choisi
-                </h1>
-            </div>
+            <AmpouleDetails
+                retourner={() => choisirActionneur(AUCUN)}
+            />
         )
     }
 
     if(actionneurChoisi === SERVO_MOTEUR) {
         return (
-            <div className="actionneur-root">
-                <button
-                    className="actionneur-retour"
-                    onClick={() => {
-                        setActionneurChoisi(AUCUN);
-                        enregistrer_actionneur_choisi(AUCUN)
-                    }}
-                >
-                    Retour
-                </button>
-                <h1>
-                    Porte choisi
-                </h1>
-            </div>
+            <ServoMoteurDetails
+                retourner={() => choisirActionneur(AUCUN)}
+            />
         )
     }
 
