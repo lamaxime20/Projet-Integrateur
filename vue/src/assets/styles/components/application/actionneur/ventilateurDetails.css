@@ -1,8 +1,6 @@
 .ventilateurDetails-root {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
     gap: clamp(1.25rem, 3vw, 2.25rem);
     width: min(100%, var(--container-lg));
     min-height: 100dvh;
@@ -22,8 +20,8 @@
     gap: var(--space-sm);
 }
 
-.ventilateurDetails-header h1 {
-    margin: 0;
+.ventilateurDetails-titre {
+    margin-top: 2rem;
     color: var(--secondary-color-dark);
     font-family: var(--typography-title);
     font-size: clamp(1.9rem, 7vw, 3.4rem);
@@ -31,6 +29,10 @@
     text-wrap: balance;
     text-align: center;
     width: 100%;
+}
+
+.ventilateurDetails-titre::after {
+    display: none;
 }
 
 .ventilateurDetails-retour {

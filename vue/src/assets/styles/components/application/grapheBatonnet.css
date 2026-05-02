@@ -54,25 +54,25 @@
 
 .grapheBatonnet-bar {
     display: block;
-    width: 0.72rem;
+    width: 1rem;
     min-height: 0.2rem;
     border-radius: 999px 999px 0.35rem 0.35rem;
     transition: height 220ms ease, filter 160ms ease;
 }
 
 .grapheBatonnet-bar-running {
-    background: linear-gradient(180deg, #4fa956, var(--secondary-color));
-    box-shadow: 0 0 18px rgba(46, 125, 50, 0.2);
+    background: linear-gradient(180deg, rgba(96, 154, 101, 0.86), rgba(46, 125, 50, 0.78));
+    box-shadow: 0 0 14px rgba(46, 125, 50, 0.12);
 }
 
 .grapheBatonnet-bar-stopped {
-    background: linear-gradient(180deg, #ffd45a, var(--alertes-moyen));
-    box-shadow: 0 0 18px rgba(251, 192, 45, 0.18);
+    background: linear-gradient(180deg, rgba(232, 194, 95, 0.86), rgba(193, 139, 35, 0.76));
+    box-shadow: 0 0 14px rgba(193, 139, 35, 0.12);
 }
 
 .grapheBatonnet-bar-defaillant {
-    background: linear-gradient(180deg, #f06c62, var(--alertes-critique));
-    box-shadow: 0 0 18px rgba(211, 47, 47, 0.18);
+    background: linear-gradient(180deg, rgba(214, 112, 105, 0.86), rgba(177, 66, 60, 0.78));
+    box-shadow: 0 0 14px rgba(177, 66, 60, 0.12);
 }
 
 .grapheBatonnet-bar:hover {

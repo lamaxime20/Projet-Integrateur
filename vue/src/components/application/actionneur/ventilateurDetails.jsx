@@ -40,7 +40,7 @@ function VentilateurDetails({retourner}) {
                     <span className="material-symbols-outlined" aria-hidden="true">arrow_back</span>
                     Retour
                 </button>
-                <h1>Ventilateur</h1>
+                <h1 className="ventilateurDetails-titre">Ventilateur</h1>
             </header>
             <div className="ventilateurDetails-content">
                 <section className="ventilateurDetails-state-graph">

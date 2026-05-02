@@ -108,7 +108,7 @@ function Actionneur() {
     return (
         <div className="actionneur-root">
             <header className="actionneur-header">
-                <h1>Actionneur</h1>
+                <h1 className="actionneur-titre">Actionneur</h1>
                 <p>
                     Regarde l’état de tes actionneurs et garde le contrôle sur la qualité de ta terre.
                 </p>

@@ -1,7 +1,7 @@
 # Graph Report - D:\Desktop\X2\Projet Integrateur  (2026-05-02)
 
 ## Corpus Check
-- 7936 files · ~4,128,972 words
+- 7936 files · ~4,128,037 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -18477,11 +18477,11 @@ Nodes (0):
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `get()` connect `Community 11` to `Community 0`, `Community 1`, `Community 2`, `Community 3`, `Community 4`, `Community 5`, `Community 6`, `Community 7`, `Community 8`, `Community 10`, `Community 12`, `Community 13`, `Community 14`, `Community 15`, `Community 16`, `Community 17`, `Community 18`, `Community 19`, `Community 21`, `Community 22`, `Community 23`, `Community 25`, `Community 26`, `Community 27`, `Community 29`, `Community 30`, `Community 31`, `Community 32`, `Community 33`, `Community 34`, `Community 35`, `Community 39`, `Community 42`, `Community 44`, `Community 45`, `Community 46`?**
-  _High betweenness centrality (0.038) - this node is a cross-community bridge._
-- **Why does `Builder` connect `Community 3` to `Community 0`, `Community 1`, `Community 4`, `Community 6`, `Community 12`, `Community 15`, `Community 16`, `Community 18`, `Community 19`, `Community 26`, `Community 29`?**
-  _High betweenness centrality (0.036) - this node is a cross-community bridge._
-- **Why does `Str` connect `Community 6` to `Community 0`, `Community 1`, `Community 2`, `Community 3`, `Community 4`, `Community 5`, `Community 7`, `Community 8`, `Community 11`, `Community 12`, `Community 13`, `Community 14`, `Community 15`, `Community 16`, `Community 17`, `Community 19`, `Community 22`, `Community 23`, `Community 24`, `Community 25`, `Community 26`, `Community 27`, `Community 28`, `Community 29`, `Community 30`, `Community 31`, `Community 32`, `Community 33`, `Community 34`, `Community 35`, `Community 42`, `Community 44`, `Community 46`, `Community 52`, `Community 53`?**
-  _High betweenness centrality (0.034) - this node is a cross-community bridge._
+  _High betweenness centrality (0.044) - this node is a cross-community bridge._
+- **Why does `all()` connect `Community 0` to `Community 1`, `Community 2`, `Community 3`, `Community 4`, `Community 5`, `Community 6`, `Community 8`, `Community 10`, `Community 11`, `Community 12`, `Community 13`, `Community 14`, `Community 16`, `Community 17`, `Community 18`, `Community 19`, `Community 21`, `Community 22`, `Community 25`, `Community 26`, `Community 27`, `Community 28`, `Community 29`, `Community 30`, `Community 31`, `Community 32`, `Community 35`, `Community 38`, `Community 42`, `Community 43`, `Community 44`, `Community 45`, `Community 52`, `Community 59`?**
+  _High betweenness centrality (0.023) - this node is a cross-community bridge._
+- **Why does `File` connect `Community 26` to `Community 0`, `Community 1`, `Community 2`, `Community 4`, `Community 6`, `Community 7`, `Community 8`, `Community 10`, `Community 12`, `Community 15`, `Community 17`, `Community 18`, `Community 19`, `Community 23`, `Community 24`, `Community 32`, `Community 34`, `Community 41`, `Community 43`?**
+  _High betweenness centrality (0.019) - this node is a cross-community bridge._
 - **Are the 455 inferred relationships involving `Str` (e.g. with `.login()` and `.createAccount()`) actually correct?**
   _`Str` has 455 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 501 inferred relationships involving `get()` (e.g. with `.test_the_application_returns_a_successful_response()` and `.ext()`) actually correct?**

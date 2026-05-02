@@ -15,12 +15,22 @@
     max-width: 46rem;
 }
 
-.actionneur-header h1 {
+.actionneur-titre {
     margin: 0;
     color: var(--secondary-color-dark);
     font-family: var(--typography-title);
     font-size: clamp(1.9rem, 7vw, 3.35rem);
     line-height: 1.04;
+}
+
+.actionneur-titre::after {
+    content: "";
+    display: block;
+    width: min(8rem, 32vw);
+    height: 0.28rem;
+    margin-top: var(--space-sm);
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--secondary-color) 0 72%, var(--accent-color) 72% 100%);
 }
 
 .actionneur-header p {
