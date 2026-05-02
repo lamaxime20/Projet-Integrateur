@@ -7,7 +7,7 @@ import {
     loginFromDatabase,
     logoutFromDatabase,
     restoreSessionFromDatabase,
-} from "../src/utils/user";
+} from "../utils/user";
 
 const AuthContext = createContext({
     isAuthenticated: false,
