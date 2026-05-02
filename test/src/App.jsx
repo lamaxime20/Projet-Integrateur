@@ -1,102 +1,120 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 function App() {
-  const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState("");
+  const [formData, setFormData] = useState({
+    nom: "",
+    mac_address: "",
+    identifiant: "",
+    reference: "",
+    passkey: "",
+  });
 
-  const API_BASE = "https://projet-integrateur-do3r.onrender.com/api";
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  // ===== RECUPERER LES MESSAGES =====
-  const fetchMessages = async () => {
-    try {
-      const res = await fetch(`${API_BASE}/messages`);
-      const data = await res.json();
-      setMessages(data.reverse()); // plus récent en haut
-    } catch (err) {
-      console.error(err);
-    }
+  // 🔹 Gestion des inputs
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
   };
 
-  // ===== ENVOYER MESSAGE =====
-  const sendMessage = async () => {
-    if (!newMessage) return;
+  // 🔹 Soumission du formulaire
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setMessage("");
 
     try {
-      await fetch(`${API_BASE}/send-message`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          device_id: "esp32_01",
-          message: newMessage,
-        }),
-      });
+      const response = await fetch(
+        "http://localhost:8000/api/microcontroleurs/create",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
-      setNewMessage("");
-    } catch (err) {
-      console.error(err);
+      const data = await response.json();
+
+      if (data.success) {
+        setMessage("✅ Microcontrôleur créé avec succès !");
+        setFormData({
+          nom: "",
+          mac_address: "",
+          identifiant: "",
+          reference: "",
+          passkey: "",
+        });
+      } else {
+        setMessage("❌ " + data.message);
+      }
+    } catch (error) {
+      setMessage("❌ Erreur serveur : " + error.message);
+    } finally {
+      setLoading(false);
     }
   };
-
-  // ===== AUTO REFRESH =====
-  useEffect(() => {
-    fetchMessages();
-
-    const interval = setInterval(() => {
-      fetchMessages();
-    }, 5000); // refresh toutes les 5s
-
-    return () => clearInterval(interval);
-  }, []);
 
   return (
-    <div style={{ padding: 20, fontFamily: "Arial" }}>
-      <h2>📡 Test ESP32 MQTT</h2>
+    <div style={{ padding: "20px", maxWidth: "500px", margin: "auto" }}>
+      <h2>Créer un microcontrôleur</h2>
 
-      {/* INPUT */}
-      <div style={{ marginBottom: 20 }}>
+      <form onSubmit={handleSubmit}>
         <input
           type="text"
-          placeholder="Nouveau message..."
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          style={{ padding: 10, width: "300px", marginRight: 10 }}
+          name="nom"
+          placeholder="Nom"
+          value={formData.nom}
+          onChange={handleChange}
+          required
         />
 
-        <button onClick={sendMessage} style={{ padding: 10 }}>
-          Envoyer
+        <input
+          type="text"
+          name="mac_address"
+          placeholder="Adresse MAC"
+          value={formData.mac_address}
+          onChange={handleChange}
+          required
+        />
+
+        <input
+          type="text"
+          name="identifiant"
+          placeholder="Identifiant utilisateur"
+          value={formData.identifiant}
+          onChange={handleChange}
+          required
+        />
+
+        <input
+          type="text"
+          name="reference"
+          placeholder="Référence"
+          value={formData.reference}
+          onChange={handleChange}
+          required
+        />
+
+        <input
+          type="text"
+          name="passkey"
+          placeholder="Passkey"
+          value={formData.passkey}
+          onChange={handleChange}
+          required
+        />
+
+        <button type="submit" disabled={loading}>
+          {loading ? "Envoi..." : "Créer"}
         </button>
-      </div>
+      </form>
 
-      {/* LISTE MESSAGES */}
-      <h3>📜 Messages reçus</h3>
-
-      <div
-        style={{
-          border: "1px solid #ccc",
-          padding: 10,
-          maxHeight: 300,
-          overflowY: "auto",
-        }}
-      >
-        {messages.length === 0 ? (
-          <p>Aucun message</p>
-        ) : (
-          messages.map((msg, index) => (
-            <div
-              key={index}
-              style={{
-                padding: 8,
-                borderBottom: "1px solid #eee",
-                fontSize: 14,
-              }}
-            >
-              {msg}
-            </div>
-          ))
-        )}
-      </div>
+      {message && <p style={{ marginTop: "15px" }}>{message}</p>}
     </div>
   );
 }
