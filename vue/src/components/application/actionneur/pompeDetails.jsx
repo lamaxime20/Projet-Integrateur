@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import GrapheBatonnet from "../grapheBatonnet";
+import InstructionModal from "./instructionModal";
 import {
     charger_etat_pompe,
     charger_historique_pompe,
@@ -8,6 +9,7 @@ import {
     charger_pompe_seuils,
     obtenir_classe_humidite_sol,
     obtenir_classe_niveau_reservoir,
+    creer_instruction_simule,
 } from "../../../utils/actionneur";
 import "../../../assets/styles/components/application/actionneur/pompeDetails.css";
 
@@ -22,6 +24,8 @@ function PompeDetails({ retourner }) {
         "niveau_reservoir_min": 20,
         "niveau_reservoir_moyen": 45,
     });
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalAction, setModalAction] = useState(null);
 
     useEffect(() => {
         charger_etat_pompe(setPompeState);
@@ -35,6 +39,29 @@ function PompeDetails({ retourner }) {
 
     const retour = () => {
         retourner();
+    };
+
+    const handleOpenModal = (action) => {
+        setModalAction(action);
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+        setModalAction(null);
+    };
+
+    const handleConfirmInstruction = (dureeMinutes) => {
+        const instruction = creer_instruction_simule("pompe", modalAction, dureeMinutes);
+        console.log("Instruction créée :", instruction);
+
+        if (modalAction === "allumer") {
+            setPompeState("running");
+        } else if (modalAction === "arreter") {
+            setPompeState("stopped");
+        }
+
+        handleCloseModal();
     };
 
     return (
@@ -85,40 +112,59 @@ function PompeDetails({ retourner }) {
                         {pompeState === "running" &&
                             <>
                                 <p>La pompe est en marche</p>
-                                <button type="button">Arrêter</button>
+                                <button
+                                    type="button"
+                                    onClick={() => handleOpenModal("arreter")}
+                                >
+                                    Arrêter
+                                </button>
                             </>
                         }
 
                         {pompeState === "stopped" &&
                             <>
                                 <p>La pompe est arrêtée</p>
-                                <button type="button">Démarrer</button>
+                                <button
+                                    type="button"
+                                    onClick={() => handleOpenModal("allumer")}
+                                >
+                                    Allumer
+                                </button>
                             </>
                         }
 
                         {pompeState === "defaillant" &&
                             <>
                                 <p>La pompe est défaillante</p>
-                                <button type="button" disabled={true}>Arrêter</button>
+                                <button type="button" disabled={true}>
+                                    Arrêter
+                                </button>
                             </>
                         }
                     </div>
                     <hr />
-                    <div className="pompeDetails-mesures">
-                        <div className={`pompeDetails-humidite ${obtenir_classe_humidite_sol(humiditeSol, seuils)}`}>
-                            <span className="pompeDetails-mesure-label">Sol</span>
+                    <div className="pompeDetails-other-mesure">
+                        <div className="pompeDetails-humidite">
+                            <span className={`pompeDetails-mesure-icon ${obtenir_classe_humidite_sol(humiditeSol, seuils)}`} aria-hidden="true"></span>
                             <strong>{humiditeSol}%</strong>
                             <span>Humidité</span>
                         </div>
-                        <div className={`pompeDetails-reservoir ${obtenir_classe_niveau_reservoir(niveauReservoir, seuils)}`}>
-                            <span className="pompeDetails-reservoir-eau" style={{ height: `${niveauReservoir}%` }}></span>
-                            <span className="pompeDetails-mesure-label">Réservoir</span>
+                        <div className="pompeDetails-reservoir">
+                            <span className={`pompeDetails-mesure-icon ${obtenir_classe_niveau_reservoir(niveauReservoir, seuils)}`} aria-hidden="true"></span>
                             <strong>{niveauReservoir}%</strong>
-                            <span>Niveau d’eau</span>
+                            <span>Réservoir</span>
                         </div>
                     </div>
                 </section>
             </div>
+
+            <InstructionModal
+                actionneur="pompe"
+                action={modalAction}
+                isOpen={isModalOpen}
+                onClose={handleCloseModal}
+                onConfirm={handleConfirmInstruction}
+            />
         </div>
     );
 }

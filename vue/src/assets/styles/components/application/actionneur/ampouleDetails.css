@@ -221,6 +221,12 @@
     line-height: 1;
 }
 
+@media (min-width: 62rem) {
+    .ampouleDetails-graph {
+        min-height: 20rem;
+    }
+}
+
 .ampouleDetails-item-luminosite span:last-child {
     color: rgba(20, 32, 19, 0.66);
     font-size: 0.82rem;

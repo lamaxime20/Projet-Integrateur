@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import GrapheBatonnet from "../grapheBatonnet";
+import InstructionModal from "./instructionModal";
 import {
     charger_etat_ampoule,
     charger_historique_ampoule,
     charger_luminosite_actuelle,
     charger_luminosite_seuils,
     obtenir_classe_luminosite,
+    creer_instruction_simule,
 } from "../../../utils/actionneur";
 import "../../../assets/styles/components/application/actionneur/ampouleDetails.css";
 
@@ -17,6 +19,8 @@ function AmpouleDetails({ retourner }) {
         "luminosite_min": 250,
         "luminosite_max": 900,
     });
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalAction, setModalAction] = useState(null);
 
     useEffect(() => {
         charger_etat_ampoule(setAmpouleState);
@@ -29,6 +33,29 @@ function AmpouleDetails({ retourner }) {
 
     const retour = () => {
         retourner();
+    };
+
+    const handleOpenModal = (action) => {
+        setModalAction(action);
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+        setModalAction(null);
+    };
+
+    const handleConfirmInstruction = (dureeMinutes) => {
+        const instruction = creer_instruction_simule("ampoule", modalAction, dureeMinutes);
+        console.log("Instruction créée :", instruction);
+
+        if (modalAction === "allumer") {
+            setAmpouleState("running");
+        } else if (modalAction === "arreter") {
+            setAmpouleState("stopped");
+        }
+
+        handleCloseModal();
     };
 
     return (
@@ -78,35 +105,58 @@ function AmpouleDetails({ retourner }) {
                     <div className="ampouleDetails-instruction">
                         {ampouleState === "running" &&
                             <>
-                                <p>L’ampoule est allumée</p>
-                                <button type="button">Éteindre</button>
+                                <p>L'ampoule est allumée</p>
+                                <button
+                                    type="button"
+                                    onClick={() => handleOpenModal("arreter")}
+                                >
+                                    Éteindre
+                                </button>
                             </>
                         }
 
                         {ampouleState === "stopped" &&
                             <>
-                                <p>L’ampoule est éteinte</p>
-                                <button type="button">Allumer</button>
+                                <p>L'ampoule est éteinte</p>
+                                <button
+                                    type="button"
+                                    onClick={() => handleOpenModal("allumer")}
+                                >
+                                    Allumer
+                                </button>
                             </>
                         }
 
                         {ampouleState === "defaillant" &&
                             <>
-                                <p>L’ampoule est défaillante</p>
-                                <button type="button" disabled={true}>Éteindre</button>
+                                <p>L'ampoule est défaillante</p>
+                                <button type="button" disabled={true}>
+                                    Éteindre
+                                </button>
                             </>
                         }
                     </div>
                     <hr />
                     <div className="ampouleDetails-luminosite">
-                        <div className={`ampouleDetails-item-luminosite ${obtenir_classe_luminosite(luminosite, seuils)}`}>
-                            <span className="material-symbols-outlined" aria-hidden="true">wb_sunny</span>
+                        <div className="ampouleDetails-item-luminosite">
+                            <span
+                                className={`ampouleDetails-mesure-icon ${obtenir_classe_luminosite(luminosite, seuils)}`}
+                                aria-hidden="true"
+                            ></span>
                             <strong>{luminosite}</strong>
                             <span>lux</span>
                         </div>
                     </div>
                 </section>
             </div>
+
+            <InstructionModal
+                actionneur="ampoule"
+                action={modalAction}
+                isOpen={isModalOpen}
+                onClose={handleCloseModal}
+                onConfirm={handleConfirmInstruction}
+            />
         </div>
     );
 }

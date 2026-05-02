@@ -236,3 +236,9 @@
         gap: var(--space-lg);
     }
 }
+
+@media (min-width: 62rem) {
+    .servoMoteurDetails-graph {
+        min-height: 20rem;
+    }
+}

@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import GrapheBatonnet from "../grapheBatonnet";
+import InstructionModal from "./instructionModal";
 import { charger_etat_ventilateur, charger_historique_ventilateur, charger_temperature_actuelle } from "../../../utils/actionneur";
 import { charger_temperature_seuils } from "../../../utils/actionneur";
-import { obtenir_classe_temperature } from "../../../utils/actionneur";
+import { obtenir_classe_temperature, creer_instruction_simule } from "../../../utils/actionneur";
 import '../../../assets/styles/components/application/actionneur/ventilateurDetails.css'
 
 function VentilateurDetails({retourner}) {
@@ -13,6 +14,8 @@ function VentilateurDetails({retourner}) {
         "temperature_min": 10,
         "temperature_max": 30,
     });
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalAction, setModalAction] = useState(null);
 
     useEffect(() => {
         charger_etat_ventilateur(setVentilateurState);
@@ -26,6 +29,30 @@ function VentilateurDetails({retourner}) {
     const retour = () => {
         retourner();
     }
+
+    const handleOpenModal = (action) => {
+        setModalAction(action);
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+        setModalAction(null);
+    };
+
+    const handleConfirmInstruction = (dureeMinutes) => {
+        const instruction = creer_instruction_simule("ventilateur", modalAction, dureeMinutes);
+        console.log("Instruction créée :", instruction);
+
+        // Simuler le changement d'état
+        if (modalAction === "allumer") {
+            setVentilateurState("running");
+        } else if (modalAction === "arreter") {
+            setVentilateurState("stopped");
+        }
+
+        handleCloseModal();
+    };
 
     return (
         <div className="ventilateurDetails-root">
@@ -76,21 +103,31 @@ function VentilateurDetails({retourner}) {
                 </section>
                 <section className="ventilateurDetails-other">
                     <div className="ventilateurDetails-instruction">
-                        {ventilateurState === "running" && 
+                        {ventilateurState === "running" &&
                             <>
                                 <p>Le ventilateur est allumé</p>
-                                <button type="button">Arrêter</button>
+                                <button
+                                    type="button"
+                                    onClick={() => handleOpenModal("arreter")}
+                                >
+                                    Arrêter
+                                </button>
                             </>
                         }
 
-                        {ventilateurState === "stopped" && 
+                        {ventilateurState === "stopped" &&
                             <>
                                 <p>Le ventilateur est éteint</p>
-                                <button type="button">Allumer</button>
+                                <button
+                                    type="button"
+                                    onClick={() => handleOpenModal("allumer")}
+                                >
+                                    Allumer
+                                </button>
                             </>
                         }
 
-                        {ventilateurState === "defaillant" && 
+                        {ventilateurState === "defaillant" &&
                             <>
                                 <p>Le ventilateur est défaillant</p>
                                 <button
@@ -104,7 +141,7 @@ function VentilateurDetails({retourner}) {
                     </div>
                     <hr />
                     <div className="ventilateurDetails-temperature">
-                        <a 
+                        <a
                             className={`ventilateurDetails-item-temperature ${obtenir_classe_temperature(temperature, seuils)}`}
                         >
                             {temperature}°C
@@ -112,6 +149,14 @@ function VentilateurDetails({retourner}) {
                     </div>
                 </section>
             </div>
+
+            <InstructionModal
+                actionneur="ventilateur"
+                action={modalAction}
+                isOpen={isModalOpen}
+                onClose={handleCloseModal}
+                onConfirm={handleConfirmInstruction}
+            />
         </div>
     )
 }

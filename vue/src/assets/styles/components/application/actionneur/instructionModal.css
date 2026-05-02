@@ -1,0 +1,199 @@
+.instructionModal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    background-color: rgba(20, 32, 19, 0.5);
+    backdrop-filter: blur(2px);
+    animation: fadeIn 200ms ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.instructionModal-root {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-md);
+}
+
+.instructionModal-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    width: 100%;
+    max-width: 28rem;
+    padding: var(--space-lg);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(249, 250, 251, 0.92));
+    box-shadow: 0 20px 60px rgba(8, 24, 11, 0.16);
+    animation: slideUp 300ms ease;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(1rem);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.instructionModal-titre {
+    margin: 0;
+    color: var(--secondary-color-dark);
+    font-family: var(--typography-title);
+    font-size: clamp(1.35rem, 5vw, 1.65rem);
+    line-height: 1.2;
+}
+
+.instructionModal-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    align-items: center;
+}
+
+.instructionModal-label {
+    display: block;
+    margin: 0;
+    color: rgba(20, 32, 19, 0.8);
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.instructionModal-duree-control {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    width: 100%;
+    max-width: 12rem;
+}
+
+.instructionModal-duree-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0;
+    border: 2px solid var(--secondary-color);
+    border-radius: 999px;
+    background: linear-gradient(135deg, rgba(46, 125, 50, 0.08), rgba(46, 125, 50, 0.02));
+    color: var(--secondary-color-dark);
+    font-weight: 700;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 150ms ease;
+}
+
+.instructionModal-duree-btn:hover {
+    background: linear-gradient(135deg, rgba(46, 125, 50, 0.15), rgba(46, 125, 50, 0.08));
+    transform: scale(1.05);
+}
+
+.instructionModal-duree-btn:active {
+    transform: scale(0.95);
+}
+
+.instructionModal-duree-input {
+    flex: 1;
+    padding: 0.65rem var(--space-sm);
+    border: 2px solid rgba(46, 125, 50, 0.2);
+    border-radius: var(--radius-md);
+    background: rgba(46, 125, 50, 0.04);
+    color: var(--secondary-color-dark);
+    font: inherit;
+    font-weight: 600;
+    font-size: 1.1rem;
+    text-align: center;
+    transition: all 150ms ease;
+}
+
+.instructionModal-duree-input:focus {
+    outline: none;
+    border-color: var(--secondary-color);
+    background: rgba(46, 125, 50, 0.08);
+    box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+}
+
+.instructionModal-duree-unit {
+    margin: 0;
+    color: rgba(20, 32, 19, 0.6);
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-transform: lowercase;
+}
+
+.instructionModal-duree-info {
+    margin: 0;
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, rgba(46, 125, 50, 0.1), rgba(2, 136, 209, 0.05));
+    color: var(--secondary-color-dark);
+    font-weight: 700;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.instructionModal-actions {
+    display: flex;
+    gap: var(--space-md);
+    width: 100%;
+    margin-top: var(--space-md);
+}
+
+.instructionModal-btn-cancel,
+.instructionModal-btn-confirm {
+    flex: 1;
+    padding: 0.8rem var(--space-lg);
+    border: none;
+    border-radius: 999px;
+    font: inherit;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 150ms ease;
+}
+
+.instructionModal-btn-cancel {
+    background: rgba(46, 125, 50, 0.1);
+    color: var(--secondary-color-dark);
+}
+
+.instructionModal-btn-cancel:hover {
+    background: rgba(46, 125, 50, 0.15);
+}
+
+.instructionModal-btn-confirm {
+    background: linear-gradient(135deg, var(--secondary-color), var(--secondary-color-dark));
+    color: var(--text-color-inverse);
+    box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+}
+
+.instructionModal-btn-confirm:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(46, 125, 50, 0.4);
+}
+
+.instructionModal-btn-confirm:active {
+    transform: translateY(0);
+}
+
+@media (max-width: 42rem) {
+    .instructionModal-content {
+        max-width: 90%;
+    }
+}

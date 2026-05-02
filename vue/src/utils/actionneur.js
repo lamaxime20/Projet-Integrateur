@@ -356,3 +356,20 @@ export function construire_batonnets_historique_actionneur(historique, dateActue
 
     return batonnets;
 }
+
+export function creer_instruction_simule(actionneur, action, dureeMinutes) {
+    // API plus tard:
+    // Envoyer: POST /api/instructions avec { actionneur_id, action, duree_minutes }
+    // Recevoir: { id, action, duree, statut, date_arrivee, user_id, actionneur_id }
+
+    const instruction = {
+        id: crypto.getRandomValues(new Uint8Array(16)).toString(),
+        action,
+        duree: dureeMinutes * 60, // en secondes pour la BD
+        statut: 'en_attente',
+        date_arrivee: new Date().toISOString(),
+        actionneur,
+    };
+
+    return instruction;
+}

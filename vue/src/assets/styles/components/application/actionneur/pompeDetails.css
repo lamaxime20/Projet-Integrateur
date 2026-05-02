@@ -242,3 +242,9 @@
         gap: var(--space-lg);
     }
 }
+
+@media (min-width: 62rem) {
+    .pompeDetails-graph {
+        min-height: 20rem;
+    }
+}
