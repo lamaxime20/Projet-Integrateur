@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Utilisateur;
 use App\Models\Session;
+use App\Models\Utilisateur;
+use App\Support\ApiTokenManager;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Str;
-use Carbon\Carbon;
 
 class AuthController extends Controller
 {
+    public function __construct(private ApiTokenManager $tokenManager) {}
+
     public function login(Request $request)
     {
         $request->validate([
@@ -29,19 +30,7 @@ class AuthController extends Controller
             return response()->json(['error' => 'Account is not active'], 403);
         }
 
-        $token = Str::uuid();
-        $expiresAt = Carbon::now()->addDays(7);
-
-        Session::create([
-            'token' => $token,
-            'user_id' => $user->id,
-            'role' => $user->role,
-            'created_at' => Carbon::now(),
-            'expires_at' => $expiresAt,
-            'last_used_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
-            'is_revoked' => false,
-        ]);
+        $result = $this->tokenManager->issueToken($user, $user->role, Carbon::now()->addDays(7));
 
         $userData = [
             'id' => $user->id,
@@ -52,15 +41,18 @@ class AuthController extends Controller
         ];
 
         return response()->json($userData)
-            ->withCookie(cookie('auth_token', $token, 60 * 24 * 7, '/', null, false, true));
+            ->withCookie(cookie('auth_token', $result['plain_text_token'], 60 * 24 * 7, '/', null, false, true));
     }
 
     public function logout(Request $request)
     {
-        $token = $request->cookie('auth_token');
+        $cookieToken = $request->cookie('auth_token');
 
-        if ($token) {
-            Session::where('token', $token)->update(['is_revoked' => true]);
+        if ($cookieToken && str_contains($cookieToken, '|')) {
+            [$tokenId] = explode('|', $cookieToken, 3);
+            if (ctype_digit((string) $tokenId)) {
+                Session::find($tokenId)?->delete();
+            }
         }
 
         return response()->json(['message' => 'Logged out'])
