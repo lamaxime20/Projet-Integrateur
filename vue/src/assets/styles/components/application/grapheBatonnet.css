@@ -1,0 +1,97 @@
+.grapheBatonnet-root {
+    display: grid;
+    grid-template-columns: 3.4rem minmax(0, 1fr);
+    align-items: stretch;
+    width: 100%;
+    min-height: 100%;
+    color: rgba(20, 32, 19, 0.72);
+}
+
+.grapheBatonnet-y-axis {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0.35rem 0.65rem 1.9rem 0;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-align: right;
+}
+
+.grapheBatonnet-scroll {
+    min-width: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: var(--space-xs);
+}
+
+.grapheBatonnet-track {
+    display: flex;
+    align-items: stretch;
+    gap: var(--space-sm);
+    min-width: max-content;
+    height: 100%;
+}
+
+.grapheBatonnet-item {
+    display: grid;
+    grid-template-rows: minmax(9rem, 1fr) auto;
+    justify-items: center;
+    width: 2.2rem;
+    gap: var(--space-xs);
+}
+
+.grapheBatonnet-bar-area {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    width: 100%;
+    min-height: 9rem;
+    background:
+        linear-gradient(180deg, rgba(46, 125, 50, 0.09) 0 1px, transparent 1px 50%),
+        linear-gradient(180deg, transparent calc(50% - 1px), rgba(2, 136, 209, 0.08) calc(50% - 1px) 50%, transparent 50%);
+}
+
+.grapheBatonnet-bar {
+    display: block;
+    width: 0.72rem;
+    min-height: 0.2rem;
+    border-radius: 999px 999px 0.35rem 0.35rem;
+    transition: height 220ms ease, filter 160ms ease;
+}
+
+.grapheBatonnet-bar-running {
+    background: linear-gradient(180deg, #4fa956, var(--secondary-color));
+    box-shadow: 0 0 18px rgba(46, 125, 50, 0.2);
+}
+
+.grapheBatonnet-bar-stopped {
+    background: linear-gradient(180deg, #ffd45a, var(--alertes-moyen));
+    box-shadow: 0 0 18px rgba(251, 192, 45, 0.18);
+}
+
+.grapheBatonnet-bar-defaillant {
+    background: linear-gradient(180deg, #f06c62, var(--alertes-critique));
+    box-shadow: 0 0 18px rgba(211, 47, 47, 0.18);
+}
+
+.grapheBatonnet-bar:hover {
+    filter: saturate(1.12) brightness(1.02);
+}
+
+.grapheBatonnet-time {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: rgba(20, 32, 19, 0.62);
+    white-space: nowrap;
+}
+
+@media (min-width: 48rem) {
+    .grapheBatonnet-root {
+        grid-template-columns: 4rem minmax(0, 1fr);
+    }
+
+    .grapheBatonnet-item {
+        width: 2.45rem;
+    }
+}
