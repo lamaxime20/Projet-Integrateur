@@ -19,6 +19,8 @@ return new class extends Migration
 
             $table->foreign('user_id')->references('id')->on('utilisateurs');
         });
+
+        DB::statement("ALTER TABLE reset_password_codes ADD CONSTRAINT reset_password_expiration_check CHECK (expires_at <= created_at + INTERVAL '15 minutes')");
     }
 
     public function down(): void

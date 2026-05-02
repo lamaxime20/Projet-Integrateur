@@ -68,11 +68,7 @@ class PasswordResetController extends Controller
             return response()->json(['error' => 'Invalid or expired code'], 400);
         }
 
-        // Mark as used and extend expiry to allow time to complete password change
-        $resetCode->update([
-            'is_used' => true,
-            'expires_at' => Carbon::now()->addMinutes(30),
-        ]);
+        $resetCode->update(['is_used' => true]);
 
         return response()->json(['message' => 'Code verified']);
     }
@@ -92,7 +88,6 @@ class PasswordResetController extends Controller
 
         $resetCode = ResetPasswordCode::where('user_id', $user->id)
             ->where('is_used', true)
-            ->where('expires_at', '>', Carbon::now())
             ->first();
 
         if (!$resetCode) {

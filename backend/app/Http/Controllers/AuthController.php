@@ -49,10 +49,8 @@ class AuthController extends Controller
         $cookieToken = $request->cookie('auth_token');
 
         if ($cookieToken && str_contains($cookieToken, '|')) {
-            [$tokenId] = explode('|', $cookieToken, 3);
-            if (ctype_digit((string) $tokenId)) {
-                Session::find($tokenId)?->delete();
-            }
+            $tokenId = $this->tokenManager->avoirTokenIdPur($cookieToken);
+            Session::find($tokenId)?->update(['is_revoked' => true]);
         }
 
         return response()->json(['message' => 'Logged out'])

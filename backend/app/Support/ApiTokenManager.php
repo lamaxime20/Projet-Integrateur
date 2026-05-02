@@ -37,7 +37,7 @@ class ApiTokenManager
 
         [$tokenId, $plainTextToken, $role] = explode('|', $bearerToken, 3);
 
-        if (! ctype_digit((string) $tokenId) || $plainTextToken === '') {
+        if (! \Illuminate\Support\Str::isUuid($tokenId) || $plainTextToken === '') {
             return null;
         }
 
@@ -90,7 +90,7 @@ class ApiTokenManager
 
         [$tokenId, $plainTextToken, $role] = explode('|', $bearerToken, 3);
 
-        if (! ctype_digit((string) $tokenId) || $plainTextToken === '') {
+        if (! \Illuminate\Support\Str::isUuid($tokenId) || $plainTextToken === '') {
             return null;
         }
 
