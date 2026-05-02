@@ -4,7 +4,6 @@ namespace App\Support;
 
 use App\Models\Session;
 use App\Models\Utilisateur;
-use Hamcrest\Util;
 use Illuminate\Support\Str;
 
 class ApiTokenManager
@@ -17,10 +16,11 @@ class ApiTokenManager
             'user_id' => $user->id,
             'role' => $role,
             'token' => hash('sha256', $plainTextToken),
-            'create_at' => now(),
+            'created_at' => now(),
             'expires_at' => $expiresAt,
             'updated_at' => now(),
-            'last_used_at' => now()
+            'last_used_at' => now(),
+            'is_revoked' => false,
         ]);
 
         return [
@@ -44,6 +44,10 @@ class ApiTokenManager
         $token = Session::find((String) $tokenId);
 
         if (! $token || ! hash_equals($token->token, hash('sha256', $plainTextToken))) {
+            return null;
+        }
+
+        if ($token->is_revoked) {
             return null;
         }
 
@@ -96,6 +100,10 @@ class ApiTokenManager
             return null;
         }
 
+        if ($token->is_revoked) {
+            return null;
+        }
+
         if ($token->expires_at && $token->expires_at->isPast()) {
             $token->delete();
 
@@ -125,5 +133,10 @@ class ApiTokenManager
             'token' => $token,
             'user' => $user,
         ];
+    }
+
+    public function avoirTokenIdPur(string $token) {
+        [$tokenId, $plainTextToken, $role] = explode('|', $token, 3);
+        return $tokenId;
     }
 }

@@ -3,11 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Microcontroleur;
+use App\Models\Session;
+use App\Models\Utilisateur;
+use App\Support\ApiTokenManager;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class MicrocontroleurController extends Controller
 {
+    public function __construct(private ApiTokenManager $tokenManager) {}
+
     public function enregistrer(Request $request)
     {
         $request->validate([
@@ -15,7 +20,13 @@ class MicrocontroleurController extends Controller
             'password'    => 'required|string',
         ]);
 
-        $user = Auth::user();
+        $tokenCookies = $request->cookie('auth_token');
+
+        $tokenId = $this->tokenManager->avoirTokenIdPur($tokenCookies);
+
+        $token = Session::where('id', $tokenId)->first();
+
+        $user = Utilisateur::where('id', $token->user_id)->first();
 
         $microcontroleur = Microcontroleur::where('identifiant_user', $request->identifiant)
             ->where('passkey', $request->password)
@@ -49,7 +60,13 @@ class MicrocontroleurController extends Controller
 
     public function liste(Request $request)
     {
-        $user = Auth::user();
+        $tokenCookies = $request->cookie('auth_token');
+
+        $tokenId = $this->tokenManager->avoirTokenIdPur($tokenCookies);
+
+        $token = Session::where('id', $tokenId)->first();
+
+        $user = Utilisateur::where('id', $token->user_id)->first();
 
         $microcontroleurs = Microcontroleur::where('user_id', $user->id)
             ->get(['nom', 'allume']);
@@ -59,7 +76,13 @@ class MicrocontroleurController extends Controller
 
     public function charger(Request $request, string $nom)
     {
-        $user = Auth::user();
+        $tokenCookies = $request->cookie('auth_token');
+
+        $tokenId = $this->tokenManager->avoirTokenIdPur($tokenCookies);
+
+        $token = Session::where('id', $tokenId)->first();
+
+        $user = Utilisateur::where('id', $token->user_id)->first();
 
         $microcontroleur = Microcontroleur::where('user_id', $user->id)
             ->where('nom', $nom)

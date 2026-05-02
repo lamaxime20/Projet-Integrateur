@@ -17,7 +17,7 @@ class AuthenticateApiTokenAdmin
 
     public function handle(Request $request, Closure $next): Response
     {
-        $resolved = $this->tokenManager->resolveFromBearerTokenAdmin($request->bearerToken(), touch: true);
+        $resolved = $this->tokenManager->resolveFromBearerTokenAdmin($request->cookie('auth_token'), touch: true);
 
         if (! $resolved) {
             return response()->json([

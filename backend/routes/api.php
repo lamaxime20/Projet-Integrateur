@@ -28,7 +28,7 @@ Route::post('/password-reset/verify-code', [PasswordResetController::class, 'ver
 Route::post('/password-reset/change', [PasswordResetController::class, 'changePassword']);
 
 // Microcontroleur routes (cookie auth required)
-Route::middleware('cookie.user')->group(function () {
+Route::middleware('user.token')->group(function () {
     Route::post('/microcontroleurs', [MicrocontroleurController::class, 'enregistrer']);
     Route::get('/microcontroleurs', [MicrocontroleurController::class, 'liste']);
     Route::get('/microcontroleurs/{nom}', [MicrocontroleurController::class, 'charger']);
