@@ -1,3 +1,5 @@
+import API_BASE_URL from './config.js';
+
 const LOCAL_INFOS_MICROCONTROLEUR_ENREGISTREMENT = "infos_microcontroleur_enregistrement";
 const LOCAL_ERREUR_ENREGISTREMENT = "erreur_enregistrement";
 
@@ -38,71 +40,40 @@ export function supprimer_erreur_enregistrement() {
 }
 
 export async function enregistrer_microcontroleur_user(donnees_microcontroleur) {
-    //Simulation d'un appel API qui va prendre l'identifiant du microcontroleur
-    // et son passkey, verifier si il appartient deja a quelqu'un
-    // sinon,
-    // il va renvoyer une connfirmation avec toutes les infos du microcontroleur
+    const response = await fetch(`${API_BASE_URL}/microcontroleurs`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(donnees_microcontroleur),
+    });
 
-    return {
-        "success": true,
-        "message": "Microcontroleur enregistré avec succès",
-        "microcontroleur": {
-            "nom": "champ de pascal",
-            "mac_address": 12345,
-            "identifiant": "yess",
-            "reference": "Mince",
-            "allume": true,
-            "last_connexion": "29-01-2025",
-            "date_installation": "29-01-2025",
-            "passkey": "123456789",
-        }
-    }
+    return await response.json();
 }
 
 export async function charger_liste_microcontroleurs_user() {
-    // Utiliser les credentials pour chercher a partir du token d'un utilisateur
-    // les microcontroleurs qui l'appartiennent et renvoyer les noms de ces microcontroleurs
-    // et leurs etats allume ou eteint sous forme de liste
+    const response = await fetch(`${API_BASE_URL}/microcontroleurs`, {
+        method: 'GET',
+        credentials: 'include',
+    });
 
-    const data = [
-        {
-            "nom": "champ de pascal",
-            "allume": true,
-        },
-        {
-            "nom": "champ de tomate",
-            "allume": false,
-        },
-        {
-            "nom": "champ de raisin",
-            "allume": true,
-        },
-    ]
+    if (!response.ok) {
+        return [];
+    }
 
-    return data;
+    return await response.json();
 }
 
 export async function charger_microcontroleur_user(nom_microcontroleur) {
-    // En utilisant les credentials pour avoir le token de l'utilisateur
-    // utilise le nom du microcontroleur et le token de l'utilisateur pour
-    // avoir toutes les informations du microcontroleur
+    const response = await fetch(`${API_BASE_URL}/microcontroleurs/${encodeURIComponent(nom_microcontroleur)}`, {
+        method: 'GET',
+        credentials: 'include',
+    });
 
-    const result = {
-        "success": true,
-        "message": "Microcontroleur chargé avec succès",
-        "microcontroleur": {
-            "nom": "champ de pascal",
-            "mac_address": 12345,
-            "identifiant": "yess",
-            "reference": "Mince",
-            "allume": true,
-            "last_connexion": "29-01-2025",
-            "date_installation": "29-01-2025",
-            "passkey": "123456789",
-        }
+    const result = await response.json();
+
+    if (result.success) {
+        enregistrer_microcontroleur_local(result.microcontroleur);
     }
-
-    enregistrer_microcontroleur_local(result.microcontroleur);
 
     return result.success;
 }

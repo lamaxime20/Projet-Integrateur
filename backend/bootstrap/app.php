@@ -13,8 +13,9 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
-            'user.token' => \App\Http\Middleware\AuthenticateApiTokenUser::class,
+            'user.token'  => \App\Http\Middleware\AuthenticateApiTokenUser::class,
             'admin.token' => \App\Http\Middleware\AuthenticateApiTokenAdmin::class,
+            'cookie.user' => \App\Http\Middleware\AuthenticateCookieUser::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
