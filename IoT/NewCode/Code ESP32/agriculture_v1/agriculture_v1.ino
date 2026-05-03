@@ -64,6 +64,9 @@ Servo servoPorte;
 WiFiClientSecure espClient;
 PubSubClient client(espClient);
 
+#define DIAG_DELAY 15000   // 15 secondes avant analyse
+#define VARIATION_MIN 3.0  // variation minimale (%)
+
 // ============================================================
 // SEUILS
 // ============================================================
@@ -115,6 +118,17 @@ ComponentState components[] = {
   {"co2","capteur",""},
   {"niveau_eau","capteur",""}
 };
+
+struct DiagnosticState {
+  bool actif;
+  unsigned long startTime;
+  float valeurInitiale;
+};
+
+DiagnosticState diagPompe   = {false, 0, 0};
+DiagnosticState diagVentil  = {false, 0, 0};
+DiagnosticState diagLampe   = {false, 0, 0};
+DiagnosticState diagPorte   = {false, 0, 0};
 
 // ============================================================
 // UTILS
@@ -244,6 +258,99 @@ void verifierEtats(float hum_sol,float temp,float lum,float co2,int eau){
       publierEtatComposant(components[index].name,"capteur",capteurs[i]);
     }
     index++;
+  }
+}
+
+void verifierPannes(float hum_sol, float temp, float lum, float co2) {
+
+  unsigned long now = millis();
+
+  // ================= POMPE =================
+  if (digitalRead(POMPE_PIN) == HIGH) {
+
+    if (!diagPompe.actif) {
+      diagPompe.actif = true;
+      diagPompe.startTime = now;
+      diagPompe.valeurInitiale = hum_sol;
+    }
+
+    if (now - diagPompe.startTime > DIAG_DELAY) {
+
+      if ((hum_sol - diagPompe.valeurInitiale) < VARIATION_MIN) {
+        publierEtatComposant("pompe", "actionneur", "defaillant");
+      }
+
+      diagPompe.actif = false;
+    }
+
+  } else {
+    diagPompe.actif = false;
+  }
+
+  // ================= VENTILATEUR =================
+  if (digitalRead(VENTIL_PIN) == HIGH) {
+
+    if (!diagVentil.actif) {
+      diagVentil.actif = true;
+      diagVentil.startTime = now;
+      diagVentil.valeurInitiale = temp;
+    }
+
+    if (now - diagVentil.startTime > DIAG_DELAY) {
+
+      if ((diagVentil.valeurInitiale - temp) < VARIATION_MIN) {
+        publierEtatComposant("ventilateur", "actionneur", "defaillant");
+      }
+
+      diagVentil.actif = false;
+    }
+
+  } else {
+    diagVentil.actif = false;
+  }
+
+  // ================= LAMPE =================
+  if (digitalRead(ECLAIRE_PIN) == HIGH) {
+
+    if (!diagLampe.actif) {
+      diagLampe.actif = true;
+      diagLampe.startTime = now;
+      diagLampe.valeurInitiale = lum;
+    }
+
+    if (now - diagLampe.startTime > DIAG_DELAY) {
+
+      if ((lum - diagLampe.valeurInitiale) < VARIATION_MIN) {
+        publierEtatComposant("ampoule", "actionneur", "defaillant");
+      }
+
+      diagLampe.actif = false;
+    }
+
+  } else {
+    diagLampe.actif = false;
+  }
+
+  // ================= PORTE (CO2) =================
+  if (servoPorte.read() > 45) {
+
+    if (!diagPorte.actif) {
+      diagPorte.actif = true;
+      diagPorte.startTime = now;
+      diagPorte.valeurInitiale = co2;
+    }
+
+    if (now - diagPorte.startTime > DIAG_DELAY) {
+
+      if ((diagPorte.valeurInitiale - co2) < VARIATION_MIN) {
+        publierEtatComposant("porte", "actionneur", "defaillant");
+      }
+
+      diagPorte.actif = false;
+    }
+
+  } else {
+    diagPorte.actif = false;
   }
 }
 
@@ -387,6 +494,8 @@ void loop(){
   appliquerActionneurs(lum,hum_sol,temp,co2,eau);
 
   verifierEtats(hum_sol,temp,lum,co2,eau);
+
+  verifierPannes(hum_sol,temp,lum,co2);
 
   unsigned long now=millis();
 
