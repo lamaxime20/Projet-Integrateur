@@ -39,6 +39,7 @@ String device_id = "esp32_01";
 #define TOPIC_DATA   "agriculture/esp32_01/data"
 #define TOPIC_INSTR  "agriculture/esp32_01/instructions"
 #define TOPIC_STATUS "agriculture/esp32_01/status"
+#define TOPIC_AVAILABILITY "agriculture/esp32_01/availability"
 #define TOPIC_COMPONENT_STATUS "agriculture/esp32_01/components"
 
 // ============================================================
@@ -417,10 +418,18 @@ void callback(char* topic,byte* payload,unsigned int length){
 // ============================================================
 void reconnect(){
   while(!client.connected()){
-    if(client.connect(device_id.c_str(),mqtt_user,mqtt_pass)){
+    // Connexion avec Last Will and Testament (LWT)
+    // Paramètres : clientID, user, pass, willTopic, willQoS, willRetain, willMessage
+    if(client.connect(device_id.c_str(), mqtt_user, mqtt_pass, TOPIC_AVAILABILITY, 1, true, "offline")){
+      
+      // Une fois connecté, on publie immédiatement qu'on est en ligne avec retain=true
+      client.publish(TOPIC_AVAILABILITY, "online", true);
+      
       client.subscribe(TOPIC_SEUILS);
       client.subscribe(TOPIC_INSTR);
     } else {
+      Serial.print("Echec connexion MQTT, rc=");
+      Serial.print(client.state());
       delay(5000);
     }
   }

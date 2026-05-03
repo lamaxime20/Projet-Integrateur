@@ -417,3 +417,34 @@ Détection réelle de panne matérielle :
 
 pompe ON mais humidité ne monte pas → pompe HS
 ventilateur ON mais température ne baisse pas → ventilateur HS
+
+### Mécanisme de surveillance de l'état (LWT & Retain)
+
+Pour que le backend Laravel et l'interface React sachent en temps réel si le microcontrôleur est allumé ou éteint, nous utilisons une combinaison de deux fonctionnalités MQTT :
+
+#### 1. Last Will and Testament (LWT)
+Lors de la phase de connexion au broker, l'ESP32 définit un "testament". C'est un message que le broker doit publier automatiquement si la connexion avec l'ESP32 est rompue de manière inattendue (panne de courant, perte de Wi-Fi, crash).
+- **Topic :** `agriculture/{device_id}/availability`
+- **Message :** `offline`
+- **QoS :** 1 (pour garantir la livraison)
+- **Retain :** true
+
+#### 2. Message de présence (Retained Online)
+Dès que la connexion est établie avec succès, l'ESP32 publie lui-même un message sur le même topic.
+- **Topic :** `agriculture/{device_id}/availability`
+- **Message :** `online`
+- **Retain :** true
+
+#### 3. Pourquoi le flag "Retain" ?
+Le flag `retain = true` indique au broker de garder en mémoire le dernier message reçu sur ce topic. 
+- **Avantage pour React :** Lorsqu'un utilisateur ouvre son dashboard, React s'abonne au topic de disponibilité. Grâce au flag Retain, le broker envoie immédiatement le dernier état connu (online ou offline) sans attendre que l'ESP32 n'envoie un nouveau message.
+- **Avantage pour Laravel :** Si le backend redémarre, il récupère instantanément l'état de tous les microcontrôleurs du parc.
+
+#### 4. Flux de détection côté Backend
+1. Le broker détecte la perte du signal "KeepAlive" de l'ESP32.
+2. Le broker publie `offline` sur le topic `availability`.
+3. Laravel, abonné à ce topic, reçoit le message.
+4. Laravel met à jour la base de données (champ `is_active` ou `last_seen`).
+5. Laravel broadcast un événement WebSocket vers React pour mettre à jour l'interface (ex: passage d'une icône au rouge).
+
+Ce mécanisme est bien plus efficace qu'un système de "ping" manuel car il ne consomme aucune bande passante supplémentaire et repose sur la détection native du protocole MQTT.
