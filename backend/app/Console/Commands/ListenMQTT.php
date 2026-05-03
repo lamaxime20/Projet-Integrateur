@@ -2,39 +2,86 @@
 
 namespace App\Console\Commands;
 
+use App\Http\Controllers\MqttController;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Storage;
-use PhpMqtt\Client\MqttClient;
 use PhpMqtt\Client\ConnectionSettings;
+use PhpMqtt\Client\MqttClient;
 
 class ListenMQTT extends Command
 {
-    protected $signature = 'mqtt:listen';
-    protected $description = 'Listen to MQTT messages';
+    protected $signature   = 'mqtt:listen';
+    protected $description = 'Abonnement MQTT — réception et persistance des données ESP32';
 
-    public function handle()
+    public function handle(): void
     {
-        $server = 'b1d946f5edb84d23ade6058bd316610b.s1.eu.hivemq.cloud';
-        $port = 8883;
-        $clientId = 'laravel-subscriber';
+        $server   = 'b1d946f5edb84d23ade6058bd316610b.s1.eu.hivemq.cloud';
+        $port     = 8883;
 
-        $mqtt = new MqttClient($server, $port, $clientId);
+        $ctrl = new MqttController();
 
-        $connectionSettings = (new ConnectionSettings)
-            ->setUsername(env('HIVEMQ_USERNAME'))
-            ->setPassword(env('HIVEMQ_PASSWORD'))
-            ->setUseTls(true)
-            ->setTlsSelfSignedAllowed(true);
+        // Reconnexion automatique en cas de perte du broker
+        while (true) {
+            try {
+                $mqtt = new MqttClient($server, $port, 'laravel-subscriber-' . uniqid());
 
-        $mqtt->connect($connectionSettings, true);
+                $mqtt->connect(
+                    (new ConnectionSettings)
+                        ->setUsername(env('HIVEMQ_USERNAME'))
+                        ->setPassword(env('HIVEMQ_PASSWORD'))
+                        ->setUseTls(true)
+                        ->setTlsSelfSignedAllowed(true),
+                    true
+                );
 
-        $this->info("MQTT connecté...");
+                $this->info('[MQTT] Connecté — en attente de messages...');
 
-        $mqtt->subscribe('agriculture/+/data', function ($topic, $message) {
-            $line = date('Y-m-d H:i:s') . " | " . $topic . " | " . $message . PHP_EOL;
-            Storage::append('messages.txt', $line);
-        }, 1);
+                // ——— Données capteurs ———
+                // agriculture/{device_id}/data
+                // {"temperature":28,"humidite":65,"co2":400,"luminosite":300}
+                $mqtt->subscribe('agriculture/+/data', function (string $topic, string $message) use ($ctrl) {
+                    $deviceId = explode('/', $topic)[1];
+                    $data = json_decode($message, true);
+                    if (is_array($data)) {
+                        $ctrl->handleData($deviceId, $data);
+                    }
+                }, 1);
 
-        $mqtt->loop(true);
+                // ——— État capteurs / actionneurs ———
+                // agriculture/{device_id}/components
+                // {"device_id":"esp32_01","nom":"pompe","type":"actionneur","etat":"allume"}
+                $mqtt->subscribe('agriculture/+/components', function (string $topic, string $message) use ($ctrl) {
+                    $deviceId = explode('/', $topic)[1];
+                    $data = json_decode($message, true);
+                    if (is_array($data)) {
+                        $ctrl->handleComponents($deviceId, $data);
+                    }
+                }, 1);
+
+                // ——— Statut d'exécution des instructions ———
+                // agriculture/{device_id}/status
+                // {"device_id":"esp32_01","id_instruction":"uuid","status":"terminee"}
+                $mqtt->subscribe('agriculture/+/status', function (string $topic, string $message) use ($ctrl) {
+                    $deviceId = explode('/', $topic)[1];
+                    $data = json_decode($message, true);
+                    if (is_array($data)) {
+                        $ctrl->handleStatus($deviceId, $data);
+                    }
+                }, 1);
+
+                // ——— Disponibilité du microcontrôleur (LWT + online) ———
+                // agriculture/{device_id}/availability
+                // "online" ou "offline"
+                $mqtt->subscribe('agriculture/+/availability', function (string $topic, string $message) use ($ctrl) {
+                    $deviceId = explode('/', $topic)[1];
+                    $ctrl->handleAvailability($deviceId, $message);
+                }, 1);
+
+                $mqtt->loop(true);
+
+            } catch (\Throwable $e) {
+                $this->error('[MQTT] Erreur : ' . $e->getMessage() . ' — reconnexion dans 10 s...');
+                sleep(10);
+            }
+        }
     }
 }

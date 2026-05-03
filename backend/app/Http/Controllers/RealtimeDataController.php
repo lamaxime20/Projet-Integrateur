@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\MqttController;
 use App\Models\Actionneur;
 use App\Models\Capteur;
 use App\Models\Donnee;
@@ -187,6 +188,9 @@ class RealtimeDataController extends Controller
             'user_id' => $user->id,
             'actionneur_id' => $actionneur->id,
         ]);
+
+        // Publie l'instruction vers l'ESP32 via MQTT
+        MqttController::publishInstruction($instruction->load('actionneur.microcontroleur'));
 
         return response()->json([
             'id' => $instruction->id,

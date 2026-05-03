@@ -21,5 +21,7 @@ RUN chown -R www-data:www-data storage bootstrap/cache \
 
 EXPOSE 8000
 
-# Serveur PHP intégré, Laravel utilisera les variables d'environnement de Render
-CMD php artisan serve --host=0.0.0.0 --port=8000 & php artisan mqtt:listen
+# Lance le serveur HTTP en arrière-plan puis l'écouteur MQTT au premier plan.
+# L'écouteur MQTT gère la reconnexion automatique au broker.
+# Si l'un des deux processus s'arrête, le conteneur redémarre (Render le relance).
+CMD sh -c "php artisan serve --host=0.0.0.0 --port=8000 & php artisan mqtt:listen"

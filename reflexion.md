@@ -448,3 +448,6 @@ Le flag `retain = true` indique au broker de garder en mémoire le dernier messa
 5. Laravel broadcast un événement WebSocket vers React pour mettre à jour l'interface (ex: passage d'une icône au rouge).
 
 Ce mécanisme est bien plus efficace qu'un système de "ping" manuel car il ne consomme aucune bande passante supplémentaire et repose sur la détection native du protocole MQTT.
+
+### Note : 
+publishSeuils() est prêt mais n'est appelé nulle part encore — à brancher dans SeuilController dès qu'un endpoint de mise à jour des seuils sera ajouté.
