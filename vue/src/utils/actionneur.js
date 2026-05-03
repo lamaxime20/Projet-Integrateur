@@ -1,3 +1,5 @@
+import API_BASE_URL from './config.js';
+
 const LOCAL_ACTIONNEUR_CHOISI = "actionneur_choisi";
 const UNE_HEURE_EN_MINUTES = 60;
 const DOUZE_HEURES_EN_MINUTES = 12 * UNE_HEURE_EN_MINUTES;
@@ -58,16 +60,10 @@ export function obtenir_classe_humidite_sol(humiditeSol, seuils) {
     return "humidite-vert";
 }
 
-export function obtenir_classe_niveau_reservoir(niveauReservoir, seuils) {
-    if (niveauReservoir < seuils["niveau_reservoir_min"]) {
-        return "niveau-rouge";
-    }
-
-    if (niveauReservoir < seuils["niveau_reservoir_moyen"]) {
-        return "niveau-orange";
-    }
-
-    return "niveau-vert";
+// Le niveau d'eau est un capteur digital (HIGH = "OK", LOW = "Bas") — pas de pourcentage.
+export function obtenir_classe_niveau_eau(niveauEau) {
+    if (niveauEau === "OK") return "niveau-vert";
+    return "niveau-rouge";
 }
 
 export function obtenir_classe_luminosite(luminosite, seuils) {
@@ -82,17 +78,33 @@ export function obtenir_classe_luminosite(luminosite, seuils) {
     return "luminosite-vert";
 }
 
-export function obtenir_classe_angle_porte(anglePorte) {
-    if (anglePorte >= 70) {
-        return "angle-vert";
-    }
-
-    if (anglePorte > 0) {
-        return "angle-orange";
-    }
-
-    return "angle-rouge";
+// La porte s'ouvre quand le CO2 dépasse co2_max, se ferme quand il est sous co2_min.
+export function obtenir_classe_co2(co2, seuils) {
+    if (co2 > seuils["co2_max"]) return "co2-rouge";
+    if (co2 < seuils["co2_min"]) return "co2-orange";
+    return "co2-vert";
 }
+
+// ============================================================
+//  HELPERS INTERNES
+// ============================================================
+
+function obtenirNomMicrocontroleur() {
+    try {
+        const micro = JSON.parse(localStorage.getItem('microcontroleur_actuel'));
+        return micro?.nom ?? null;
+    } catch {
+        return null;
+    }
+}
+
+function construireParams(nomMicro) {
+    return nomMicro ? `?microcontroleur=${encodeURIComponent(nomMicro)}` : '';
+}
+
+// ============================================================
+//  CHARGEMENT DES ÉTATS ACTIONNEURS
+// ============================================================
 
 export async function charger_etat_ventilateur(setVentilateurState) {
     // API plus tard:
@@ -100,25 +112,6 @@ export async function charger_etat_ventilateur(setVentilateurState) {
     // Recevoir: { etat: "running" | "stopped" | "defaillant" }.
 
     setVentilateurState("running");
-}
-
-export async function charger_temperature_actuelle(setTemperatureActuelle) {
-    // API plus tard:
-    // Envoyer: GET /api/capteurs/temperature/actuelle avec l'identifiant du microcontroleur en query/header.
-    // Recevoir: { temperature: number } en degres Celsius.
-
-    setTemperatureActuelle(20);
-}
-
-export async function charger_temperature_seuils(setTemperatureSeuils) {
-    // API plus tard:
-    // Envoyer: GET /api/seuils/temperature avec l'identifiant user ou microcontroleur.
-    // Recevoir: { temperature_min: number, temperature_max: number }.
-    
-    setTemperatureSeuils({
-        "temperature_min": 10,
-        "temperature_max": 30
-    })
 }
 
 export async function charger_etat_pompe(setPompeState) {
@@ -129,40 +122,6 @@ export async function charger_etat_pompe(setPompeState) {
     setPompeState("running");
 }
 
-export async function charger_humidite_sol_actuelle(setHumiditeSol) {
-    // API plus tard:
-    // Envoyer: GET /api/capteurs/humidite-sol/actuelle avec l'identifiant du microcontroleur.
-    // Recevoir: { humidite_sol: number } en pourcentage.
-
-    setHumiditeSol(42);
-}
-
-export async function charger_niveau_reservoir_actuel(setNiveauReservoir) {
-    // API plus tard:
-    // Envoyer: GET /api/capteurs/reservoir/niveau-actuel avec l'identifiant du microcontroleur.
-    // Recevoir: { niveau_reservoir: number } en pourcentage.
-
-    setNiveauReservoir(68);
-}
-
-export async function charger_pompe_seuils(setPompeSeuils) {
-    // API plus tard:
-    // Envoyer: GET /api/seuils/pompe avec l'identifiant user ou microcontroleur.
-    // Recevoir: {
-    //   humidite_sol_min: number,
-    //   humidite_sol_max: number,
-    //   niveau_reservoir_min: number,
-    //   niveau_reservoir_moyen: number
-    // }.
-
-    setPompeSeuils({
-        "humidite_sol_min": 35,
-        "humidite_sol_max": 75,
-        "niveau_reservoir_min": 20,
-        "niveau_reservoir_moyen": 45
-    });
-}
-
 export async function charger_etat_ampoule(setAmpouleState) {
     // API plus tard:
     // Envoyer: GET /api/actionneurs/ampoule/etat avec l'identifiant du microcontroleur.
@@ -171,40 +130,145 @@ export async function charger_etat_ampoule(setAmpouleState) {
     setAmpouleState("running");
 }
 
-export async function charger_luminosite_actuelle(setLuminosite) {
-    // API plus tard:
-    // Envoyer: GET /api/capteurs/luminosite/actuelle avec l'identifiant du microcontroleur.
-    // Recevoir: { luminosite: number } en lux.
-
-    setLuminosite(540);
-}
-
-export async function charger_luminosite_seuils(setLuminositeSeuils) {
-    // API plus tard:
-    // Envoyer: GET /api/seuils/luminosite avec l'identifiant user ou microcontroleur.
-    // Recevoir: { luminosite_min: number, luminosite_max: number }.
-
-    setLuminositeSeuils({
-        "luminosite_min": 250,
-        "luminosite_max": 900
-    });
-}
-
 export async function charger_etat_servo_moteur(setServoMoteurState) {
     // API plus tard:
     // Envoyer: GET /api/actionneurs/porte/etat avec l'identifiant du microcontroleur.
     // Recevoir: { etat: "running" | "stopped" | "defaillant" }.
+    // running = ouverte (CO2 élevé), stopped = fermée (CO2 normal).
 
     setServoMoteurState("stopped");
 }
 
-export async function charger_angle_porte_actuel(setAnglePorte) {
-    // API plus tard:
-    // Envoyer: GET /api/actionneurs/porte/angle-actuel avec l'identifiant du microcontroleur.
-    // Recevoir: { angle_porte: number } en degres, entre 0 et 90.
+// ============================================================
+//  CHARGEMENT DES VALEURS CAPTEURS
+// ============================================================
 
-    setAnglePorte(12);
+export async function charger_temperature_actuelle(setTemperatureActuelle) {
+    // API plus tard:
+    // Envoyer: GET /api/capteurs/temperature/actuelle avec l'identifiant du microcontroleur.
+    // Recevoir: { temperature: number } en degrés Celsius.
+
+    setTemperatureActuelle(20);
 }
+
+export async function charger_humidite_sol_actuelle(setHumiditeSol) {
+    // API plus tard:
+    // Envoyer: GET /api/capteurs/humidite-sol/actuelle avec l'identifiant du microcontroleur.
+    // Recevoir: { humidite_sol: number } en pourcentage.
+
+    setHumiditeSol(42);
+}
+
+// Le capteur de niveau d'eau est digital : "OK" (réservoir plein) ou "Bas" (réservoir vide).
+export async function charger_niveau_eau_actuel(setNiveauEau) {
+    // API plus tard:
+    // Envoyer: GET /api/capteurs/niveau-eau/actuel avec l'identifiant du microcontroleur.
+    // Recevoir: { niveau_eau: "OK" | "Bas" }.
+
+    setNiveauEau("OK");
+}
+
+export async function charger_luminosite_actuelle(setLuminosite) {
+    // API plus tard:
+    // Envoyer: GET /api/capteurs/luminosite/actuelle avec l'identifiant du microcontroleur.
+    // Recevoir: { luminosite: number } en pourcentage relatif (0-100).
+
+    setLuminosite(54);
+}
+
+export async function charger_co2_actuel(setCo2) {
+    // API plus tard:
+    // Envoyer: GET /api/capteurs/co2/actuel avec l'identifiant du microcontroleur.
+    // Recevoir: { co2: number } en valeur relative (0-100).
+    // La porte s'ouvre si co2 > co2_max, se ferme si co2 < co2_min.
+
+    setCo2(45);
+}
+
+// ============================================================
+//  CHARGEMENT DES SEUILS (appels API réels)
+// ============================================================
+
+export async function charger_temperature_seuils(setTemperatureSeuils) {
+    const nomMicro = obtenirNomMicrocontroleur();
+    const params = construireParams(nomMicro);
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/seuils/temperature${params}`, {
+            credentials: 'include',
+        });
+        if (!response.ok) throw new Error();
+        const data = await response.json();
+        setTemperatureSeuils({
+            temperature_min: data.temperature_min,
+            temperature_max: data.temperature_max,
+        });
+    } catch {
+        setTemperatureSeuils({ temperature_min: 18, temperature_max: 35 });
+    }
+}
+
+export async function charger_pompe_seuils(setPompeSeuils) {
+    // Le niveau d'eau est binaire (OK/Bas) — il n'a pas de seuil min/max.
+    const nomMicro = obtenirNomMicrocontroleur();
+    const params = construireParams(nomMicro);
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/seuils/pompe${params}`, {
+            credentials: 'include',
+        });
+        if (!response.ok) throw new Error();
+        const data = await response.json();
+        setPompeSeuils({
+            humidite_sol_min: data.humidite_sol_min,
+            humidite_sol_max: data.humidite_sol_max,
+        });
+    } catch {
+        setPompeSeuils({ humidite_sol_min: 30, humidite_sol_max: 70 });
+    }
+}
+
+export async function charger_luminosite_seuils(setLuminositeSeuils) {
+    const nomMicro = obtenirNomMicrocontroleur();
+    const params = construireParams(nomMicro);
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/seuils/luminosite${params}`, {
+            credentials: 'include',
+        });
+        if (!response.ok) throw new Error();
+        const data = await response.json();
+        setLuminositeSeuils({
+            luminosite_min: data.luminosite_min,
+            luminosite_max: data.luminosite_max,
+        });
+    } catch {
+        setLuminositeSeuils({ luminosite_min: 20, luminosite_max: 80 });
+    }
+}
+
+export async function chargerCo2Seuil(setCo2Seuil) {
+    const nomMicro = obtenirNomMicrocontroleur();
+    const params = construireParams(nomMicro);
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/seuils/co2${params}`, {
+            credentials: 'include',
+        });
+        if (!response.ok) throw new Error();
+        const data = await response.json();
+        setCo2Seuil({
+            co2_min: data.co2_min,
+            co2_max: data.co2_max,
+        });
+    } catch {
+        setCo2Seuil({ co2_min: 20, co2_max: 70 });
+    }
+}
+
+// ============================================================
+//  HISTORIQUES (intervalle 15 s)
+// ============================================================
 
 function ajouterMinutes(date, minutes) {
     return new Date(date.getTime() + minutes * 60 * 1000);
@@ -365,7 +429,7 @@ export function creer_instruction_simule(actionneur, action, dureeMinutes) {
     const instruction = {
         id: crypto.getRandomValues(new Uint8Array(16)).toString(),
         action,
-        duree: dureeMinutes * 60, // en secondes pour la BD
+        duree: dureeMinutes * 60,
         statut: 'en_attente',
         date_arrivee: new Date().toISOString(),
         actionneur,

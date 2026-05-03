@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SignupController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\MicrocontroleurController;
+use App\Http\Controllers\SeuilController;
 
 Route::post('/device/token', [DeviceController::class, 'getToken']);
 
@@ -34,4 +35,10 @@ Route::middleware('user.token')->group(function () {
     Route::post('/microcontroleurs', [MicrocontroleurController::class, 'enregistrer']);
     Route::get('/microcontroleurs', [MicrocontroleurController::class, 'liste']);
     Route::get('/microcontroleurs/{nom}', [MicrocontroleurController::class, 'charger']);
+
+    // Seuils routes
+    Route::get('/seuils/temperature', [SeuilController::class, 'temperature']);
+    Route::get('/seuils/pompe', [SeuilController::class, 'pompe']);
+    Route::get('/seuils/luminosite', [SeuilController::class, 'luminosite']);
+    Route::get('/seuils/co2', [SeuilController::class, 'co2']);
 });

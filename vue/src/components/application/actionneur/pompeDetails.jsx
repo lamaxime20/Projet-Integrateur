@@ -5,10 +5,10 @@ import {
     charger_etat_pompe,
     charger_historique_pompe,
     charger_humidite_sol_actuelle,
-    charger_niveau_reservoir_actuel,
+    charger_niveau_eau_actuel,
     charger_pompe_seuils,
     obtenir_classe_humidite_sol,
-    obtenir_classe_niveau_reservoir,
+    obtenir_classe_niveau_eau,
     creer_instruction_simule,
 } from "../../../utils/actionneur";
 import "../../../assets/styles/components/application/actionneur/pompeDetails.css";
@@ -16,13 +16,11 @@ import "../../../assets/styles/components/application/actionneur/pompeDetails.cs
 function PompeDetails({ retourner }) {
     const [pompeState, setPompeState] = useState("running");
     const [humiditeSol, setHumiditeSol] = useState(42);
-    const [niveauReservoir, setNiveauReservoir] = useState(68);
+    const [niveauEau, setNiveauEau] = useState("OK");
     const [historiquePompe, setHistoriquePompe] = useState([]);
     const [seuils, setSeuils] = useState({
-        "humidite_sol_min": 35,
-        "humidite_sol_max": 75,
-        "niveau_reservoir_min": 20,
-        "niveau_reservoir_moyen": 45,
+        "humidite_sol_min": 30,
+        "humidite_sol_max": 70,
     });
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalAction, setModalAction] = useState(null);
@@ -30,7 +28,7 @@ function PompeDetails({ retourner }) {
     useEffect(() => {
         charger_etat_pompe(setPompeState);
         charger_humidite_sol_actuelle(setHumiditeSol);
-        charger_niveau_reservoir_actuel(setNiveauReservoir);
+        charger_niveau_eau_actuel(setNiveauEau);
         charger_pompe_seuils(setSeuils);
         const intervalHistorique = charger_historique_pompe(setHistoriquePompe);
 
@@ -150,8 +148,8 @@ function PompeDetails({ retourner }) {
                             <span>Humidité</span>
                         </div>
                         <div className="pompeDetails-reservoir">
-                            <span className={`pompeDetails-mesure-icon ${obtenir_classe_niveau_reservoir(niveauReservoir, seuils)}`} aria-hidden="true"></span>
-                            <strong>{niveauReservoir}%</strong>
+                            <span className={`pompeDetails-mesure-icon ${obtenir_classe_niveau_eau(niveauEau)}`} aria-hidden="true"></span>
+                            <strong>{niveauEau}</strong>
                             <span>Réservoir</span>
                         </div>
                     </div>

@@ -2,24 +2,27 @@ import { useState, useEffect } from "react";
 import GrapheBatonnet from "../grapheBatonnet";
 import InstructionModal from "./instructionModal";
 import {
-    charger_angle_porte_actuel,
     charger_etat_servo_moteur,
     charger_historique_servo_moteur,
-    obtenir_classe_angle_porte,
+    charger_co2_actuel,
+    chargerCo2Seuil,
+    obtenir_classe_co2,
     creer_instruction_simule,
 } from "../../../utils/actionneur";
 import "../../../assets/styles/components/application/actionneur/servoMoteurDetails.css";
 
 function ServoMoteurDetails({ retourner }) {
     const [servoMoteurState, setServoMoteurState] = useState("stopped");
-    const [anglePorte, setAnglePorte] = useState(12);
+    const [co2, setCo2] = useState(45);
+    const [co2Seuils, setCo2Seuils] = useState({ co2_min: 20, co2_max: 70 });
     const [historiqueServoMoteur, setHistoriqueServoMoteur] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalAction, setModalAction] = useState(null);
 
     useEffect(() => {
         charger_etat_servo_moteur(setServoMoteurState);
-        charger_angle_porte_actuel(setAnglePorte);
+        charger_co2_actuel(setCo2);
+        chargerCo2Seuil(setCo2Seuils);
         const intervalHistorique = charger_historique_servo_moteur(setHistoriqueServoMoteur);
 
         return () => clearInterval(intervalHistorique);
@@ -131,21 +134,18 @@ function ServoMoteurDetails({ retourner }) {
                         }
                     </div>
                     <hr />
-                    <div className="servoMoteurDetails-angle">
-                        <div className="servoMoteurDetails-item-angle">
-                            <div className="servoMoteurDetails-jaugeAngle">
-                                <div
-                                    className={`servoMoteurDetails-jauge-graphique ${obtenir_classe_angle_porte(anglePorte)}`}
-                                >
-                                    <span
-                                        className="servoMoteurDetails-angle-aiguille"
-                                        style={{ transform: `rotate(${anglePorte}deg)` }}
-                                    ></span>
-                                </div>
-                            </div>
-                            <strong>{anglePorte}°</strong>
-                            <span>Angle d'ouverture</span>
-                        </div>
+                    <div className="servoMoteurDetails-co2">
+                        <a className={`servoMoteurDetails-item-co2 ${obtenir_classe_co2(co2, co2Seuils)}`}>
+                            {co2}%
+                        </a>
+                        <span>Qualité de l'air (CO2)</span>
+                        <p className="servoMoteurDetails-co2-explication">
+                            {co2 > co2Seuils.co2_max
+                                ? "CO2 élevé — la porte s'ouvre pour ventiler."
+                                : co2 < co2Seuils.co2_min
+                                    ? "CO2 bas — la porte reste fermée."
+                                    : "Qualité de l'air normale — porte fermée."}
+                        </p>
                     </div>
                 </section>
             </div>
