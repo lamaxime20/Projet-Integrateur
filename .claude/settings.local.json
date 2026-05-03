@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(php artisan *)"
+      "Bash(php artisan *)",
+      "Bash(Remove-Item \"d:\\\\Desktop\\\\X2\\\\Projet Integrateur\\\\backend\\\\database\\\\migrations\\\\2026_04_30_131008_add_last_used_at_to_sessions_table.php\")",
+      "PowerShell(Get-ChildItem -Path \"d:\\\\Desktop\\\\X2\\\\Projet Integrateur\\\\vue\\\\src\\\\components\\\\rapports\\\\\" -Force -ErrorAction SilentlyContinue | ForEach-Object { $_.FullName })"
     ]
   }
 }

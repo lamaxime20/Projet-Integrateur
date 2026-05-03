@@ -22,6 +22,8 @@ return new class extends Migration
             $table->uuid('user_id')->nullable();
 
             $table->unique(['nom', 'user_id']);
+            $table->unique('passkey');
+            $table->unique('identifiant_user');
             $table->foreign('user_id')->references('id')->on('utilisateurs');
         });
     }

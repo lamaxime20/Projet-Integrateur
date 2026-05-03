@@ -1,13 +1,15 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../assets/styles/components/application/choix_microcontroleur.css";
 import {
     charger_liste_microcontroleurs_user,
     charger_microcontroleur_user,
 } from "../../utils/microcontroleur";
+import { useAuth } from "../../hooks/useAuth";
 
 function Choix_microcontroleur() {
     const navigate = useNavigate();
+    const logout = useAuth().logout;
     const [listeMicrocontroleur_user, setListeMicrocontroleur_user] = useState([]);
     const [erreur, setErreur] = useState("");
     const [isLoading, setIsLoading] = useState(false);
@@ -15,6 +17,12 @@ function Choix_microcontroleur() {
     useEffect(() => {
         charger_liste();
     }, []);
+
+    const handleLogout = () => {
+        logout();
+        localStorage.clear();
+        window.location.href = "/";
+    }
 
     const charger_liste = async () => {
         setIsLoading(true);
@@ -62,6 +70,13 @@ function Choix_microcontroleur() {
                     >
                         Enregistrer un kit
                     </button>
+                    <span
+                        className="choix_microcontroleur-logout"
+                        onClick={() => handleLogout()}
+                    >
+                        <span className="material-symbols-outlined" aria-hidden="true">logout</span>
+                        <span>Déconnexion</span>
+                    </span>
                 </div>
             ):(
                 <>

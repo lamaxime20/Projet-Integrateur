@@ -63,11 +63,7 @@ class SignupController extends Controller
             return response()->json(['error' => 'Invalid or expired code'], 400);
         }
 
-        // Mark as used and extend expiry to allow time to complete signup
-        $verification->update([
-            'is_used' => true,
-            'expired_at' => Carbon::now()->addMinutes(30),
-        ]);
+        $verification->update(['is_used' => true]);
 
         return response()->json(['message' => 'Code verified']);
     }
@@ -83,7 +79,6 @@ class SignupController extends Controller
 
         $verification = VerificationCode::where('email', $request->email)
             ->where('is_used', true)
-            ->where('expired_at', '>', Carbon::now())
             ->first();
 
         if (!$verification) {

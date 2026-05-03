@@ -3,12 +3,15 @@ import { useState } from "react";
 import { charger_microcontroleur_local } from "../../utils/microcontroleur";
 import { changer_microcontroleur_user } from "../../utils/microcontroleur";
 import { logoutFromDatabase } from "../../utils/user";
-import { DASHBOARD, ACTIONNEUR, SEUIL, STATISTIQUE, NOTIFICATION } from "./sidebar-constants";
+import { DASHBOARD, ACTIONNEUR, SEUIL, STATISTIQUE, NOTIFICATION } from "../../utils/sidebar-constants";
 import '../../assets/styles/components/application/sidebar.css'
+import { useAuth } from "../../hooks/useAuth";
 
 function Sidebar({ongletActif}) {
     const microcontroleur = charger_microcontroleur_local();
     const [sidebarEpinglee, setSidebarEpinglee] = useState(false);
+    const logout = useAuth().logout;
+
     const basculerSidebarEpinglee = (event) => {
         setSidebarEpinglee((epinglee) => !epinglee);
         event.currentTarget.blur();
@@ -20,6 +23,12 @@ function Sidebar({ongletActif}) {
         { id: STATISTIQUE, label: "Statistique", href: "/application/statistique", icon: "monitoring" },
         { id: NOTIFICATION, label: "Notification", href: "/application/notification", icon: "notifications" },
     ];
+
+    const handleLogout = () => {
+        logout();
+        localStorage.clear();
+        window.location.href = "/";
+    }
 
     return (
         <nav className={`sidebar-root ${sidebarEpinglee ? "is-pinned" : ""}`} aria-label="Navigation de l'application">
@@ -77,7 +86,7 @@ function Sidebar({ongletActif}) {
                 <button
                     type="button"
                     className="sidebar-otherPages-logout"
-                    onClick={() => logoutFromDatabase()}
+                    onClick={() => handleLogout()}
                 >
                     <span className="material-symbols-outlined" aria-hidden="true">logout</span>
                     <span className="sidebar-label">Déconnexion</span>
@@ -89,4 +98,4 @@ function Sidebar({ongletActif}) {
 
 export default Sidebar;
 
-export { DASHBOARD, ACTIONNEUR, SEUIL, STATISTIQUE, NOTIFICATION } from "./sidebar-constants";
+export { DASHBOARD, ACTIONNEUR, SEUIL, STATISTIQUE, NOTIFICATION } from "../../utils/sidebar-constants";

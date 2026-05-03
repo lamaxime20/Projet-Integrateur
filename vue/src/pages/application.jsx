@@ -5,7 +5,7 @@ import { useAuth } from "../hooks/useAuth";
 import { charger_microcontroleur_local, supprimer_microcontroleur_local } from "../utils/microcontroleur";
 import Choix_microcontroleur from "../components/application/choix_microcontroleur";
 import Application_pricipale from "../components/application/application_principale";
-import { DASHBOARD } from "../components/application/sidebar-constants";
+import { DASHBOARD } from "../utils/sidebar-constants";
 
 function Application({onglet = DASHBOARD}) {
     const navigate = useNavigate();

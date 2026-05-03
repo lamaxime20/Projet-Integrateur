@@ -354,10 +354,7 @@ CREATE TABLE verification_codes (
   CONSTRAINT verification_codes_pk001 PRIMARY KEY (id),
 
   CONSTRAINT verification_codes_expiration_check
-    CHECK (expired_at <= created_at + INTERVAL '15 minutes'),
-
-  CONSTRAINT verification_codes_fk001 FOREIGN KEY (email)
-    REFERENCES utilisateurs(email)
+    CHECK (expired_at <= created_at + INTERVAL '15 minutes')
 );
 
 --
