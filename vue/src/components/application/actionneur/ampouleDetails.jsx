@@ -8,6 +8,7 @@ import {
     charger_luminosite_seuils,
     obtenir_classe_luminosite,
     creer_instruction_simule,
+    microcontroleur_est_actif,
 } from "../../../utils/actionneur";
 import "../../../assets/styles/components/application/actionneur/ampouleDetails.css";
 
@@ -19,6 +20,7 @@ function AmpouleDetails({ retourner }) {
         "luminosite_min": 250,
         "luminosite_max": 900,
     });
+    const [microcontroleurAllume, setMicrocontroleurAllume] = useState(microcontroleur_est_actif());
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalAction, setModalAction] = useState(null);
 
@@ -29,6 +31,7 @@ function AmpouleDetails({ retourner }) {
             charger_historique_ampoule(setHistoriqueAmpoule),
         ];
         charger_luminosite_seuils(setSeuils);
+        setMicrocontroleurAllume(microcontroleur_est_actif());
 
         return () => intervals.forEach(clearInterval);
     }, []);
@@ -47,8 +50,8 @@ function AmpouleDetails({ retourner }) {
         setModalAction(null);
     };
 
-    const handleConfirmInstruction = (dureeMinutes) => {
-        const instruction = creer_instruction_simule("ampoule", modalAction, dureeMinutes);
+    const handleConfirmInstruction = async (dureeMinutes) => {
+        const instruction = await creer_instruction_simule("ampoule", modalAction, dureeMinutes);
         console.log("Instruction créée :", instruction);
 
         if (modalAction === "allumer") {
@@ -111,9 +114,11 @@ function AmpouleDetails({ retourner }) {
                                 <button
                                     type="button"
                                     onClick={() => handleOpenModal("arreter")}
+                                    disabled={!microcontroleurAllume}
                                 >
                                     Éteindre
                                 </button>
+                                {!microcontroleurAllume && <p className="ampouleDetails-warning">Microcontrôleur éteint — impossible d'envoyer l'instruction.</p>}
                             </>
                         }
 
@@ -123,9 +128,11 @@ function AmpouleDetails({ retourner }) {
                                 <button
                                     type="button"
                                     onClick={() => handleOpenModal("allumer")}
+                                    disabled={!microcontroleurAllume}
                                 >
                                     Allumer
                                 </button>
+                                {!microcontroleurAllume && <p className="ampouleDetails-warning">Microcontrôleur éteint — impossible d'envoyer l'instruction.</p>}
                             </>
                         }
 

@@ -10,6 +10,7 @@ import {
     obtenir_classe_humidite_sol,
     obtenir_classe_niveau_eau,
     creer_instruction_simule,
+    microcontroleur_est_actif,
 } from "../../../utils/actionneur";
 import "../../../assets/styles/components/application/actionneur/pompeDetails.css";
 
@@ -22,6 +23,7 @@ function PompeDetails({ retourner }) {
         "humidite_sol_min": 30,
         "humidite_sol_max": 70,
     });
+    const [microcontroleurAllume, setMicrocontroleurAllume] = useState(microcontroleur_est_actif());
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalAction, setModalAction] = useState(null);
 
@@ -33,6 +35,7 @@ function PompeDetails({ retourner }) {
             charger_historique_pompe(setHistoriquePompe),
         ];
         charger_pompe_seuils(setSeuils);
+        setMicrocontroleurAllume(microcontroleur_est_actif());
 
         return () => intervals.forEach(clearInterval);
     }, []);
@@ -51,8 +54,8 @@ function PompeDetails({ retourner }) {
         setModalAction(null);
     };
 
-    const handleConfirmInstruction = (dureeMinutes) => {
-        const instruction = creer_instruction_simule("pompe", modalAction, dureeMinutes);
+    const handleConfirmInstruction = async (dureeMinutes) => {
+        const instruction = await creer_instruction_simule("pompe", modalAction, dureeMinutes);
         console.log("Instruction créée :", instruction);
 
         if (modalAction === "allumer") {
@@ -115,9 +118,11 @@ function PompeDetails({ retourner }) {
                                 <button
                                     type="button"
                                     onClick={() => handleOpenModal("arreter")}
+                                    disabled={!microcontroleurAllume}
                                 >
                                     Arrêter
                                 </button>
+                                {!microcontroleurAllume && <p className="pompeDetails-warning">Microcontrôleur éteint — impossible d'envoyer l'instruction.</p>}
                             </>
                         }
 
@@ -127,9 +132,11 @@ function PompeDetails({ retourner }) {
                                 <button
                                     type="button"
                                     onClick={() => handleOpenModal("allumer")}
+                                    disabled={!microcontroleurAllume}
                                 >
                                     Allumer
                                 </button>
+                                {!microcontroleurAllume && <p className="pompeDetails-warning">Microcontrôleur éteint — impossible d'envoyer l'instruction.</p>}
                             </>
                         }
 

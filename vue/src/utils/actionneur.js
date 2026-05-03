@@ -99,6 +99,15 @@ function obtenirNomMicrocontroleur() {
     }
 }
 
+export function microcontroleur_est_actif() {
+    try {
+        const micro = JSON.parse(localStorage.getItem('microcontroleur_actuel'));
+        return Boolean(micro?.allume);
+    } catch {
+        return false;
+    }
+}
+
 function construireParams(nomMicro) {
     return nomMicro ? `?microcontroleur=${encodeURIComponent(nomMicro)}` : '';
 }

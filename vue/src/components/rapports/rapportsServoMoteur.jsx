@@ -8,7 +8,7 @@ import {
     charger_instructions_actionneur,
 } from "../../utils/statistiques";
 import { generer_rapport_actionneur, generer_rapport_instructions } from "../../utils/rapport";
-import { creer_instruction_simule } from "../../utils/actionneur";
+import { creer_instruction_simule, microcontroleur_est_actif } from "../../utils/actionneur";
 import "../../assets/styles/components/rapports/rapportActionneur.css";
 
 const AUJOURD_HUI = new Date().toISOString().split("T")[0];
@@ -34,6 +34,7 @@ function RapportsServoMoteur() {
     const [etatPorte, setEtatPorte] = useState("stopped");
     const [historique, setHistorique] = useState([]);
     const [grandeurs, setGrandeurs] = useState({});
+    const [microcontroleurAllume, setMicrocontroleurAllume] = useState(microcontroleur_est_actif());
     const [dateDebutGraph, setDateDebutGraph] = useState(IL_Y_A_7J);
     const [dateFinGraph, setDateFinGraph] = useState(AUJOURD_HUI);
     const [etatsGraph, setEtatsGraph] = useState({ running: true, stopped: true, defaillant: true });
@@ -58,6 +59,7 @@ function RapportsServoMoteur() {
             charger_grandeurs_actionneur("servo-moteur", setGrandeurs),
             charger_instructions_actionneur("servo-moteur", setInstructions),
         ];
+        setMicrocontroleurAllume(microcontroleur_est_actif());
         return () => intervals.forEach(clearInterval);
     }, []);
 
@@ -68,8 +70,8 @@ function RapportsServoMoteur() {
         generer_rapport_actionneur("servo-moteur", formatGraph, dateDebutGraph, dateFinGraph, etatsSelectionnes, setChargementGraph, setErreurGraph);
     };
 
-    const handleConfirmInstruction = (dureeMinutes) => {
-        creer_instruction_simule("servo-moteur", modalAction, dureeMinutes);
+    const handleConfirmInstruction = async (dureeMinutes) => {
+        await creer_instruction_simule("servo-moteur", modalAction, dureeMinutes);
         if (modalAction === "allumer") setEtatPorte("running");
         else if (modalAction === "arreter") setEtatPorte("stopped");
         setIsModalOpen(false);
@@ -147,8 +149,8 @@ function RapportsServoMoteur() {
                     </div>
 
                     <div className="rapport-instruction-zone">
-                        {etatPorte === "running" && (<><p>La porte est ouverte</p><button type="button" className="rapport-btn-instruction" onClick={() => { setModalAction("arreter"); setIsModalOpen(true); }}>Fermer</button></>)}
-                        {etatPorte === "stopped" && (<><p>La porte est fermée</p><button type="button" className="rapport-btn-instruction" onClick={() => { setModalAction("allumer"); setIsModalOpen(true); }}>Ouvrir</button></>)}
+                        {etatPorte === "running" && (<><p>La porte est ouverte</p><button type="button" className="rapport-btn-instruction" onClick={() => { setModalAction("arreter"); setIsModalOpen(true); }} disabled={!microcontroleurAllume}>Fermer</button>{!microcontroleurAllume && <p className="rapport-warning">Microcontrôleur éteint — impossible d'envoyer l'instruction.</p>}</>)}
+                        {etatPorte === "stopped" && (<><p>La porte est fermée</p><button type="button" className="rapport-btn-instruction" onClick={() => { setModalAction("allumer"); setIsModalOpen(true); }} disabled={!microcontroleurAllume}>Ouvrir</button>{!microcontroleurAllume && <p className="rapport-warning">Microcontrôleur éteint — impossible d'envoyer l'instruction.</p>}</>)}
                         {etatPorte === "defaillant" && (<><p>La porte est défaillante</p><button type="button" className="rapport-btn-instruction" disabled>Fermer</button></>)}
                     </div>
 

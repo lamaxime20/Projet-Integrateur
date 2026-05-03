@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
 import GrapheBatonnet from "../grapheBatonnet";
 import InstructionModal from "./instructionModal";
-import { charger_etat_ventilateur, charger_historique_ventilateur, charger_temperature_actuelle } from "../../../utils/actionneur";
-import { charger_temperature_seuils } from "../../../utils/actionneur";
-import { obtenir_classe_temperature, creer_instruction_simule } from "../../../utils/actionneur";
+import { charger_etat_ventilateur, charger_historique_ventilateur, charger_temperature_actuelle, charger_temperature_seuils, obtenir_classe_temperature, creer_instruction_simule, microcontroleur_est_actif } from "../../../utils/actionneur";
 import '../../../assets/styles/components/application/actionneur/ventilateurDetails.css'
 
 function VentilateurDetails({retourner}) {
@@ -14,6 +12,7 @@ function VentilateurDetails({retourner}) {
         "temperature_min": 10,
         "temperature_max": 30,
     });
+    const [microcontroleurAllume, setMicrocontroleurAllume] = useState(microcontroleur_est_actif());
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalAction, setModalAction] = useState(null);
 
@@ -24,6 +23,7 @@ function VentilateurDetails({retourner}) {
             charger_historique_ventilateur(setHistoriqueVentilateur),
         ];
         charger_temperature_seuils(setSeuils);
+        setMicrocontroleurAllume(microcontroleur_est_actif());
 
         return () => intervals.forEach(clearInterval);
     }, []);
@@ -42,8 +42,8 @@ function VentilateurDetails({retourner}) {
         setModalAction(null);
     };
 
-    const handleConfirmInstruction = (dureeMinutes) => {
-        const instruction = creer_instruction_simule("ventilateur", modalAction, dureeMinutes);
+    const handleConfirmInstruction = async (dureeMinutes) => {
+        const instruction = await creer_instruction_simule("ventilateur", modalAction, dureeMinutes);
         console.log("Instruction créée :", instruction);
 
         // Simuler le changement d'état
@@ -111,9 +111,11 @@ function VentilateurDetails({retourner}) {
                                 <button
                                     type="button"
                                     onClick={() => handleOpenModal("arreter")}
+                                    disabled={!microcontroleurAllume}
                                 >
                                     Arrêter
                                 </button>
+                                {!microcontroleurAllume && <p className="ventilateurDetails-warning">Microcontrôleur éteint — impossible d'envoyer l'instruction.</p>}
                             </>
                         }
 
@@ -123,9 +125,11 @@ function VentilateurDetails({retourner}) {
                                 <button
                                     type="button"
                                     onClick={() => handleOpenModal("allumer")}
+                                    disabled={!microcontroleurAllume}
                                 >
                                     Allumer
                                 </button>
+                                {!microcontroleurAllume && <p className="ventilateurDetails-warning">Microcontrôleur éteint — impossible d'envoyer l'instruction.</p>}
                             </>
                         }
 

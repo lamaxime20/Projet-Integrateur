@@ -8,6 +8,7 @@ import {
     chargerCo2Seuil,
     obtenir_classe_co2,
     creer_instruction_simule,
+    microcontroleur_est_actif,
 } from "../../../utils/actionneur";
 import "../../../assets/styles/components/application/actionneur/servoMoteurDetails.css";
 
@@ -16,6 +17,7 @@ function ServoMoteurDetails({ retourner }) {
     const [co2, setCo2] = useState(45);
     const [co2Seuils, setCo2Seuils] = useState({ co2_min: 20, co2_max: 70 });
     const [historiqueServoMoteur, setHistoriqueServoMoteur] = useState([]);
+    const [microcontroleurAllume, setMicrocontroleurAllume] = useState(microcontroleur_est_actif());
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalAction, setModalAction] = useState(null);
 
@@ -26,6 +28,7 @@ function ServoMoteurDetails({ retourner }) {
             charger_historique_servo_moteur(setHistoriqueServoMoteur),
         ];
         chargerCo2Seuil(setCo2Seuils);
+        setMicrocontroleurAllume(microcontroleur_est_actif());
 
         return () => intervals.forEach(clearInterval);
     }, []);
@@ -44,8 +47,8 @@ function ServoMoteurDetails({ retourner }) {
         setModalAction(null);
     };
 
-    const handleConfirmInstruction = (dureeMinutes) => {
-        const instruction = creer_instruction_simule("porte", modalAction, dureeMinutes);
+    const handleConfirmInstruction = async (dureeMinutes) => {
+        const instruction = await creer_instruction_simule("porte", modalAction, dureeMinutes);
         console.log("Instruction créée :", instruction);
 
         if (modalAction === "allumer") {
@@ -108,9 +111,11 @@ function ServoMoteurDetails({ retourner }) {
                                 <button
                                     type="button"
                                     onClick={() => handleOpenModal("arreter")}
+                                    disabled={!microcontroleurAllume}
                                 >
                                     Fermer
                                 </button>
+                                {!microcontroleurAllume && <p className="servoMoteurDetails-warning">Microcontrôleur éteint — impossible d'envoyer l'instruction.</p>}
                             </>
                         }
 
@@ -120,9 +125,11 @@ function ServoMoteurDetails({ retourner }) {
                                 <button
                                     type="button"
                                     onClick={() => handleOpenModal("allumer")}
+                                    disabled={!microcontroleurAllume}
                                 >
                                     Ouvrir
                                 </button>
+                                {!microcontroleurAllume && <p className="servoMoteurDetails-warning">Microcontrôleur éteint — impossible d'envoyer l'instruction.</p>}
                             </>
                         }
 

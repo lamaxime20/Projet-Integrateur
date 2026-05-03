@@ -8,7 +8,7 @@ import {
     charger_instructions_actionneur,
 } from "../../utils/statistiques";
 import { generer_rapport_actionneur, generer_rapport_instructions } from "../../utils/rapport";
-import { creer_instruction_simule } from "../../utils/actionneur";
+import { creer_instruction_simule, microcontroleur_est_actif } from "../../utils/actionneur";
 import "../../assets/styles/components/rapports/rapportActionneur.css";
 
 const AUJOURD_HUI = new Date().toISOString().split("T")[0];
@@ -34,6 +34,7 @@ function RapportsAmpoule() {
     const [etatAmpoule, setEtatAmpoule] = useState("running");
     const [historique, setHistorique] = useState([]);
     const [grandeurs, setGrandeurs] = useState({});
+    const [microcontroleurAllume, setMicrocontroleurAllume] = useState(microcontroleur_est_actif());
     const [dateDebutGraph, setDateDebutGraph] = useState(IL_Y_A_7J);
     const [dateFinGraph, setDateFinGraph] = useState(AUJOURD_HUI);
     const [etatsGraph, setEtatsGraph] = useState({ running: true, stopped: true, defaillant: true });
@@ -58,6 +59,7 @@ function RapportsAmpoule() {
             charger_grandeurs_actionneur("ampoule", setGrandeurs),
             charger_instructions_actionneur("ampoule", setInstructions),
         ];
+        setMicrocontroleurAllume(microcontroleur_est_actif());
         return () => intervals.forEach(clearInterval);
     }, []);
 
@@ -68,8 +70,8 @@ function RapportsAmpoule() {
         generer_rapport_actionneur("ampoule", formatGraph, dateDebutGraph, dateFinGraph, etatsSelectionnes, setChargementGraph, setErreurGraph);
     };
 
-    const handleConfirmInstruction = (dureeMinutes) => {
-        creer_instruction_simule("ampoule", modalAction, dureeMinutes);
+    const handleConfirmInstruction = async (dureeMinutes) => {
+        await creer_instruction_simule("ampoule", modalAction, dureeMinutes);
         if (modalAction === "allumer") setEtatAmpoule("running");
         else if (modalAction === "arreter") setEtatAmpoule("stopped");
         setIsModalOpen(false);
@@ -147,8 +149,8 @@ function RapportsAmpoule() {
                     </div>
 
                     <div className="rapport-instruction-zone">
-                        {etatAmpoule === "running" && (<><p>L'ampoule est allumée</p><button type="button" className="rapport-btn-instruction" onClick={() => { setModalAction("arreter"); setIsModalOpen(true); }}>Éteindre</button></>)}
-                        {etatAmpoule === "stopped" && (<><p>L'ampoule est éteinte</p><button type="button" className="rapport-btn-instruction" onClick={() => { setModalAction("allumer"); setIsModalOpen(true); }}>Allumer</button></>)}
+                        {etatAmpoule === "running" && (<><p>L'ampoule est allumée</p><button type="button" className="rapport-btn-instruction" onClick={() => { setModalAction("arreter"); setIsModalOpen(true); }} disabled={!microcontroleurAllume}>Éteindre</button>{!microcontroleurAllume && <p className="rapport-warning">Microcontrôleur éteint — impossible d'envoyer l'instruction.</p>}</>)}
+                        {etatAmpoule === "stopped" && (<><p>L'ampoule est éteinte</p><button type="button" className="rapport-btn-instruction" onClick={() => { setModalAction("allumer"); setIsModalOpen(true); }} disabled={!microcontroleurAllume}>Allumer</button>{!microcontroleurAllume && <p className="rapport-warning">Microcontrôleur éteint — impossible d'envoyer l'instruction.</p>}</>)}
                         {etatAmpoule === "defaillant" && (<><p>L'ampoule est défaillante</p><button type="button" className="rapport-btn-instruction" disabled>Éteindre</button></>)}
                     </div>
 

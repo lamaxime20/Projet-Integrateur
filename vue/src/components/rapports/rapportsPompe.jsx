@@ -8,7 +8,7 @@ import {
     charger_instructions_actionneur,
 } from "../../utils/statistiques";
 import { generer_rapport_actionneur, generer_rapport_instructions } from "../../utils/rapport";
-import { creer_instruction_simule } from "../../utils/actionneur";
+import { creer_instruction_simule, microcontroleur_est_actif } from "../../utils/actionneur";
 import "../../assets/styles/components/rapports/rapportActionneur.css";
 
 const AUJOURD_HUI = new Date().toISOString().split("T")[0];
@@ -34,6 +34,7 @@ function RapportsPompe() {
     const [etatPompe, setEtatPompe] = useState("stopped");
     const [historique, setHistorique] = useState([]);
     const [grandeurs, setGrandeurs] = useState({});
+    const [microcontroleurAllume, setMicrocontroleurAllume] = useState(microcontroleur_est_actif());
     const [dateDebutGraph, setDateDebutGraph] = useState(IL_Y_A_7J);
     const [dateFinGraph, setDateFinGraph] = useState(AUJOURD_HUI);
     const [etatsGraph, setEtatsGraph] = useState({ running: true, stopped: true, defaillant: true });
@@ -58,6 +59,7 @@ function RapportsPompe() {
             charger_grandeurs_actionneur("pompe", setGrandeurs),
             charger_instructions_actionneur("pompe", setInstructions),
         ];
+        setMicrocontroleurAllume(microcontroleur_est_actif());
         return () => intervals.forEach(clearInterval);
     }, []);
 
@@ -68,8 +70,8 @@ function RapportsPompe() {
         generer_rapport_actionneur("pompe", formatGraph, dateDebutGraph, dateFinGraph, etatsSelectionnes, setChargementGraph, setErreurGraph);
     };
 
-    const handleConfirmInstruction = (dureeMinutes) => {
-        creer_instruction_simule("pompe", modalAction, dureeMinutes);
+    const handleConfirmInstruction = async (dureeMinutes) => {
+        await creer_instruction_simule("pompe", modalAction, dureeMinutes);
         if (modalAction === "allumer") setEtatPompe("running");
         else if (modalAction === "arreter") setEtatPompe("stopped");
         setIsModalOpen(false);
@@ -147,8 +149,8 @@ function RapportsPompe() {
                     </div>
 
                     <div className="rapport-instruction-zone">
-                        {etatPompe === "running" && (<><p>La pompe est en marche</p><button type="button" className="rapport-btn-instruction" onClick={() => { setModalAction("arreter"); setIsModalOpen(true); }}>Arrêter</button></>)}
-                        {etatPompe === "stopped" && (<><p>La pompe est arrêtée</p><button type="button" className="rapport-btn-instruction" onClick={() => { setModalAction("allumer"); setIsModalOpen(true); }}>Allumer</button></>)}
+                        {etatPompe === "running" && (<><p>La pompe est en marche</p><button type="button" className="rapport-btn-instruction" onClick={() => { setModalAction("arreter"); setIsModalOpen(true); }} disabled={!microcontroleurAllume}>Arrêter</button>{!microcontroleurAllume && <p className="rapport-warning">Microcontrôleur éteint — impossible d'envoyer l'instruction.</p>}</>)}
+                        {etatPompe === "stopped" && (<><p>La pompe est arrêtée</p><button type="button" className="rapport-btn-instruction" onClick={() => { setModalAction("allumer"); setIsModalOpen(true); }} disabled={!microcontroleurAllume}>Allumer</button>{!microcontroleurAllume && <p className="rapport-warning">Microcontrôleur éteint — impossible d'envoyer l'instruction.</p>}</>)}
                         {etatPompe === "defaillant" && (<><p>La pompe est défaillante</p><button type="button" className="rapport-btn-instruction" disabled>Arrêter</button></>)}
                     </div>
 

@@ -8,7 +8,7 @@ import {
     charger_instructions_actionneur,
 } from "../../utils/statistiques";
 import { generer_rapport_actionneur, generer_rapport_instructions } from "../../utils/rapport";
-import { creer_instruction_simule } from "../../utils/actionneur";
+import { creer_instruction_simule, microcontroleur_est_actif } from "../../utils/actionneur";
 import "../../assets/styles/components/rapports/rapportActionneur.css";
 
 const AUJOURD_HUI = new Date().toISOString().split("T")[0];
@@ -35,6 +35,7 @@ function RapportsVentilateur() {
     const [etatVentilateur, setEtatVentilateur] = useState("running");
     const [historique, setHistorique] = useState([]);
     const [grandeurs, setGrandeurs] = useState({});
+    const [microcontroleurAllume, setMicrocontroleurAllume] = useState(microcontroleur_est_actif());
     const [dateDebutGraph, setDateDebutGraph] = useState(IL_Y_A_7J);
     const [dateFinGraph, setDateFinGraph] = useState(AUJOURD_HUI);
     const [etatsGraph, setEtatsGraph] = useState({ running: true, stopped: true, defaillant: true });
@@ -60,6 +61,7 @@ function RapportsVentilateur() {
             charger_grandeurs_actionneur("ventilateur", setGrandeurs),
             charger_instructions_actionneur("ventilateur", setInstructions),
         ];
+        setMicrocontroleurAllume(microcontroleur_est_actif());
         return () => intervals.forEach(clearInterval);
     }, []);
 
@@ -70,8 +72,8 @@ function RapportsVentilateur() {
         generer_rapport_actionneur("ventilateur", formatGraph, dateDebutGraph, dateFinGraph, etatsSelectionnes, setChargementGraph, setErreurGraph);
     };
 
-    const handleConfirmInstruction = (dureeMinutes) => {
-        creer_instruction_simule("ventilateur", modalAction, dureeMinutes);
+    const handleConfirmInstruction = async (dureeMinutes) => {
+        await creer_instruction_simule("ventilateur", modalAction, dureeMinutes);
         if (modalAction === "allumer") setEtatVentilateur("running");
         else if (modalAction === "arreter") setEtatVentilateur("stopped");
         setIsModalOpen(false);
@@ -170,13 +172,15 @@ function RapportsVentilateur() {
                         {etatVentilateur === "running" && (
                             <>
                                 <p>Le ventilateur est en marche</p>
-                                <button type="button" className="rapport-btn-instruction" onClick={() => { setModalAction("arreter"); setIsModalOpen(true); }}>Arrêter</button>
+                                <button type="button" className="rapport-btn-instruction" onClick={() => { setModalAction("arreter"); setIsModalOpen(true); }} disabled={!microcontroleurAllume}>Arrêter</button>
+                                {!microcontroleurAllume && <p className="rapport-warning">Microcontrôleur éteint — impossible d'envoyer l'instruction.</p>}
                             </>
                         )}
                         {etatVentilateur === "stopped" && (
                             <>
                                 <p>Le ventilateur est arrêté</p>
-                                <button type="button" className="rapport-btn-instruction" onClick={() => { setModalAction("allumer"); setIsModalOpen(true); }}>Allumer</button>
+                                <button type="button" className="rapport-btn-instruction" onClick={() => { setModalAction("allumer"); setIsModalOpen(true); }} disabled={!microcontroleurAllume}>Allumer</button>
+                                {!microcontroleurAllume && <p className="rapport-warning">Microcontrôleur éteint — impossible d'envoyer l'instruction.</p>}
                             </>
                         )}
                         {etatVentilateur === "defaillant" && (
