@@ -203,3 +203,7 @@ la reconnexion automatique au broker
 un buffer local en cas de perte de connexion
 
 Lors de sa première connexion au backend, le microcontrolleur doit envoyer (identifiant_user) pour recevoir son token
+
+Pour chaque capteur, on lit sa mesure 05 fois et on fait une moyenne afin que les bruits ne soient pas trop importants
+
+On publie les données si et seulement si la valeur d'un capteur a augmenté ou diminué de 10% par rapport à la dernière mesure
