@@ -1,0 +1,365 @@
+.rapport-root {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at top left, rgba(46, 125, 50, 0.08), transparent 24%),
+        radial-gradient(circle at bottom right, rgba(2, 136, 209, 0.06), transparent 26%),
+        linear-gradient(180deg, #f8fbf6 0%, #eef5ef 100%);
+    color: var(--text-color);
+}
+
+.rapport-shell {
+    width: min(100%, var(--container-lg));
+    margin: 0 auto;
+    padding: var(--space-lg) var(--space-md) clamp(3rem, 8vw, 6rem);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1.75rem, 4vw, 3rem);
+}
+
+/* ── En-tête ── */
+
+.rapport-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.rapport-retour {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    width: fit-content;
+    min-height: 2.65rem;
+    padding: 0 var(--space-md);
+    border: none;
+    border-radius: 999px;
+    background-color: rgba(46, 125, 50, 0.1);
+    color: var(--secondary-color-dark);
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 140ms ease;
+}
+
+.rapport-retour:hover,
+.rapport-retour:focus-visible {
+    background-color: rgba(46, 125, 50, 0.16);
+    outline: none;
+}
+
+.rapport-retour .material-symbols-outlined {
+    font-size: 1.2rem;
+}
+
+.rapport-titre {
+    margin: 0;
+    color: var(--secondary-color-dark);
+    font-family: var(--typography-title);
+    font-size: clamp(1.8rem, 6vw, 3rem);
+    line-height: 1.06;
+}
+
+.rapport-titre::after {
+    content: "";
+    display: block;
+    width: min(6rem, 28vw);
+    height: 0.25rem;
+    margin-top: var(--space-xs);
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--secondary-color) 0 68%, var(--accent-color) 68% 100%);
+}
+
+.rapport-sous-titre {
+    margin: 0;
+    color: rgba(20, 32, 19, 0.62);
+    font-size: 0.95rem;
+    line-height: 1.55;
+}
+
+/* ── Section ── */
+
+.rapport-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    padding: var(--space-lg);
+    border-radius: var(--radius-xl);
+    background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.72), rgba(249, 250, 251, 0.44)),
+        linear-gradient(145deg, rgba(46, 125, 50, 0.07), rgba(2, 136, 209, 0.03));
+    box-shadow: 0 8px 24px rgba(8, 24, 11, 0.05);
+}
+
+.rapport-section-heading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+}
+
+.rapport-section-heading h2 {
+    margin: 0;
+    color: var(--secondary-color-dark);
+    font-family: var(--typography-title);
+    font-size: clamp(1.2rem, 3.5vw, 1.6rem);
+}
+
+.rapport-section-heading p {
+    margin: 0;
+    color: rgba(20, 32, 19, 0.62);
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* ── Contrôles ── */
+
+.rapport-controls {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(46, 125, 50, 0.1);
+}
+
+.rapport-controls-row {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.rapport-periode {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.rapport-label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: rgba(20, 32, 19, 0.72);
+}
+
+.rapport-input-date {
+    padding: 0.42rem 0.7rem;
+    border: 1px solid rgba(46, 125, 50, 0.22);
+    border-radius: var(--radius-sm);
+    background: rgba(255, 255, 255, 0.9);
+    color: var(--text-color);
+    font: inherit;
+    font-size: 0.88rem;
+    cursor: pointer;
+}
+
+.rapport-input-date:focus {
+    outline: 2px solid var(--secondary-color);
+    outline-offset: 1px;
+}
+
+.rapport-etats,
+.rapport-format {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: 0;
+    margin: 0;
+    border: none;
+}
+
+.rapport-etats-legend {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: rgba(20, 32, 19, 0.58);
+}
+
+.rapport-checkbox,
+.rapport-radio {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: rgba(20, 32, 19, 0.8);
+    cursor: pointer;
+    user-select: none;
+}
+
+.rapport-checkbox input,
+.rapport-radio input {
+    width: 1rem;
+    height: 1rem;
+    accent-color: var(--secondary-color);
+    cursor: pointer;
+}
+
+.rapport-btn-generer {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    align-self: flex-start;
+    min-height: 2.75rem;
+    padding: 0 var(--space-lg);
+    border: none;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--secondary-color), var(--secondary-color-dark));
+    color: var(--text-color-inverse);
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 160ms ease, box-shadow 160ms ease;
+    box-shadow: 0 6px 18px rgba(46, 125, 50, 0.2);
+}
+
+.rapport-btn-generer:hover:not(:disabled),
+.rapport-btn-generer:focus-visible:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 22px rgba(46, 125, 50, 0.26);
+    outline: none;
+}
+
+.rapport-btn-generer:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.rapport-btn-generer .material-symbols-outlined {
+    font-size: 1.1rem;
+}
+
+.rapport-erreur {
+    margin: 0;
+    color: var(--alertes-critique);
+    font-size: 0.88rem;
+    font-weight: 600;
+}
+
+/* ── Graphe ── */
+
+.rapport-graph-wrapper {
+    width: 100%;
+    min-height: 16rem;
+    padding: var(--space-md) 0 0;
+    border-radius: var(--radius-md);
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.55), rgba(249, 250, 251, 0.22)),
+        linear-gradient(90deg, rgba(46, 125, 50, 0.08), rgba(2, 136, 209, 0.04));
+}
+
+/* ── Légende ── */
+
+.rapport-legende {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+}
+
+.rapport-legende-item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: rgba(20, 32, 19, 0.68);
+}
+
+/* ── Points de couleur ── */
+
+.rapport-dot {
+    display: inline-block;
+    width: 0.62rem;
+    height: 0.62rem;
+    flex: 0 0 auto;
+    border-radius: 999px;
+    background-color: rgba(20, 32, 19, 0.2);
+}
+
+.rapport-dot.vert {
+    background-color: var(--secondary-color);
+    box-shadow: 0 0 0 0.22rem rgba(46, 125, 50, 0.14);
+}
+
+.rapport-dot.orange {
+    background-color: var(--alertes-moyen);
+    box-shadow: 0 0 0 0.22rem rgba(251, 192, 45, 0.14);
+}
+
+.rapport-dot.rouge {
+    background-color: var(--alertes-critique);
+    box-shadow: 0 0 0 0.22rem rgba(211, 47, 47, 0.12);
+}
+
+/* ── KPI capteur (max / min / moy) ── */
+
+.rapport-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-md);
+}
+
+.rapport-kpi-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2xs);
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.88);
+    box-shadow: 0 4px 14px rgba(8, 24, 11, 0.06);
+    border: 1px solid rgba(46, 125, 50, 0.08);
+    text-align: center;
+}
+
+.rapport-kpi-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: rgba(20, 32, 19, 0.56);
+}
+
+.rapport-kpi-valeur {
+    font-family: var(--typography-title);
+    font-size: clamp(1.5rem, 5vw, 2rem);
+    font-weight: 700;
+    line-height: 1.1;
+    display: flex;
+    align-items: baseline;
+    gap: 0.2em;
+}
+
+.rapport-kpi-valeur.rouge { color: var(--alertes-critique); }
+.rapport-kpi-valeur.bleu  { color: var(--accent-color); }
+.rapport-kpi-valeur.vert  { color: var(--secondary-color-dark); }
+
+.rapport-kpi-unite {
+    font-family: var(--typography-common);
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: rgba(20, 32, 19, 0.5);
+}
+
+/* ── Responsive ── */
+
+@media (min-width: 38rem) {
+    .rapport-controls-row {
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: flex-start;
+    }
+
+    .rapport-graph-wrapper {
+        min-height: 18rem;
+    }
+}
+
+@media (min-width: 62rem) {
+    .rapport-graph-wrapper {
+        min-height: 20rem;
+    }
+}

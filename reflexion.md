@@ -207,3 +207,17 @@ Lors de sa première connexion au backend, le microcontrolleur doit envoyer (ide
 Pour chaque capteur, on lit sa mesure 05 fois et on fait une moyenne afin que les bruits ne soient pas trop importants
 
 On publie les données si et seulement si la valeur d'un capteur a augmenté ou diminué de 10% par rapport à la dernière mesure
+
+### Constitution des rapports
+Lis @AGENTS.md  et suis ses instructions pour cette session
+
+
+Je veux que tu fasse la page @vue/src/components/application/statistiques.jsx 
+Elle aura trois sections
+La première section est celle du microcontroleur, où il y aura
+- Un graphe indiquant les heures où celui ci était actif, et les heures où il était inactif 
+- Des champs pour indiquer la période de mesure du graphe, l'état que le graphes doit principalement afficher (Fais des check box avec les états Allumé, éteint comme ça il peut soit afficher soit l'un, soit l'autre, ou les deux) et un bouton générer rapport qui va générer un rapport soit .csv soit .pdf
+Le rapport .csv doit indiquer pour chaque date l'enchainement des états du microcontroleurs avec les périodes que chaque état a occupé (Allumé de xh à yh puis éteint de yh à  zh puis allumé de zh à ah)
+Le rapport .pdf doit avoir le graphe que le frontend montre actuellement, puis en dessous, le tableau que le .csv devrait présenter 
+
+La génération d'un rapport se fait uniquement par le backend, qui l'envoit au frontend par appel API
