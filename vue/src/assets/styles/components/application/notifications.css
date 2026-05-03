@@ -1,0 +1,278 @@
+.notifications-root {
+    width: min(100%, var(--container-lg));
+    margin: 0 auto;
+    padding: var(--space-lg) var(--space-md) clamp(3rem, 8vw, 6rem);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    color: var(--text-color);
+}
+
+.notifications-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.notifications-header h1,
+.notifications-header p {
+    margin: 0;
+}
+
+.notifications-titre {
+    color: var(--secondary-color-dark);
+    font-family: var(--typography-title);
+    font-size: clamp(1.8rem, 6vw, 3rem);
+    line-height: 1.06;
+}
+
+.notifications-header p {
+    max-width: 44rem;
+    color: rgba(20, 32, 19, 0.62);
+    line-height: 1.55;
+}
+
+.notifications-toolbar,
+.notifications-actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    padding: var(--space-sm);
+    border-radius: var(--radius-lg);
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(46, 125, 50, 0.1);
+    box-shadow: 0 8px 24px rgba(8, 24, 11, 0.05);
+}
+
+.notifications-filtres {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-xs);
+}
+
+.notifications-filtres button,
+.notifications-btn-secondaire,
+.notifications-actions button {
+    min-height: 2.65rem;
+    border: none;
+    border-radius: var(--radius-md);
+    font: inherit;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.notifications-filtres button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: 0 var(--space-sm);
+    background: rgba(46, 125, 50, 0.08);
+    color: rgba(20, 32, 19, 0.72);
+}
+
+.notifications-filtres button span {
+    min-width: 1.45rem;
+    padding: 0.1rem 0.35rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.82);
+    color: var(--secondary-color-dark);
+    font-size: 0.78rem;
+}
+
+.notifications-filtres button.is-active {
+    background: linear-gradient(135deg, var(--secondary-color), var(--secondary-color-dark));
+    color: var(--text-color-inverse);
+}
+
+.notifications-btn-secondaire,
+.notifications-actions button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    padding: 0 var(--space-md);
+    background: rgba(46, 125, 50, 0.1);
+    color: var(--secondary-color-dark);
+}
+
+.notifications-btn-secondaire:disabled,
+.notifications-actions button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.notifications-actions {
+    align-items: stretch;
+}
+
+.notifications-actions > span {
+    color: rgba(20, 32, 19, 0.64);
+    font-size: 0.9rem;
+    font-weight: 800;
+}
+
+.notifications-actions button.is-danger {
+    background: rgba(211, 47, 47, 0.1);
+    color: var(--alertes-critique);
+}
+
+.notifications-erreur {
+    margin: 0;
+    color: var(--alertes-critique);
+    font-weight: 700;
+}
+
+.notifications-liste {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.notifications-card {
+    display: grid;
+    grid-template-columns: auto auto minmax(0, 1fr) auto;
+    gap: var(--space-sm);
+    align-items: center;
+    padding: var(--space-md);
+    border: 1px solid rgba(46, 125, 50, 0.1);
+    border-radius: var(--radius-lg);
+    background: rgba(255, 255, 255, 0.78);
+    box-shadow: 0 8px 22px rgba(8, 24, 11, 0.05);
+    cursor: pointer;
+    transition: transform 160ms ease, border-color 160ms ease, background-color 160ms ease;
+}
+
+.notifications-card:hover,
+.notifications-card:focus-within {
+    transform: translateY(-1px);
+    border-color: rgba(46, 125, 50, 0.22);
+}
+
+.notifications-card.is-unread {
+    background:
+        linear-gradient(90deg, rgba(46, 125, 50, 0.12), transparent 34%),
+        rgba(255, 255, 255, 0.9);
+}
+
+.notifications-card.is-selected {
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 0.18rem rgba(46, 125, 50, 0.14);
+}
+
+.notifications-checkbox {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.notifications-checkbox input {
+    width: 1.1rem;
+    height: 1.1rem;
+    accent-color: var(--secondary-color);
+    cursor: pointer;
+}
+
+.notifications-icone {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: var(--radius-md);
+    background: rgba(46, 125, 50, 0.1);
+    color: var(--secondary-color-dark);
+}
+
+.notifications-contenu {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+}
+
+.notifications-card-header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    align-items: center;
+}
+
+.notifications-card h2 {
+    margin: 0;
+    color: var(--secondary-color-dark);
+    font-size: 1rem;
+    line-height: 1.25;
+}
+
+.notifications-card p {
+    margin: 0;
+    color: rgba(20, 32, 19, 0.72);
+    line-height: 1.45;
+}
+
+.notifications-card time {
+    color: rgba(20, 32, 19, 0.52);
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.notifications-badge {
+    padding: 0.18rem 0.5rem;
+    border-radius: 999px;
+    background: rgba(251, 192, 45, 0.18);
+    color: #795700;
+    font-size: 0.75rem;
+    font-weight: 800;
+}
+
+.notifications-arrow {
+    color: rgba(20, 32, 19, 0.38);
+}
+
+.notifications-vide {
+    display: grid;
+    justify-items: center;
+    gap: var(--space-xs);
+    padding: clamp(2rem, 8vw, 4rem);
+    border-radius: var(--radius-lg);
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(46, 125, 50, 0.1);
+    text-align: center;
+}
+
+.notifications-vide .material-symbols-outlined {
+    color: var(--secondary-color);
+    font-size: 2.4rem;
+}
+
+.notifications-vide h2,
+.notifications-vide p {
+    margin: 0;
+}
+
+.notifications-vide h2 {
+    color: var(--secondary-color-dark);
+    font-size: 1.25rem;
+}
+
+.notifications-vide p {
+    color: rgba(20, 32, 19, 0.62);
+}
+
+@media (min-width: 42rem) {
+    .notifications-header,
+    .notifications-toolbar,
+    .notifications-actions {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .notifications-filtres {
+        width: fit-content;
+    }
+
+    .notifications-actions {
+        justify-content: flex-start;
+    }
+}

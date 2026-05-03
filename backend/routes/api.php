@@ -9,6 +9,7 @@ use App\Http\Controllers\MicrocontroleurController;
 use App\Http\Controllers\SeuilController;
 use App\Http\Controllers\RealtimeDataController;
 use App\Http\Controllers\RapportController;
+use App\Http\Controllers\AlerteController;
 
 Route::post('/device/token', [DeviceController::class, 'getToken']);
 
@@ -43,6 +44,11 @@ Route::middleware('user.token')->group(function () {
     Route::get('/seuils/pompe', [SeuilController::class, 'pompe']);
     Route::get('/seuils/luminosite', [SeuilController::class, 'luminosite']);
     Route::get('/seuils/co2', [SeuilController::class, 'co2']);
+
+    Route::get('/notifications', [AlerteController::class, 'liste']);
+    Route::patch('/notifications/toutes/lues', [AlerteController::class, 'marquerToutesCommeLues']);
+    Route::patch('/notifications/{id}/lue', [AlerteController::class, 'marquerCommeLue']);
+    Route::patch('/notifications', [AlerteController::class, 'actionGroupee']);
 
     Route::get('/microcontroleur/etat', [RealtimeDataController::class, 'microcontroleurEtat']);
     Route::get('/microcontroleur/historique', [RealtimeDataController::class, 'microcontroleurHistorique']);

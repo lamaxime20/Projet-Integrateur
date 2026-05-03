@@ -2,6 +2,7 @@ import Sidebar from "./sidebar";
 import Actionneur from "./actionneur";
 import Statistiques from "./statistiques";
 import Seuils from "./seuils";
+import Notifications from "./notifications";
 import { DASHBOARD, ACTIONNEUR, SEUIL, STATISTIQUE, NOTIFICATION } from "../../utils/sidebar-constants";
 import '../../assets/styles/components/application/application_principale.css'
 
@@ -16,7 +17,7 @@ function Application_pricipale({onglet = DASHBOARD}) {
                 {onglet === ACTIONNEUR && <Actionneur />}
                 {onglet === SEUIL && <Seuils />}
                 {onglet === STATISTIQUE && <Statistiques />}
-                {onglet === NOTIFICATION && <h1>Notification</h1>}
+                {onglet === NOTIFICATION && <Notifications />}
             </div>
         </section>
     )
