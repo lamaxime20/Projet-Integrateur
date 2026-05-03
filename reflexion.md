@@ -404,3 +404,16 @@ User B → micro 2
 microIds.forEach(id => {
     echo.private(`capteurs.${id}`)
 });
+
+
+### Gestion des instructions par le microcontroleur
+Tu vas abonner le microcontrôleur au topic agriculture/nom_device/instructions Quand Laravel va publier une instruction, elle aura action : allumer/eteindre/redemarrer duree : en secondes actionneur : pompe/ampoule/ventilateur/porte id_instructiom Quand Laravel va publier une instruction, elle aura action : allumer/eteindre/redemarrer duree : en secondes actionneur : pompe/ampoule/ventilateur/porte Quand une instruction arrive, on identifie l'action Si l'action est égale à redemarrer, alors on redemarre simplement le microcontrôleur Sinon, on passe à la deuxième étape On identifie l'actionneur concerné. Dès qu'on connait l'actionneur concerné, interrompt son fonctionnement normal et on exécute l'action durant le nombre de secondes donné Maintenant, si lors de l'execution d'une instruction par un actionneur, une autre instruction concernant le même actionneur arrive on arrête l'instruction précedente, on envoit au backend que l'instruction d'id id a été interrompu, puis on lance la nouvelle instruction
+
+
+### Gestion des états des capteurs et actionneurs
+le microcontroleur doit détecter si un capteur/un actionneur est allumé, éteint, ou défaillant (absent ou ne marche pas) et publish A chaque loop, il vérifie l'état de chaque capteur/actionneur, si l'état d'un change, il envoit un JSON indiquant le capteur/l'actionneur et le nouvel état
+
+Détection réelle de panne matérielle :
+
+pompe ON mais humidité ne monte pas → pompe HS
+ventilateur ON mais température ne baisse pas → ventilateur HS
