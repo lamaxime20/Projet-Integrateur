@@ -48,12 +48,12 @@ String device_id = "esp32_01";
 #define SOIL_PIN 36
 #define LDR_PIN 39
 #define CO2_PIN 34
-#define WATER_PIN 2
+#define WATER_PIN 14
 #define DHT_PIN 4
 
 #define POMPE_PIN 5
-#define VENTIL_PIN 6
-#define ECLAIRE_PIN 7
+#define VENTIL_PIN 12
+#define ECLAIRE_PIN 13
 #define SERVO_PIN 18
 
 // ============================================================
@@ -474,6 +474,7 @@ void setup(){
   pinMode(VENTIL_PIN,OUTPUT);
   pinMode(ECLAIRE_PIN,OUTPUT);
   pinMode(WATER_PIN,INPUT);
+  Serial.println("--- DEMARRAGE DU SYSTEME ---");
 
   dht.begin();
   servoPorte.attach(SERVO_PIN);
