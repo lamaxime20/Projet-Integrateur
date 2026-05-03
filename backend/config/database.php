@@ -97,6 +97,10 @@ return [
             'prefix_indexes' => true,
             'search_path' => 'public',
             'sslmode' => env('DB_SSLMODE', 'prefer'),
+            // Force le fuseau UTC côté connexion PostgreSQL.
+            // Sans ça, le serveur DB peut interpréter les TIMESTAMP naïfs
+            // avec son propre TZ, causant des décalages sur les comparaisons d'expiration.
+            'timezone' => 'UTC',
         ],
 
         'sqlsrv' => [

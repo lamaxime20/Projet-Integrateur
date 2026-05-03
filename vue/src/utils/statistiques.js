@@ -1,4 +1,5 @@
 import API_BASE_URL from './config.js';
+import { debutJourUTC, finJourUTC } from './date.js';
 
 const UNE_HEURE_EN_MINUTES = 60;
 const DOUZE_HEURES_EN_MINUTES = 12 * UNE_HEURE_EN_MINUTES;
@@ -210,8 +211,14 @@ export function charger_stats_capteur(capteur, setStats) {
 }
 
 export async function charger_mesures_capteur(capteur, dateDebut, dateFin) {
+    // dateDebut / dateFin sont des "YYYY-MM-DD" locaux (valeurs d'un <input type="date">).
+    // On les convertit en ISO UTC avant d'interroger l'API pour que le backend
+    // compare les plages dans le bon fuseau, quelle que soit la localisation du serveur.
+    const debutUTC = debutJourUTC(dateDebut) ?? dateDebut;
+    const finUTC   = finJourUTC(dateFin)   ?? dateFin;
+
     try {
-        return await getApi(`/capteurs/${capteur}/mesures?date_debut=${encodeURIComponent(dateDebut)}&date_fin=${encodeURIComponent(dateFin)}`);
+        return await getApi(`/capteurs/${capteur}/mesures?date_debut=${encodeURIComponent(debutUTC)}&date_fin=${encodeURIComponent(finUTC)}`);
     } catch {
         const maintenant = new Date();
         const points = Array.from({ length: 12 }, (_, index) => {

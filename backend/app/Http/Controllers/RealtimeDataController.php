@@ -269,8 +269,11 @@ class RealtimeDataController extends Controller
             return response()->json(['message' => 'Capteur introuvable.'], 404);
         }
 
-        $debut = Carbon::parse($request->query('date_debut', now()->subDays(7)->toDateString()))->startOfDay();
-        $fin = Carbon::parse($request->query('date_fin', now()->toDateString()))->endOfDay();
+        // Le frontend envoie des ISO 8601 UTC (ex. "2026-05-03T23:00:00.000Z").
+        // Carbon::parse() conserve le TZ transmis — on ne redéfinit pas startOfDay()
+        // pour ne pas écraser la borne que le frontend a déjà calculée en UTC.
+        $debut = Carbon::parse($request->query('date_debut', now()->subDays(7)->startOfDay()->toIso8601String()));
+        $fin   = Carbon::parse($request->query('date_fin',   now()->endOfDay()->toIso8601String()));
 
         $points = $modele->donnees()
             ->whereBetween('date_arrivee', [$debut, $fin])

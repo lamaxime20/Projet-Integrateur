@@ -25,9 +25,12 @@ class PasswordResetController extends Controller
             return response()->json(['error' => 'Email not found'], 404);
         }
 
-        // Invalidate any previous unused codes for this user
+        // N'invalider que les codes encore actifs.
+        // Si on appliquait Carbon::now() sur un code déjà expiré, on dépasserait
+        // la contrainte DB (expires_at <= created_at + 15 min) car now() > created_at + 15 min.
         ResetPasswordCode::where('user_id', $user->id)
             ->where('is_used', false)
+            ->where('expires_at', '>', Carbon::now())
             ->update(['expires_at' => Carbon::now()]);
 
         $code = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);

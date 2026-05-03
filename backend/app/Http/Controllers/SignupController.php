@@ -26,9 +26,12 @@ class SignupController extends Controller
             return response()->json(['error' => 'Email already exists'], 400);
         }
 
-        // Invalidate any previous unused codes for this email
+        // N'invalider que les codes encore actifs.
+        // Si on appliquait Carbon::now() sur un code déjà expiré, on dépasserait
+        // la contrainte DB (expired_at <= created_at + 15 min) car now() > created_at + 15 min.
         VerificationCode::where('email', $request->email)
             ->where('is_used', false)
+            ->where('expired_at', '>', Carbon::now())
             ->update(['expired_at' => Carbon::now()]);
 
         $code = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
