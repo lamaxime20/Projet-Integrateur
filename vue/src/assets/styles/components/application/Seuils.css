@@ -1,0 +1,140 @@
+.seuils-container {
+    padding: 20px;
+    background-color: #F9FAFB;
+    min-height: 100vh;
+}
+
+.seuils-header h1 {
+    color: #2E7D32;
+    font-size: 1.8rem;
+    margin-bottom: 5px;
+}
+
+.seuils-header p {
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.seuils-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+@media (max-width: 900px) {
+    .seuils-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.capteurs-selector {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+}
+
+.capteur-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+    border: 2px solid #eee;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s;
+    min-width: 100px;
+}
+
+.capteur-btn.active {
+    border-color: #0288D1;
+    background-color: rgba(2, 136, 209, 0.05);
+    color: #0288D1;
+}
+
+.capteur-btn span {
+    margin-top: 8px;
+    font-weight: 500;
+}
+
+.seuils-form .input-group {
+    margin-bottom: 20px;
+}
+
+.seuils-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
+}
+
+.seuils-form input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+.save-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 15px;
+    background-color: #2E7D32;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.save-btn:hover {
+    background-color: #1B5E20;
+}
+
+.history-item {
+    padding: 15px 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.alert-message {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+}
+
+.alert-message.success {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.alert-message.error {
+    background-color: #ffebee;
+    color: #d32f2f;
+}
+
+.history-section h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
