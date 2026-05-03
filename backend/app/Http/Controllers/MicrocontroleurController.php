@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Actionneur;
 use App\Models\Capteur;
 use App\Models\Grandeur;
+use App\Models\EtatActionneur;
+use App\Models\EtatCapteur;
+use App\Models\EtatMicrocontroleur;
 use App\Models\Microcontroleur;
 use App\Models\Session;
 use App\Models\Seuil;
@@ -134,29 +137,44 @@ class MicrocontroleurController extends Controller
                 'user_id' => null
             ]);
 
-            Actionneur::create([
+            EtatMicrocontroleur::create([
+                'microcontroleur_id' => $microcontroleur->id,
+                'etat' => 'inactif',
+                'date_debut_etat' => now(),
+            ]);
+
+            $actionneurs = [];
+            $actionneurs[] = Actionneur::create([
                 'microcontroleur_id' => $microcontroleur->id,
                 'modele' => "pompe classique",
                 'etat' => 'inactif',
             ]);
 
-            Actionneur::create([
+            $actionneurs[] = Actionneur::create([
                 'microcontroleur_id' => $microcontroleur->id,
                 'modele' => "servomoteur classique",
                 'etat' => 'inactif',
             ]);
 
-            Actionneur::create([
+            $actionneurs[] = Actionneur::create([
                 'microcontroleur_id' => $microcontroleur->id,
                 'modele' => "ampoule classique",
                 'etat' => 'inactif',
             ]);
             
-            Actionneur::create([
+            $actionneurs[] = Actionneur::create([
                 'microcontroleur_id' => $microcontroleur->id,
                 'modele' => "ventilateur classique",
                 'etat' => 'inactif',
             ]);
+
+            foreach ($actionneurs as $actionneur) {
+                EtatActionneur::create([
+                    'actionneur_id' => $actionneur->id,
+                    'etat' => $actionneur->etat,
+                    'date_debut_etat' => now(),
+                ]);
+            }
 
             $temperature = Grandeur::where('name', "Température de l'air")->first();
             $humidite_air = Grandeur::where('name', "Humidité de l'air")->first();
@@ -169,47 +187,56 @@ class MicrocontroleurController extends Controller
                 throw new \Exception("Certaines grandeurs physiques sont manquantes dans la base de données. Veuillez exécuter createBaseofData.sql.");
             }
 
-            Capteur::create([
+            $capteurs = [];
+            $capteurs[] = Capteur::create([
                 'type_mesure' => $humidite_sol->id,
                 'microcontroleur_id' => $microcontroleur->id,
                 'etat' => 'inactif',
                 'modele' => 'YL-06',
             ]);
 
-            Capteur::create([
+            $capteurs[] = Capteur::create([
                 'type_mesure' => $temperature->id,
                 'microcontroleur_id' => $microcontroleur->id,
                 'etat' => 'inactif',
                 'modele' => 'DHT11',
             ]);
 
-            Capteur::create([
+            $capteurs[] = Capteur::create([
                 'type_mesure' => $humidite_air->id,
                 'microcontroleur_id' => $microcontroleur->id,
                 'etat' => 'inactif',
                 'modele' => 'DHT11',
             ]);
 
-            Capteur::create([
+            $capteurs[] = Capteur::create([
                 'type_mesure' => $co2->id,
                 'microcontroleur_id' => $microcontroleur->id,
                 'etat' => 'inactif',
                 'modele' => 'MQ-135',
             ]);
 
-            Capteur::create([
+            $capteurs[] = Capteur::create([
                 'type_mesure' => $luminosite->id,
                 'microcontroleur_id' => $microcontroleur->id,
                 'etat' => 'inactif',
                 'modele' => 'LDR',
             ]);
 
-            Capteur::create([
+            $capteurs[] = Capteur::create([
                 'type_mesure' => $niveau_eau->id,
                 'microcontroleur_id' => $microcontroleur->id,
                 'etat' => 'inactif',
                 'modele' => 'water sensor'
             ]);
+
+            foreach ($capteurs as $capteur) {
+                EtatCapteur::create([
+                    'capteur_id' => $capteur->id,
+                    'etat' => $capteur->etat,
+                    'date_debut_etat' => now(),
+                ]);
+            }
 
             DB::commit();
 

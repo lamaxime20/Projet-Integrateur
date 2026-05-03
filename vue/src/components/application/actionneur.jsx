@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import VentilateurDetails from "./actionneur/ventilateurDetails";
 import PompeDetails from "./actionneur/pompeDetails";
 import AmpouleDetails from "./actionneur/ampouleDetails";
@@ -8,14 +8,18 @@ import {
     charger_actionneur_choisi,
     obtenir_couleur_etat_actionneur,
     obtenir_libelle_etat_actionneur,
+    charger_etat_ventilateur,
+    charger_etat_pompe,
+    charger_etat_ampoule,
+    charger_etat_servo_moteur,
 } from "../../utils/actionneur";
 import "../../assets/styles/components/application/actionneur.css";
 
 function Actionneur() {
-    const [ventilateurState] = useState("running");
-    const [pompeState] = useState("running");
-    const [ampouleState] = useState("running");
-    const [servoMoteurState] = useState("running");
+    const [ventilateurState, setVentilateurState] = useState("running");
+    const [pompeState, setPompeState] = useState("running");
+    const [ampouleState, setAmpouleState] = useState("running");
+    const [servoMoteurState, setServoMoteurState] = useState("running");
     const [actionneurChoisi, setActionneurChoisi] = useState(charger_actionneur_choisi());
     const vocabulaire = {
         ventilateur: {
@@ -39,6 +43,17 @@ function Actionneur() {
             defaillant: "Défaillante",
         },
     };
+
+    useEffect(() => {
+        const intervals = [
+            charger_etat_ventilateur(setVentilateurState),
+            charger_etat_pompe(setPompeState),
+            charger_etat_ampoule(setAmpouleState),
+            charger_etat_servo_moteur(setServoMoteurState),
+        ];
+
+        return () => intervals.forEach(clearInterval);
+    }, []);
 
     const choisirActionneur = (actionneur) => {
         setActionneurChoisi(actionneur);

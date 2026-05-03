@@ -8,6 +8,12 @@ import {
     charger_temps_activation_actionneurs_7j,
 } from "../../utils/statistiques";
 import { generer_rapport_microcontroleur } from "../../utils/rapport";
+import {
+    charger_etat_ventilateur,
+    charger_etat_pompe,
+    charger_etat_ampoule,
+    charger_etat_servo_moteur,
+} from "../../utils/actionneur";
 import "../../assets/styles/components/application/statistiques.css";
 
 const AUJOURD_HUI = new Date().toISOString().split("T")[0];
@@ -59,22 +65,22 @@ function Statistiques() {
     const [etatsActionneurs, setEtatsActionneurs] = useState({});
 
     useEffect(() => {
-        charger_historique_microcontroleur(setHistoriqueMicro);
-        charger_moyennes_capteurs_7j(setMoyennesCapteurs);
+        const intervals = [
+            charger_historique_microcontroleur(setHistoriqueMicro),
+            charger_moyennes_capteurs_7j(setMoyennesCapteurs),
+            charger_temps_activation_actionneurs_7j(setTempsActionneurs),
+            charger_etat_ventilateur((e) => setEtatsActionneurs((prev) => ({ ...prev, ventilateur: e }))),
+            charger_etat_pompe((e) => setEtatsActionneurs((prev) => ({ ...prev, pompe: e }))),
+            charger_etat_ampoule((e) => setEtatsActionneurs((prev) => ({ ...prev, ampoule: e }))),
+            charger_etat_servo_moteur((e) => setEtatsActionneurs((prev) => ({ ...prev, "servo-moteur": e }))),
+        ];
 
         const capteurs = ["co2", "humidite-sol", "luminosite", "niveau-eau", "temperature"];
         capteurs.forEach((c) =>
-            charger_etat_capteur(c, (e) => setEtatsCapteurs((prev) => ({ ...prev, [c]: e })))
+            intervals.push(charger_etat_capteur(c, (e) => setEtatsCapteurs((prev) => ({ ...prev, [c]: e }))))
         );
 
-        charger_temps_activation_actionneurs_7j(setTempsActionneurs);
-
-        const actionneurs = ["ventilateur", "pompe", "ampoule", "servo-moteur"];
-        actionneurs.forEach((a) => {
-            // Simulation état — remplacera les appels réels
-            const etatsSimules = { ventilateur: "running", pompe: "stopped", ampoule: "running", "servo-moteur": "stopped" };
-            setEtatsActionneurs((prev) => ({ ...prev, [a]: etatsSimules[a] }));
-        });
+        return () => intervals.forEach(clearInterval);
     }, []);
 
     const handleToggleEtatMicro = (etat) => {

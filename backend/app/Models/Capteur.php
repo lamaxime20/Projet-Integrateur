@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Grandeur;
 use App\Models\Microcontroleur;
 use App\Models\Donnee;
+use App\Models\EtatCapteur;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -45,5 +46,10 @@ class Capteur extends Model
     public function donnees(): HasMany
     {
         return $this->hasMany(Donnee::class);
+    }
+
+    public function historiquesEtats(): HasMany
+    {
+        return $this->hasMany(EtatCapteur::class);
     }
 }

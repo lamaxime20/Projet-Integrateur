@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
-import { charger_microcontroleur_local } from "../../utils/microcontroleur";
+import { useEffect, useState } from "react";
+import { charger_microcontroleur_local, charger_etat_microcontroleur_temps_reel } from "../../utils/microcontroleur";
 import { changer_microcontroleur_user } from "../../utils/microcontroleur";
 import { logoutFromDatabase } from "../../utils/user";
 import { DASHBOARD, ACTIONNEUR, SEUIL, STATISTIQUE, NOTIFICATION } from "../../utils/sidebar-constants";
@@ -8,9 +8,14 @@ import '../../assets/styles/components/application/sidebar.css'
 import { useAuth } from "../../hooks/useAuth";
 
 function Sidebar({ongletActif}) {
-    const microcontroleur = charger_microcontroleur_local();
+    const [microcontroleur, setMicrocontroleur] = useState(charger_microcontroleur_local());
     const [sidebarEpinglee, setSidebarEpinglee] = useState(false);
     const logout = useAuth().logout;
+
+    useEffect(() => {
+        const interval = charger_etat_microcontroleur_temps_reel(setMicrocontroleur);
+        return () => clearInterval(interval);
+    }, []);
 
     const basculerSidebarEpinglee = (event) => {
         setSidebarEpinglee((epinglee) => !epinglee);
@@ -45,10 +50,10 @@ function Sidebar({ongletActif}) {
                     </span>
                 </button>
                 <div className="sidebar-header">
-                    <h1>{microcontroleur.nom}</h1>
+                    <h1>{microcontroleur?.nom}</h1>
                     <div className="sidebar-connecte">
-                        <span className={`choix-microcontroleur-point ${microcontroleur.allume ? "vert" : "rouge"}`} aria-hidden="true"></span>
-                        {microcontroleur.allume ? "Connecté" : "Pas connecté"}
+                        <span className={`choix-microcontroleur-point ${microcontroleur?.allume ? "vert" : "rouge"}`} aria-hidden="true"></span>
+                        {microcontroleur?.allume ? "Connecté" : "Pas connecté"}
                     </div>
                     <button
                         className="sidebar-change_microcontroleur"

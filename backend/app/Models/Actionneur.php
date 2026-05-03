@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Microcontroleur;
 use App\Models\Instruction;
+use App\Models\EtatActionneur;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -40,5 +41,10 @@ class Actionneur extends Model
     public function instructions(): HasMany
     {
         return $this->hasMany(Instruction::class);
+    }
+
+    public function historiquesEtats(): HasMany
+    {
+        return $this->hasMany(EtatActionneur::class);
     }
 }

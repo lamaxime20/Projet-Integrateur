@@ -18,12 +18,14 @@ function VentilateurDetails({retourner}) {
     const [modalAction, setModalAction] = useState(null);
 
     useEffect(() => {
-        charger_etat_ventilateur(setVentilateurState);
-        charger_temperature_actuelle(setTemperature);
+        const intervals = [
+            charger_etat_ventilateur(setVentilateurState),
+            charger_temperature_actuelle(setTemperature),
+            charger_historique_ventilateur(setHistoriqueVentilateur),
+        ];
         charger_temperature_seuils(setSeuils);
-        const intervalHistorique = charger_historique_ventilateur(setHistoriqueVentilateur);
 
-        return () => clearInterval(intervalHistorique);
+        return () => intervals.forEach(clearInterval);
     }, []);
 
     const retour = () => {

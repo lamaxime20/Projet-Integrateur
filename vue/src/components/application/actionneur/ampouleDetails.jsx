@@ -23,12 +23,14 @@ function AmpouleDetails({ retourner }) {
     const [modalAction, setModalAction] = useState(null);
 
     useEffect(() => {
-        charger_etat_ampoule(setAmpouleState);
-        charger_luminosite_actuelle(setLuminosite);
+        const intervals = [
+            charger_etat_ampoule(setAmpouleState),
+            charger_luminosite_actuelle(setLuminosite),
+            charger_historique_ampoule(setHistoriqueAmpoule),
+        ];
         charger_luminosite_seuils(setSeuils);
-        const intervalHistorique = charger_historique_ampoule(setHistoriqueAmpoule);
 
-        return () => clearInterval(intervalHistorique);
+        return () => intervals.forEach(clearInterval);
     }, []);
 
     const retour = () => {

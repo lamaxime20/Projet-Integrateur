@@ -3,6 +3,7 @@ import API_BASE_URL from './config.js';
 const LOCAL_ACTIONNEUR_CHOISI = "actionneur_choisi";
 const UNE_HEURE_EN_MINUTES = 60;
 const DOUZE_HEURES_EN_MINUTES = 12 * UNE_HEURE_EN_MINUTES;
+const INTERVALLE_TEMPS_REEL_MS = 20000;
 
 export function enregistrer_actionneur_choisi(actionneur) {
     localStorage.setItem(LOCAL_ACTIONNEUR_CHOISI, JSON.stringify(actionneur));
@@ -102,87 +103,105 @@ function construireParams(nomMicro) {
     return nomMicro ? `?microcontroleur=${encodeURIComponent(nomMicro)}` : '';
 }
 
+async function getApi(path) {
+    const nomMicro = obtenirNomMicrocontroleur();
+    const separator = path.includes("?") ? "&" : "?";
+    const params = nomMicro ? `${separator}microcontroleur=${encodeURIComponent(nomMicro)}` : "";
+    const response = await fetch(`${API_BASE_URL}${path}${params}`, {
+        credentials: 'include',
+    });
+
+    if (!response.ok) throw new Error("Erreur API");
+    return await response.json();
+}
+
+function lancerChargementTempsReel(charger) {
+    charger();
+    return setInterval(charger, INTERVALLE_TEMPS_REEL_MS);
+}
+
+function normaliserEtat(etat) {
+    if (etat === "actif") return "running";
+    if (etat === "inactif") return "stopped";
+    return etat ?? "stopped";
+}
+
+function chargerEtatActionneur(actionneur, setter, fallback) {
+    return lancerChargementTempsReel(async () => {
+        try {
+            const data = await getApi(`/actionneurs/${actionneur}/etat`);
+            setter(normaliserEtat(data.etat));
+        } catch {
+            setter(fallback);
+        }
+    });
+}
+
+function chargerValeurCapteur(capteur, cle, setter, fallback) {
+    return lancerChargementTempsReel(async () => {
+        try {
+            const data = await getApi(`/capteurs/${capteur}/actuelle`);
+            setter(data[cle]);
+        } catch {
+            setter(fallback);
+        }
+    });
+}
+
+function chargerHistoriqueActionneur(actionneur, setter, fallback) {
+    return lancerChargementTempsReel(async () => {
+        try {
+            const data = await getApi(`/actionneurs/${actionneur}/historique?fenetre=12h`);
+            setter(data);
+        } catch {
+            setter(fallback());
+        }
+    });
+}
+
 // ============================================================
 //  CHARGEMENT DES ÉTATS ACTIONNEURS
 // ============================================================
 
-export async function charger_etat_ventilateur(setVentilateurState) {
-    // API plus tard:
-    // Envoyer: GET /api/actionneurs/ventilateur/etat avec l'identifiant du microcontroleur en query/header.
-    // Recevoir: { etat: "running" | "stopped" | "defaillant" }.
-
-    setVentilateurState("running");
+export function charger_etat_ventilateur(setVentilateurState) {
+    return chargerEtatActionneur("ventilateur", setVentilateurState, "running");
 }
 
-export async function charger_etat_pompe(setPompeState) {
-    // API plus tard:
-    // Envoyer: GET /api/actionneurs/pompe/etat avec l'identifiant du microcontroleur.
-    // Recevoir: { etat: "running" | "stopped" | "defaillant" }.
-
-    setPompeState("running");
+export function charger_etat_pompe(setPompeState) {
+    return chargerEtatActionneur("pompe", setPompeState, "running");
 }
 
-export async function charger_etat_ampoule(setAmpouleState) {
-    // API plus tard:
-    // Envoyer: GET /api/actionneurs/ampoule/etat avec l'identifiant du microcontroleur.
-    // Recevoir: { etat: "running" | "stopped" | "defaillant" }.
-
-    setAmpouleState("running");
+export function charger_etat_ampoule(setAmpouleState) {
+    return chargerEtatActionneur("ampoule", setAmpouleState, "running");
 }
 
-export async function charger_etat_servo_moteur(setServoMoteurState) {
-    // API plus tard:
-    // Envoyer: GET /api/actionneurs/porte/etat avec l'identifiant du microcontroleur.
-    // Recevoir: { etat: "running" | "stopped" | "defaillant" }.
-    // running = ouverte (CO2 élevé), stopped = fermée (CO2 normal).
-
-    setServoMoteurState("stopped");
+export function charger_etat_servo_moteur(setServoMoteurState) {
+    return chargerEtatActionneur("servo-moteur", setServoMoteurState, "stopped");
 }
 
 // ============================================================
 //  CHARGEMENT DES VALEURS CAPTEURS
 // ============================================================
 
-export async function charger_temperature_actuelle(setTemperatureActuelle) {
-    // API plus tard:
-    // Envoyer: GET /api/capteurs/temperature/actuelle avec l'identifiant du microcontroleur.
-    // Recevoir: { temperature: number } en degrés Celsius.
-
-    setTemperatureActuelle(20);
+export function charger_temperature_actuelle(setTemperatureActuelle) {
+    return chargerValeurCapteur("temperature", "temperature", setTemperatureActuelle, 20);
 }
 
-export async function charger_humidite_sol_actuelle(setHumiditeSol) {
-    // API plus tard:
-    // Envoyer: GET /api/capteurs/humidite-sol/actuelle avec l'identifiant du microcontroleur.
-    // Recevoir: { humidite_sol: number } en pourcentage.
-
-    setHumiditeSol(42);
+export function charger_humidite_sol_actuelle(setHumiditeSol) {
+    return chargerValeurCapteur("humidite-sol", "humidite_sol", setHumiditeSol, 42);
 }
 
 // Le capteur de niveau d'eau est digital : "OK" (réservoir plein) ou "Bas" (réservoir vide).
-export async function charger_niveau_eau_actuel(setNiveauEau) {
-    // API plus tard:
-    // Envoyer: GET /api/capteurs/niveau-eau/actuel avec l'identifiant du microcontroleur.
-    // Recevoir: { niveau_eau: "OK" | "Bas" }.
-
-    setNiveauEau("OK");
+export function charger_niveau_eau_actuel(setNiveauEau) {
+    return chargerValeurCapteur("niveau-eau", "niveau_eau", setNiveauEau, "OK");
 }
 
-export async function charger_luminosite_actuelle(setLuminosite) {
-    // API plus tard:
-    // Envoyer: GET /api/capteurs/luminosite/actuelle avec l'identifiant du microcontroleur.
-    // Recevoir: { luminosite: number } en pourcentage relatif (0-100).
-
-    setLuminosite(54);
+export function charger_luminosite_actuelle(setLuminosite) {
+    return chargerValeurCapteur("luminosite", "luminosite", setLuminosite, 54);
 }
 
-export async function charger_co2_actuel(setCo2) {
-    // API plus tard:
-    // Envoyer: GET /api/capteurs/co2/actuel avec l'identifiant du microcontroleur.
-    // Recevoir: { co2: number } en valeur relative (0-100).
-    // La porte s'ouvre si co2 > co2_max, se ferme si co2 < co2_min.
-
-    setCo2(45);
+export function charger_co2_actuel(setCo2) {
+    return chargerValeurCapteur("co2", "co2", setCo2, 45);
 }
 
 // ============================================================
@@ -337,55 +356,19 @@ function generer_historique_actionneur_simule(actionneur, dateActuelle = new Dat
 }
 
 export function charger_historique_ventilateur(setHistoriqueVentilateur) {
-    // API plus tard:
-    // Envoyer: GET /api/actionneurs/ventilateur/historique?fenetre=12h.
-    // Recevoir: [{ etat: "running" | "stopped" | "defaillant", debut: ISOString, fin: ISOString }].
-    const envoyerHistorique = () => {
-        setHistoriqueVentilateur(generer_historique_ventilateur_simule());
-    };
-
-    envoyerHistorique();
-
-    return setInterval(envoyerHistorique, 15000);
+    return chargerHistoriqueActionneur("ventilateur", setHistoriqueVentilateur, generer_historique_ventilateur_simule);
 }
 
 export function charger_historique_pompe(setHistoriquePompe) {
-    // API plus tard:
-    // Envoyer: GET /api/actionneurs/pompe/historique?fenetre=12h.
-    // Recevoir: [{ etat: "running" | "stopped" | "defaillant", debut: ISOString, fin: ISOString }].
-    const envoyerHistorique = () => {
-        setHistoriquePompe(generer_historique_actionneur_simule("pompe"));
-    };
-
-    envoyerHistorique();
-
-    return setInterval(envoyerHistorique, 15000);
+    return chargerHistoriqueActionneur("pompe", setHistoriquePompe, () => generer_historique_actionneur_simule("pompe"));
 }
 
 export function charger_historique_ampoule(setHistoriqueAmpoule) {
-    // API plus tard:
-    // Envoyer: GET /api/actionneurs/ampoule/historique?fenetre=12h.
-    // Recevoir: [{ etat: "running" | "stopped" | "defaillant", debut: ISOString, fin: ISOString }].
-    const envoyerHistorique = () => {
-        setHistoriqueAmpoule(generer_historique_actionneur_simule("ampoule"));
-    };
-
-    envoyerHistorique();
-
-    return setInterval(envoyerHistorique, 15000);
+    return chargerHistoriqueActionneur("ampoule", setHistoriqueAmpoule, () => generer_historique_actionneur_simule("ampoule"));
 }
 
 export function charger_historique_servo_moteur(setHistoriqueServoMoteur) {
-    // API plus tard:
-    // Envoyer: GET /api/actionneurs/porte/historique?fenetre=12h.
-    // Recevoir: [{ etat: "running" | "stopped" | "defaillant", debut: ISOString, fin: ISOString }].
-    const envoyerHistorique = () => {
-        setHistoriqueServoMoteur(generer_historique_actionneur_simule("servoMoteur"));
-    };
-
-    envoyerHistorique();
-
-    return setInterval(envoyerHistorique, 15000);
+    return chargerHistoriqueActionneur("servo-moteur", setHistoriqueServoMoteur, () => generer_historique_actionneur_simule("servoMoteur"));
 }
 
 export function construire_batonnets_historique_actionneur(historique, dateActuelle = new Date()) {
@@ -421,19 +404,27 @@ export function construire_batonnets_historique_actionneur(historique, dateActue
     return batonnets;
 }
 
-export function creer_instruction_simule(actionneur, action, dureeMinutes) {
-    // API plus tard:
-    // Envoyer: POST /api/instructions avec { actionneur_id, action, duree_minutes }
-    // Recevoir: { id, action, duree, statut, date_arrivee, user_id, actionneur_id }
+export async function creer_instruction_simule(actionneur, action, dureeMinutes) {
+    try {
+        const nomMicro = obtenirNomMicrocontroleur();
+        const params = construireParams(nomMicro);
+        const response = await fetch(`${API_BASE_URL}/instructions${params}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ actionneur, action, duree_minutes: dureeMinutes }),
+        });
 
-    const instruction = {
-        id: crypto.getRandomValues(new Uint8Array(16)).toString(),
-        action,
-        duree: dureeMinutes * 60,
-        statut: 'en_attente',
-        date_arrivee: new Date().toISOString(),
-        actionneur,
-    };
-
-    return instruction;
+        if (!response.ok) throw new Error("Erreur API");
+        return await response.json();
+    } catch {
+        return {
+            id: crypto.getRandomValues(new Uint8Array(16)).toString(),
+            action,
+            duree: dureeMinutes * 60,
+            statut: 'en_attente',
+            date_arrivee: new Date().toISOString(),
+            actionneur,
+        };
+    }
 }

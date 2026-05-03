@@ -7,6 +7,8 @@ use App\Http\Controllers\SignupController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\MicrocontroleurController;
 use App\Http\Controllers\SeuilController;
+use App\Http\Controllers\RealtimeDataController;
+use App\Http\Controllers\RapportController;
 
 Route::post('/device/token', [DeviceController::class, 'getToken']);
 
@@ -41,4 +43,26 @@ Route::middleware('user.token')->group(function () {
     Route::get('/seuils/pompe', [SeuilController::class, 'pompe']);
     Route::get('/seuils/luminosite', [SeuilController::class, 'luminosite']);
     Route::get('/seuils/co2', [SeuilController::class, 'co2']);
+
+    Route::get('/microcontroleur/etat', [RealtimeDataController::class, 'microcontroleurEtat']);
+    Route::get('/microcontroleur/historique', [RealtimeDataController::class, 'microcontroleurHistorique']);
+
+    Route::get('/capteurs/moyennes', [RealtimeDataController::class, 'capteursMoyennes']);
+    Route::get('/capteurs/{capteur}/etat', [RealtimeDataController::class, 'capteurEtat']);
+    Route::get('/capteurs/{capteur}/actuelle', [RealtimeDataController::class, 'capteurValeurActuelle']);
+    Route::get('/capteurs/{capteur}/actuel', [RealtimeDataController::class, 'capteurValeurActuelle']);
+    Route::get('/capteurs/{capteur}/historique', [RealtimeDataController::class, 'capteurHistorique']);
+    Route::get('/capteurs/{capteur}/stats', [RealtimeDataController::class, 'capteurStats']);
+
+    Route::get('/actionneurs/temps-activation', [RealtimeDataController::class, 'actionneursTempsActivation']);
+    Route::get('/actionneurs/{actionneur}/etat', [RealtimeDataController::class, 'actionneurEtat']);
+    Route::get('/actionneurs/{actionneur}/historique', [RealtimeDataController::class, 'actionneurHistorique']);
+    Route::get('/actionneurs/{actionneur}/instructions', [RealtimeDataController::class, 'actionneurInstructions']);
+    Route::get('/actionneurs/{actionneur}/grandeurs', [RealtimeDataController::class, 'actionneurGrandeurs']);
+    Route::post('/instructions', [RealtimeDataController::class, 'creerInstruction']);
+
+    Route::post('/rapports/microcontroleur', [RapportController::class, 'microcontroleur']);
+    Route::post('/rapports/capteurs/{capteur}', [RapportController::class, 'capteur']);
+    Route::post('/rapports/actionneurs/{actionneur}/instructions', [RapportController::class, 'instructions']);
+    Route::post('/rapports/actionneurs/{actionneur}', [RapportController::class, 'actionneur']);
 });

@@ -8,6 +8,7 @@ use App\Models\Seuil;
 use App\Models\Actionneur;
 use App\Models\Capteur;
 use App\Models\MicrocontroleurToken;
+use App\Models\EtatMicrocontroleur;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -63,5 +64,10 @@ class Microcontroleur extends Model
     public function tokens(): HasMany
     {
         return $this->hasMany(MicrocontroleurToken::class);
+    }
+
+    public function historiquesEtats(): HasMany
+    {
+        return $this->hasMany(EtatMicrocontroleur::class);
     }
 }

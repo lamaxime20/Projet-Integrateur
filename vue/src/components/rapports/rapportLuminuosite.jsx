@@ -20,8 +20,11 @@ function RapportLuminuosite() {
     const [erreur, setErreur] = useState(null);
 
     useEffect(() => {
-        charger_historique_capteur("luminosite", setHistorique);
-        charger_stats_capteur("luminosite", setStats);
+        const intervals = [
+            charger_historique_capteur("luminosite", setHistorique),
+            charger_stats_capteur("luminosite", setStats),
+        ];
+        return () => intervals.forEach(clearInterval);
     }, []);
 
     const handleToggleEtat = (etat) => setEtats((prev) => ({ ...prev, [etat]: !prev[etat] }));

@@ -2,6 +2,7 @@ import API_BASE_URL from './config.js';
 
 const LOCAL_INFOS_MICROCONTROLEUR_ENREGISTREMENT = "infos_microcontroleur_enregistrement";
 const LOCAL_ERREUR_ENREGISTREMENT = "erreur_enregistrement";
+const INTERVALLE_TEMPS_REEL_MS = 20000;
 
 export function enregistrer_microcontroleur_local(microcontroleur) {
     localStorage.setItem("microcontroleur_actuel", JSON.stringify(microcontroleur));
@@ -81,4 +82,28 @@ export async function charger_microcontroleur_user(nom_microcontroleur) {
 export function changer_microcontroleur_user() {
     supprimer_microcontroleur_local();
     window.location.reload();
+}
+
+export function charger_etat_microcontroleur_temps_reel(setMicrocontroleur) {
+    const charger = async () => {
+        const microLocal = charger_microcontroleur_local();
+        if (!microLocal?.nom) return;
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/microcontroleur/etat?microcontroleur=${encodeURIComponent(microLocal.nom)}`, {
+                credentials: 'include',
+            });
+
+            if (!response.ok) throw new Error("Erreur API");
+            const data = await response.json();
+            const microMisAJour = { ...microLocal, allume: Boolean(data.allume) };
+            enregistrer_microcontroleur_local(microMisAJour);
+            setMicrocontroleur(microMisAJour);
+        } catch {
+            setMicrocontroleur(microLocal);
+        }
+    };
+
+    charger();
+    return setInterval(charger, INTERVALLE_TEMPS_REEL_MS);
 }

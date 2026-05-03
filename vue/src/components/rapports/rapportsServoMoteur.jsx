@@ -53,9 +53,12 @@ function RapportsServoMoteur() {
     const [erreurInstr, setErreurInstr] = useState(null);
 
     useEffect(() => {
-        charger_historique_actionneur_rapport("servo-moteur", setHistorique);
-        charger_grandeurs_actionneur("servo-moteur", setGrandeurs);
-        charger_instructions_actionneur("servo-moteur", setInstructions);
+        const intervals = [
+            charger_historique_actionneur_rapport("servo-moteur", setHistorique),
+            charger_grandeurs_actionneur("servo-moteur", setGrandeurs),
+            charger_instructions_actionneur("servo-moteur", setInstructions),
+        ];
+        return () => intervals.forEach(clearInterval);
     }, []);
 
     const handleToggleEtat = (etat) => setEtatsGraph((prev) => ({ ...prev, [etat]: !prev[etat] }));

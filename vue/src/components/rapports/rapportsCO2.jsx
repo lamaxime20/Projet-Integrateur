@@ -20,8 +20,11 @@ function RapportsCO2() {
     const [erreur, setErreur] = useState(null);
 
     useEffect(() => {
-        charger_historique_capteur("co2", setHistorique);
-        charger_stats_capteur("co2", setStats);
+        const intervals = [
+            charger_historique_capteur("co2", setHistorique),
+            charger_stats_capteur("co2", setStats),
+        ];
+        return () => intervals.forEach(clearInterval);
     }, []);
 
     const handleToggleEtat = (etat) => setEtats((prev) => ({ ...prev, [etat]: !prev[etat] }));

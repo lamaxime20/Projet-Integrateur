@@ -26,13 +26,15 @@ function PompeDetails({ retourner }) {
     const [modalAction, setModalAction] = useState(null);
 
     useEffect(() => {
-        charger_etat_pompe(setPompeState);
-        charger_humidite_sol_actuelle(setHumiditeSol);
-        charger_niveau_eau_actuel(setNiveauEau);
+        const intervals = [
+            charger_etat_pompe(setPompeState),
+            charger_humidite_sol_actuelle(setHumiditeSol),
+            charger_niveau_eau_actuel(setNiveauEau),
+            charger_historique_pompe(setHistoriquePompe),
+        ];
         charger_pompe_seuils(setSeuils);
-        const intervalHistorique = charger_historique_pompe(setHistoriquePompe);
 
-        return () => clearInterval(intervalHistorique);
+        return () => intervals.forEach(clearInterval);
     }, []);
 
     const retour = () => {

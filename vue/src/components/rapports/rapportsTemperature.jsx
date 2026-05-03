@@ -20,8 +20,11 @@ function RapportsTemperature() {
     const [erreur, setErreur] = useState(null);
 
     useEffect(() => {
-        charger_historique_capteur("temperature", setHistorique);
-        charger_stats_capteur("temperature", setStats);
+        const intervals = [
+            charger_historique_capteur("temperature", setHistorique),
+            charger_stats_capteur("temperature", setStats),
+        ];
+        return () => intervals.forEach(clearInterval);
     }, []);
 
     const handleToggleEtat = (etat) => setEtats((prev) => ({ ...prev, [etat]: !prev[etat] }));

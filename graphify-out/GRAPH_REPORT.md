@@ -1,12 +1,12 @@
 # Graph Report - D:\Desktop\X2\Projet Integrateur  (2026-05-03)
 
 ## Corpus Check
-- 7958 files · ~4,141,272 words
+- 7966 files · ~4,143,472 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 51370 nodes · 106688 edges · 2906 communities detected
-- Extraction: 60% EXTRACTED · 40% INFERRED · 0% AMBIGUOUS · INFERRED: 42983 edges (avg confidence: 0.8)
+- 51447 nodes · 107084 edges · 2906 communities detected
+- Extraction: 60% EXTRACTED · 40% INFERRED · 0% AMBIGUOUS · INFERRED: 43220 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Community Hubs (Navigation)
@@ -2919,11 +2919,11 @@
 
 ## God Nodes (most connected - your core abstractions)
 1. `Str` - 575 edges
-2. `get()` - 503 edges
+2. `get()` - 514 edges
 3. `Configuration` - 491 edges
 4. `Arr` - 468 edges
 5. `Builder` - 418 edges
-6. `map()` - 356 edges
+6. `map()` - 358 edges
 7. `all()` - 318 edges
 8. `PHPUnit` - 261 edges
 9. `Assert` - 236 edges
@@ -2938,274 +2938,274 @@
   D:\Desktop\X2\Projet Integrateur\backend\vendor\laravel\framework\src\Illuminate\Bus\Queueable.php → D:\Desktop\X2\Projet Integrateur\backend\vendor\phpunit\phpunit\src\TextUI\Configuration\Xml\PHPUnit.php
 - `Arr` --calls--> `append_config()`  [INFERRED]
   D:\Desktop\X2\Projet Integrateur\backend\vendor\laravel\framework\src\Illuminate\Collections\Arr.php → D:\Desktop\X2\Projet Integrateur\backend\vendor\laravel\framework\src\Illuminate\Support\helpers.php
-- `enum_value()` --calls--> `timezone()`  [INFERRED]
-  D:\Desktop\X2\Projet Integrateur\backend\vendor\laravel\framework\src\Illuminate\Collections\functions.php → D:\Desktop\X2\Projet Integrateur\backend\vendor\laravel\framework\src\Illuminate\Console\Scheduling\ManagesFrequencies.php
+- `Arr` --calls--> `validateRequiredArrayKeys()`  [INFERRED]
+  D:\Desktop\X2\Projet Integrateur\backend\vendor\laravel\framework\src\Illuminate\Collections\Arr.php → D:\Desktop\X2\Projet Integrateur\backend\vendor\laravel\framework\src\Illuminate\Validation\Concerns\ValidatesAttributes.php
 
 ## Communities
 
 ### Community 0 - "Community 0"
 Cohesion: 0.0
-Nodes (139): AbstractContextAwareMatcher, AbstractMatcher, AbstractUid, Address, ArgumentResolver, ArrayConverter, ArrayList, Arrays (+131 more)
+Nodes (322): AbstractBlock, AbstractClassPass, AbstractCloner, AbstractField, AbstractProviderFactory, AbstractRouteCollection, AbstractTransportFactory, Alias (+314 more)
 
 ### Community 1 - "Community 1"
 Cohesion: 0.0
-Nodes (311): AbstractBundle, AbstractClassPass, AbstractCloner, AbstractDefaultParametersMatcher, AddConsoleCommandPass, AddEventAliasesPass, AnonymousComponent, ApplicationDescription (+303 more)
+Nodes (1223): down(), up(), down(), up(), down(), up(), down(), up() (+1215 more)
 
 ### Community 2 - "Community 2"
 Cohesion: 0.0
-Nodes (186): AbstractConfigCommand, AnalysisResult, ApplicationTester, ArrayTransport, toMailAttachment(), AutoCompleter, BufferCommand, CacheWarmer (+178 more)
+Nodes (138): AbstractContextAwareMatcher, AbstractMatcher, Address, ArrayConverter, ArrayList, Arrays, ASCII, AsciiSlugger (+130 more)
 
 ### Community 3 - "Community 3"
 Cohesion: 0.0
-Nodes (296): AbstractField, AddLinkHeadersForPreloadedAssets, AddressInfoCaster, AliasLoader, convertFromHexToAnsiColorCode(), convertFromRGB(), degradeHexColorToAnsi4(), degradeHexColorToAnsi8() (+288 more)
+Nodes (385): AbstractSessionListener, AbstractSurrogate, AbstractSurrogateFragmentRenderer, AcceptHeader, Actionneur(), ajouterMinutes(), charger_actionneur_choisi(), charger_co2_actuel() (+377 more)
 
 ### Community 4 - "Community 4"
 Cohesion: 0.0
-Nodes (1190): down(), up(), down(), up(), down(), up(), down(), up() (+1182 more)
+Nodes (488): AbstractTypedMap, ArraySessionHandler, delete(), fromAttributes(), fromRawAttributes(), getCreatedAtColumn(), getDeleteQuery(), getOtherKey() (+480 more)
 
 ### Community 5 - "Community 5"
 Cohesion: 0.0
-Nodes (224): AfterLastTestMethodCalled, AfterLastTestMethodErrored, AfterLastTestMethodFailed, AfterLastTestMethodFinished, AfterTestClassMethodErroredSubscriber, AfterTestClassMethodFailedSubscriber, AfterTestMethodCalled, AfterTestMethodErrored (+216 more)
+Nodes (127): AbstractUid, AnalysisResult, AutoCompleter, BinaryUtil, BufferCommand, CacheWarmer, CodeCoverage, CodeCoverageFilterRegistry (+119 more)
 
 ### Community 6 - "Community 6"
 Cohesion: 0.0
-Nodes (307): AboutCommand, AbstractPipes, creer_instruction_simule(), AdjacentTextMerger, AnonymousResourceCollection, Arr, getQueueableId(), AuthenticationException (+299 more)
+Nodes (307): AboutCommand, AbstractChunkOutputBuilder, AbstractUnicodeString, obtenir_classe_co2(), AddLinkHeadersForPreloadedAssets, AddressInfoCaster, Alert, ArgumentFormatter (+299 more)
 
 ### Community 7 - "Community 7"
 Cohesion: 0.0
-Nodes (206): add(), alias(), __invoke(), ApplicationBuilder, ArtisanServiceProvider, Auth, Authenticated, AuthenticateWithBasicAuth (+198 more)
+Nodes (335): AbstractMap, AbstractMultipartPart, AbstractSet, AbstractSyslogHandler, AbstractWebResource, AccessDeniedException, AccessDeniedHttpException, ActualValueIsNotAnObjectException (+327 more)
 
 ### Community 8 - "Community 8"
 Cohesion: 0.0
-Nodes (243): AbstractOperation, AbstractSurrogate, AdapterRepository, AnonymousFootnoteRefParser, AnonymousFootnotesListener, ApplyDefaultAttributesProcessor, Attributes, AttributesBlockContinueParser (+235 more)
+Nodes (185): AfterLastTestMethodCalled, AfterLastTestMethodErrored, AfterLastTestMethodFailed, AfterLastTestMethodFinished, AfterTestMethodCalled, AfterTestMethodErrored, AfterTestMethodFailed, AfterTestMethodFinished (+177 more)
 
 ### Community 9 - "Community 9"
 Cohesion: 0.0
-Nodes (322): AbstractBlock, AbstractMap, AbstractMultipartPart, AbstractSyslogHandler, AbstractWebResource, AccessDeniedException, AccessDeniedHttpException, ActualValueIsNotAnObjectException (+314 more)
+Nodes (194): AbstractDumper, AggregateServiceProvider, ApacheAdapter, ApiInstallCommand, Application(), Argon2IdHasher, ArgonHasher, ArrayAdapter (+186 more)
 
 ### Community 10 - "Community 10"
 Cohesion: 0.0
-Nodes (85): Blueprint, BlueprintState, Builder, chunk(), chunkById(), chunkByIdDesc(), chunkMap(), cursorPaginator() (+77 more)
+Nodes (218): AbstractBundle, AbstractCollection, AbstractDefaultParametersMatcher, AmqpCaster, AnonymousComponent, ArgsStub, ArgumentMetadata, ArgumentMetadataFactory (+210 more)
 
 ### Community 11 - "Community 11"
 Cohesion: 0.0
-Nodes (168): AbstractDumper, AggregateServiceProvider, ApacheAdapter, ApiInstallCommand, Application(), Argon2IdHasher, ArgonHasher, Argument (+160 more)
+Nodes (226): alias(), ApplicationBuilder, ArtisanServiceProvider, BeanstalkdQueue, BroadcastableModelEventOccurred, BroadcastManager, BroadcastServiceProvider, bootBroadcastsEvents() (+218 more)
 
 ### Community 12 - "Community 12"
 Cohesion: 0.0
-Nodes (186): AbstractSessionListener, AbstractSurrogateFragmentRenderer, AcceptHeader, Actionneur(), ajouterMinutes(), charger_actionneur_choisi(), charger_luminosite_seuils(), charger_pompe_seuils() (+178 more)
+Nodes (137): AfterLastTestMethodErroredSubscriber, AfterLastTestMethodFailedSubscriber, AfterTestClassMethodErroredSubscriber, AfterTestClassMethodFailedSubscriber, ArrayLoader, Baseline, BeforeFirstTestMethodErroredSubscriber, BeforeFirstTestMethodFailedSubscriber (+129 more)
 
 ### Community 13 - "Community 13"
 Cohesion: 0.0
-Nodes (225): AbstractChunkOutputBuilder, AbstractString, AutoCompletePrompt, AutoCompletePromptRenderer, Backoff, render(), BulletList, CallableType (+217 more)
+Nodes (466): AbstractTransportFactoryTestCase, convertFromHexToAnsiColorCode(), convertFromRGB(), degradeHexColorToAnsi4(), degradeHexColorToAnsi8(), ArrayLock, ArrayStore, batch() (+458 more)
 
 ### Community 14 - "Community 14"
 Cohesion: 0.0
-Nodes (154): AssertionFailedError, AuthorCollectionIterator, AuthorizationException, BootstrapLoader, BufferingLogger, BundledComponentCollectionIterator, CallbackHandler, CallLike (+146 more)
+Nodes (323): AcceptHeaderItem, AttributeParentConnectingVisitor, fe(), Ht(), mh(), se(), ug(), Vm() (+315 more)
 
 ### Community 15 - "Community 15"
 Cohesion: 0.0
-Nodes (322): AcceptHeaderItem, AtLeastVersionCommand, AttributeParentConnectingVisitor, fe(), Ht(), mh(), se(), ug() (+314 more)
+Nodes (156): AbstractPipes, Arr, AuthenticationException, BroadcastEvent, BroadcastNotificationCreated, ChromePHPFormatter, Collection, collectResource() (+148 more)
 
 ### Community 16 - "Community 16"
 Cohesion: 0.0
-Nodes (409): AbstractTypedMap, Alerte, delete(), fromAttributes(), fromRawAttributes(), getCreatedAtColumn(), getDeleteQuery(), getOtherKey() (+401 more)
+Nodes (174): AbstractHandler, AbstractStringContainer, AdjacentTextMerger, AnonymousFootnoteRefParser, Attributes, AttributesBlockContinueParser, AttributesBlockStartParser, AttributesHelper (+166 more)
 
 ### Community 17 - "Community 17"
 Cohesion: 0.0
-Nodes (488): AbstractTransportFactoryTestCase, ArrayObjectFilter, ArrayStore, batch(), batching(), withFakeBatch(), BatchRepositoryFake, dh() (+480 more)
+Nodes (145): AssertionFailedError, AuthorElement, ap(), BootstrapLoader, BufferingLogger, BundlesElement, CallbackHandler, CallLike (+137 more)
 
 ### Community 18 - "Community 18"
 Cohesion: 0.0
-Nodes (180): AbstractProviderFactory, AbstractTransportFactory, AddQueuedCookiesToResponse, AwsS3V3Adapter, BaseUri, j(), Bundle, CachingStream (+172 more)
+Nodes (183): AbstractSessionHandler, AbstractString, Argument, Authorize, authorize(), authorizeForUser(), authorizeResource(), normalizeGuessedAbilityName() (+175 more)
 
 ### Community 19 - "Community 19"
 Cohesion: 0.0
-Nodes (168): AbstractProviderFactoryTestCase, AbstractTranslator, ActionsWithoutActiveConnectionTest, AddRequestFormatsListener, ArrayComparator, ArraySubset, AssertableJson, AssertableJsonString (+160 more)
+Nodes (141): AbstractProviderFactoryTestCase, AbstractStream, ActionsWithoutActiveConnectionTest, AnonymousNotifiable, ArrayObjectFilter, BCMathCalculator, BigDecimal, BigInteger (+133 more)
 
 ### Community 20 - "Community 20"
 Cohesion: 0.0
-Nodes (251): AbstractUnicodeString, BigNumber, ClassAliasAutoloader, ClosureValidationRule, ComponentTagCompiler, when(), pendingPotentiallyTranslatedString(), queryCallbacks() (+243 more)
+Nodes (111): AbstractConfigCommand, AddConsoleCommandPass, AddEventAliasesPass, ApplicationDescription, ApplicationTester, ArgvInput, ArrayInput, Ask (+103 more)
 
 ### Community 21 - "Community 21"
 Cohesion: 0.0
-Nodes (120): ArrayRule, Artisan, AuthManager, Bind, CacheManager, Can, migrateFreshUsing(), seeder() (+112 more)
+Nodes (88): AbstractRequestRateLimiter, AnyOf, Attachment, AutocompleterPath, assert(), castTo(), completeDefault(), doDeprecation() (+80 more)
 
 ### Community 22 - "Community 22"
-Cohesion: 0.0
-Nodes (98): AblyBroadcaster, ApcStore, ArrayLock, ArraySessionHandler, getAuthIdentifier(), getAuthIdentifierForBroadcasting(), getAuthIdentifierName(), getAuthPassword() (+90 more)
+Cohesion: 0.01
+Nodes (23): BlueprintState, wrapJsonFieldAndPath(), wrapJsonPath(), wrapJsonPathSegment(), ComposerScripts, getDatabaseName(), Grammar, Listener (+15 more)
 
 ### Community 23 - "Community 23"
 Cohesion: 0.0
-Nodes (91): AbstractFileExtractor, AbstractRequestRateLimiter, Attachment, AutocompleterPath, calculateChecksumFromStream(), readStream(), Config, ConfigPublishCommand (+83 more)
+Nodes (66): AbstractApiTransport, AbstractHeader, AbstractPart, AbstractTransport, ArrayTransport, toMailAttachment(), DelayedEnvelope, until() (+58 more)
 
 ### Community 24 - "Community 24"
 Cohesion: 0.0
-Nodes (109): AbstractHttpTransport, AbstractRouteCollection, AnonymousEvent, BelongsToManyRelationship, BelongsToRelationship, startOfMinute(), BroadcastableModelEventOccurred, bootBroadcastsEvents() (+101 more)
+Nodes (73): AbstractProxy, AcceptSuggestionAction, AcceptSuggestionWordAction, BracketPair, Buffer, ChromePHPHandler, ClearScreenAction, CompletionRenderer (+65 more)
 
 ### Community 25 - "Community 25"
-Cohesion: 0.0
-Nodes (83): AcceptSuggestionAction, AcceptSuggestionWordAction, BracketPair, Buffer, BufferAnalysis, ClassStub, CompletionRenderer, ContextAnalyzer (+75 more)
+Cohesion: 0.01
+Nodes (104): Artisan, BackgroundQueue, Bind, CacheManager, migrateFreshUsing(), seeder(), shouldDropTypes(), shouldDropViews() (+96 more)
 
 ### Community 26 - "Community 26"
 Cohesion: 0.01
-Nodes (69): AbstractLexer, BCMathCalculator, BigDecimal, BigInteger, BigRational, BrickMathCalculator, BufferStream, Calculator (+61 more)
+Nodes (55): AbstractHttpTransport, BelongsToManyRelationship, BelongsToRelationship, Client, DbCommand, Factory, FiberCaster, InvokedProcess (+47 more)
 
 ### Community 27 - "Community 27"
-Cohesion: 0.01
-Nodes (51): AbstractNode, AppendStream, ee(), vn(), Clover, Cobertura, Crap4j, CyclomaticComplexityCalculatingVisitor (+43 more)
+Cohesion: 0.0
+Nodes (114): AdapterRepository, AppendStream, BinaryFileResponse, j(), CachingStream, sendAsync(), CsvFileDumper, CurlFactory (+106 more)
 
 ### Community 28 - "Community 28"
-Cohesion: 0.0
-Nodes (70): AbstractApiTransport, AbstractHeader, AbstractPart, AbstractStream, AbstractTransport, AbstractVisitor, Alert, ConstraintVisitor (+62 more)
+Cohesion: 0.01
+Nodes (100): AbstractFileExtractor, ArgumentExtractorVisitor, BinaryUtils, BufferAnalysis, BufferAnalyzer, divide(), multiply(), subtract() (+92 more)
 
 ### Community 29 - "Community 29"
-Cohesion: 0.0
-Nodes (56): AttributeParser, BackedUpEnvironmentVariable, BusFake, ConstraintRequirement, Dependencies, ElasticsearchHandler, EventFake, ExceptionHandlerFake (+48 more)
+Cohesion: 0.01
+Nodes (83): ArrayRule, AutocompleterWord, Batch, CalledClassPass, ClassLoader, compileEchos(), compileEscapedEchos(), compileRawEchos() (+75 more)
 
 ### Community 30 - "Community 30"
-Cohesion: 0.0
-Nodes (70): AllOf, AnyOf, ArrayHasKey, assert(), castTo(), completeDefault(), doDeprecation(), doFinalize() (+62 more)
+Cohesion: 0.01
+Nodes (48): BatchFake, BroadcastChannel, CallQueuedHandler, CallQueuedListener, ChainedBatch, Channel, ChildProcessStarted, DispatchingEmitter (+40 more)
 
 ### Community 31 - "Community 31"
 Cohesion: 0.01
-Nodes (64): AbstractStringContainer, Alias, AliasConfigurator, AttributeDirectoryLoader, AttributeFileLoader, AttributeMatchingExtension, AttributeNode, AttributeServicesLoader (+56 more)
+Nodes (34): AbstractNode, BuildInformation, Clover, Cobertura, Crap4j, CyclomaticComplexityCalculatingVisitor, Dashboard, Directory (+26 more)
 
 ### Community 32 - "Community 32"
 Cohesion: 0.01
-Nodes (72): ArgumentExtractorVisitor, BinaryUtils, ClassLike, CodeCleaner, DefaultNameGenerator, getClockSeqHiAndReserved(), getClockSeqHiAndReservedHex(), getClockSeqLow() (+64 more)
+Nodes (91): CacheCommandMutex, CacheEventMutex, CacheSchedulingMutex, ConcurrencyLimiter, DatabaseJob, DatabaseNotification, DoubledClass, DurationLimiter (+83 more)
 
 ### Community 33 - "Community 33"
 Cohesion: 0.01
-Nodes (55): AbstractHandler, AbstractProcessingHandler, AfterLastTestMethodErroredSubscriber, AfterLastTestMethodFailedSubscriber, AmqpHandler, BeforeFirstTestMethodErroredSubscriber, BeforeFirstTestMethodFailedSubscriber, BufferHandler (+47 more)
+Nodes (52): AtLeast, AtMost, BadMethodCallException, ConstantsPass, isEligible(), Exact, Expectation, ExpectationDirector (+44 more)
 
 ### Community 34 - "Community 34"
 Cohesion: 0.01
-Nodes (0): 
+Nodes (149): AddQueuedCookiesToResponse, BigNumber, ChanceGenerator, CompiledUrlGenerator, CookieJar, CookieServiceProvider, DefaultGenerator, trigger_deprecation() (+141 more)
 
 ### Community 35 - "Community 35"
 Cohesion: 0.01
-Nodes (20): Attribute, CallableDispatcher, getMiddleware(), ExtensionBootstrap, FeatureSet, last(), ImplicitRouteBinding, getResources() (+12 more)
+Nodes (0): 
 
 ### Community 36 - "Community 36"
 Cohesion: 0.01
-Nodes (34): BatchFake, BroadcastChannel, Bus, CallQueuedHandler, Channel, ChildProcessStarted, DispatchingEmitter, dispatch() (+26 more)
+Nodes (18): BuilderFactory, BuilderHelpers, Class_, ClassConst, Declaration, Enum_, EnumCase, Function_ (+10 more)
 
 ### Community 37 - "Community 37"
 Cohesion: 0.01
-Nodes (18): BuilderFactory, BuilderHelpers, Class_, ClassConst, Declaration, Enum_, EnumCase, Function_ (+10 more)
+Nodes (31): AttributeMatchingExtension, AttributeNode, ClassNode, CombinationExtension, CombinedSelectorNode, CssSelectorConverter, getWeekStartsAt(), ElementNode (+23 more)
 
 ### Community 38 - "Community 38"
 Cohesion: 0.01
-Nodes (21): ConsoleProcessus, moveCursor(), restoreCursor(), showCursor(), getListener(), setListener(), FileDirectory, FileGeneric (+13 more)
+Nodes (61): AblyBroadcaster, Auth, getAuthIdentifier(), getAuthIdentifierForBroadcasting(), getAuthIdentifierName(), getAuthPassword(), getAuthPasswordName(), getRememberToken() (+53 more)
 
 ### Community 39 - "Community 39"
 Cohesion: 0.01
-Nodes (17): AbstractCursorPaginator, AbstractPaginator, ClosureCommand, CursorPaginator, __call(), getRouteKeyName(), FluentPromise, forwardCallTo() (+9 more)
+Nodes (20): CachingGenerator, ConsoleProcessus, moveCursor(), restoreCursor(), showCursor(), EventListener, getListener(), setListener() (+12 more)
 
 ### Community 40 - "Community 40"
 Cohesion: 0.01
-Nodes (67): AbstractSessionHandler, AtLeast, AtMost, BadMethodCallException, ChromePHPHandler, ConvertEmptyStringsToNull, testCreatedPartialMockObject(), Exact (+59 more)
+Nodes (35): AllOf, BaseDescription, BaseMatcher, CombinableMatcher, Every, FeatureMatcher, HasXPath, IsAnything (+27 more)
 
 ### Community 41 - "Community 41"
 Cohesion: 0.01
-Nodes (33): endOfMinute(), Cache, dispatch(), dispatchAfterResponse(), dispatchIf(), dispatchSync(), dispatchUnless(), EmailVerificationRequest (+25 more)
+Nodes (29): AtLeastVersionCommand, Barcode, Base, BundledComponentCollectionIterator, CheckPhpConfigurationCommand, column(), Color, ColumnTypeGuesser (+21 more)
 
 ### Community 42 - "Community 42"
-Cohesion: 0.02
-Nodes (25): ConfigurableMethod, Invocation, InvocationHandler, InvocationOrder, InvocationStubberImplementation, InvokedAtLeastCount, InvokedAtLeastOnce, InvokedAtMostCount (+17 more)
+Cohesion: 0.01
+Nodes (33): AbstractProcessingHandler, AmqpHandler, BufferHandler, CommandSyntaxRefiner, ContextualizedDumper, DebugLoggerConfigurator, DumpDataCollector, ErrorLevelActivationStrategy (+25 more)
 
 ### Community 43 - "Community 43"
 Cohesion: 0.01
-Nodes (0): 
+Nodes (22): AbstractCursorPaginator, AbstractPaginator, compileClassComponentOpening(), compileEndComponent(), compileEndComponentClass(), compileEndComponentFirst(), newComponentHash(), sanitizeComponentAttribute() (+14 more)
 
 ### Community 44 - "Community 44"
-Cohesion: 0.02
-Nodes (66): AnonymousNotifiable, App(), can(), canAny(), cannot(), cant(), authorize(), authorizeForUser() (+58 more)
+Cohesion: 0.01
+Nodes (15): add(), __invoke(), ClosureValidationRule, pendingPotentiallyTranslatedString(), InvokableValidationRule, InvokeQueuedClosure, Is, JobAttempted (+7 more)
 
 ### Community 45 - "Community 45"
-Cohesion: 0.03
-Nodes (7): AbstractProxy, MetadataBag, MockArraySessionStorage, MockFileSessionStorage, NativeSessionStorage, PhpBridgeSessionStorage, SessionHandlerProxy
+Cohesion: 0.01
+Nodes (35): AbstractOperation, AbstractTranslator, AbstractVisitor, ConstraintVisitor, DataCollectorTranslator, FilteringProvider, IcuDatFileLoader, IntlCaster (+27 more)
 
 ### Community 46 - "Community 46"
-Cohesion: 0.03
-Nodes (0): 
+Cohesion: 0.02
+Nodes (11): Attribute, ExtensionBootstrap, FeatureSet, getResources(), ResourceRegistrar, ReturnArgument, ReturnCallback, ReturnValueMap (+3 more)
 
 ### Community 47 - "Community 47"
-Cohesion: 0.03
-Nodes (1): Matchers
+Cohesion: 0.02
+Nodes (15): AbstractLexer, Comment, DomainComment, DomainLiteral, DomainPart, DoubleQuote, EmailLexer, EmailParser (+7 more)
 
 ### Community 48 - "Community 48"
-Cohesion: 0.04
-Nodes (6): FactoryFile, FactoryGenerator, FactoryMethod, GlobalFunctionFile, ServerEvent, StaticMethodFile
+Cohesion: 0.01
+Nodes (0): 
 
 ### Community 49 - "Community 49"
-Cohesion: 0.03
-Nodes (10): grapheme_levenshtein(), grapheme_str_split(), mb_convert_encoding(), mb_internal_encoding(), mb_lcfirst(), mb_ltrim(), mb_rtrim(), mb_scrub() (+2 more)
+Cohesion: 0.02
+Nodes (12): BinaryOperator, Constraint, Expression, LogicalAnd, LogicalNot, LogicalOr, LogicalXor, MethodName (+4 more)
 
 ### Community 50 - "Community 50"
 Cohesion: 0.03
-Nodes (15): compileElsePushIf(), compileOnce(), compileContext(), compileError(), compileInclude(), compileIncludeFirst(), compileIncludeIf(), compileIncludeIsolated() (+7 more)
+Nodes (0): 
 
 ### Community 51 - "Community 51"
-Cohesion: 0.04
-Nodes (6): EntityPopulator, getRelation(), Mapper, Populator, TargetCollectionValidator, ValidationResult
+Cohesion: 0.03
+Nodes (1): Matchers
 
 ### Community 52 - "Community 52"
+Cohesion: 0.04
+Nodes (6): MetadataBag, MockArraySessionStorage, MockFileSessionStorage, NativeSessionStorage, PhpBridgeSessionStorage, SessionHandlerProxy
+
+### Community 53 - "Community 53"
 Cohesion: 0.03
 Nodes (10): grapheme_levenshtein(), grapheme_str_split(), mb_convert_encoding(), mb_internal_encoding(), mb_lcfirst(), mb_ltrim(), mb_rtrim(), mb_scrub() (+2 more)
 
-### Community 53 - "Community 53"
-Cohesion: 0.05
-Nodes (10): AbstractCollection, DoubleEndedQueue, NamedParameterMap, element(), offer(), poll(), checkType(), extractValue() (+2 more)
-
 ### Community 54 - "Community 54"
-Cohesion: 0.06
-Nodes (0): 
+Cohesion: 0.03
+Nodes (10): grapheme_levenshtein(), grapheme_str_split(), mb_convert_encoding(), mb_internal_encoding(), mb_lcfirst(), mb_ltrim(), mb_rtrim(), mb_scrub() (+2 more)
 
 ### Community 55 - "Community 55"
-Cohesion: 0.12
-Nodes (1): MessageBag
+Cohesion: 0.07
+Nodes (56): at(), between(), cron(), daily(), dailyAt(), days(), daysOfMonth(), everyFifteenMinutes() (+48 more)
 
 ### Community 56 - "Community 56"
-Cohesion: 0.09
-Nodes (4): ProcessedBranchCoverageData, ProcessedCodeCoverageData, ProcessedFunctionCoverageData, ProcessedPathCoverageData
+Cohesion: 0.06
+Nodes (0): 
 
 ### Community 57 - "Community 57"
 Cohesion: 0.06
 Nodes (0): 
 
 ### Community 58 - "Community 58"
+Cohesion: 0.12
+Nodes (1): MessageBag
+
+### Community 59 - "Community 59"
+Cohesion: 0.06
+Nodes (0): 
+
+### Community 60 - "Community 60"
 Cohesion: 0.07
 Nodes (0): 
 
-### Community 59 - "Community 59"
+### Community 61 - "Community 61"
 Cohesion: 0.12
 Nodes (2): ConsoleColor, Highlighter
 
-### Community 60 - "Community 60"
+### Community 62 - "Community 62"
+Cohesion: 0.08
+Nodes (4): InvokedAtLeastCount, InvokedAtLeastOnce, InvokedAtMostCount, InvokedCount
+
+### Community 63 - "Community 63"
 Cohesion: 0.14
 Nodes (1): Language
 
-### Community 61 - "Community 61"
-Cohesion: 0.08
-Nodes (0): 
-
-### Community 62 - "Community 62"
-Cohesion: 0.08
-Nodes (0): 
-
-### Community 63 - "Community 63"
-Cohesion: 0.13
-Nodes (3): HigherOrderMessage, VerificationDirector, VerificationExpectation
-
 ### Community 64 - "Community 64"
 Cohesion: 0.08
-Nodes (2): MigrateConfigurationCommand, migrate()
+Nodes (0): 
 
 ### Community 65 - "Community 65"
-Cohesion: 0.17
-Nodes (1): Date
+Cohesion: 0.08
+Nodes (0): 
 
 ### Community 66 - "Community 66"
 Cohesion: 0.09
@@ -3224,32 +3224,32 @@ Cohesion: 0.09
 Nodes (1): FnStream
 
 ### Community 70 - "Community 70"
-Cohesion: 0.1
-Nodes (2): CommandDataCollector, SignalMap
+Cohesion: 0.13
+Nodes (1): FileViewFinder
 
 ### Community 71 - "Community 71"
+Cohesion: 0.14
+Nodes (1): JsonResource
+
+### Community 72 - "Community 72"
+Cohesion: 0.19
+Nodes (1): Numeric
+
+### Community 73 - "Community 73"
 Cohesion: 0.1
 Nodes (1): DecoratedAdapter
 
-### Community 72 - "Community 72"
+### Community 74 - "Community 74"
 Cohesion: 0.1
 Nodes (1): dispatch()
 
-### Community 73 - "Community 73"
+### Community 75 - "Community 75"
 Cohesion: 0.11
 Nodes (4): AuthorElementCollection, ComponentElementCollection, ElementCollection, ExtElementCollection
 
-### Community 74 - "Community 74"
-Cohesion: 0.11
-Nodes (1): Target
-
-### Community 75 - "Community 75"
-Cohesion: 0.11
-Nodes (0): 
-
 ### Community 76 - "Community 76"
 Cohesion: 0.11
-Nodes (0): 
+Nodes (1): Target
 
 ### Community 77 - "Community 77"
 Cohesion: 0.11
@@ -3264,56 +3264,56 @@ Cohesion: 0.11
 Nodes (0): 
 
 ### Community 80 - "Community 80"
-Cohesion: 0.12
+Cohesion: 0.11
 Nodes (0): 
 
 ### Community 81 - "Community 81"
-Cohesion: 0.12
-Nodes (1): Delimiter
+Cohesion: 0.11
+Nodes (0): 
 
 ### Community 82 - "Community 82"
 Cohesion: 0.12
 Nodes (0): 
 
 ### Community 83 - "Community 83"
-Cohesion: 0.12
-Nodes (0): 
+Cohesion: 0.16
+Nodes (1): SimpleMessage
 
 ### Community 84 - "Community 84"
-Cohesion: 0.14
-Nodes (1): AutoExpireFlashBag
+Cohesion: 0.12
+Nodes (1): Delimiter
 
 ### Community 85 - "Community 85"
-Cohesion: 0.15
-Nodes (1): FlashBag
+Cohesion: 0.12
+Nodes (0): 
 
 ### Community 86 - "Community 86"
 Cohesion: 0.12
-Nodes (1): make()
+Nodes (0): 
 
 ### Community 87 - "Community 87"
-Cohesion: 0.17
-Nodes (1): SimpleMessage
+Cohesion: 0.14
+Nodes (1): AutoExpireFlashBag
 
 ### Community 88 - "Community 88"
 Cohesion: 0.15
-Nodes (1): VariableBag
+Nodes (1): FlashBag
 
 ### Community 89 - "Community 89"
 Cohesion: 0.12
-Nodes (0): 
+Nodes (1): make()
 
 ### Community 90 - "Community 90"
+Cohesion: 0.12
+Nodes (0): 
+
+### Community 91 - "Community 91"
 Cohesion: 0.13
 Nodes (1): AttributeBag
 
-### Community 91 - "Community 91"
+### Community 92 - "Community 92"
 Cohesion: 0.25
 Nodes (14): delete(), deleteAsync(), get(), getAsync(), head(), headAsync(), patch(), patchAsync() (+6 more)
-
-### Community 92 - "Community 92"
-Cohesion: 0.13
-Nodes (0): 
 
 ### Community 93 - "Community 93"
 Cohesion: 0.13
@@ -3321,67 +3321,67 @@ Nodes (0):
 
 ### Community 94 - "Community 94"
 Cohesion: 0.13
-Nodes (1): GarbageCollectorStatus
+Nodes (0): 
 
 ### Community 95 - "Community 95"
 Cohesion: 0.13
-Nodes (1): ConsoleInput
+Nodes (1): GarbageCollectorStatus
 
 ### Community 96 - "Community 96"
 Cohesion: 0.13
-Nodes (1): NullOutput
+Nodes (1): ConsoleInput
 
 ### Community 97 - "Community 97"
+Cohesion: 0.13
+Nodes (1): NullOutput
+
+### Community 98 - "Community 98"
 Cohesion: 0.14
 Nodes (2): IdentityMarshaller, MarshallingSessionHandler
 
-### Community 98 - "Community 98"
+### Community 99 - "Community 99"
 Cohesion: 0.19
 Nodes (1): GenericUser
 
-### Community 99 - "Community 99"
-Cohesion: 0.14
-Nodes (0): 
-
 ### Community 100 - "Community 100"
 Cohesion: 0.14
-Nodes (1): NullQueue
+Nodes (0): 
 
 ### Community 101 - "Community 101"
 Cohesion: 0.14
-Nodes (1): NullSessionHandler
+Nodes (1): NullQueue
 
 ### Community 102 - "Community 102"
 Cohesion: 0.14
-Nodes (1): Dimensions
+Nodes (1): NullSessionHandler
 
 ### Community 103 - "Community 103"
 Cohesion: 0.14
-Nodes (13): ArgumentOutOfRangeException, DeprecatedException, DirectoryNotFoundException, FileNotFoundException, InvalidArgumentException, InvalidStateException, IOException, MemberAccessException (+5 more)
+Nodes (1): Dimensions
 
 ### Community 104 - "Community 104"
 Cohesion: 0.14
-Nodes (1): AbstractArray
+Nodes (13): ArgumentOutOfRangeException, DeprecatedException, DirectoryNotFoundException, FileNotFoundException, InvalidArgumentException, InvalidStateException, IOException, MemberAccessException (+5 more)
 
 ### Community 105 - "Community 105"
 Cohesion: 0.14
-Nodes (0): 
+Nodes (1): AbstractArray
 
 ### Community 106 - "Community 106"
+Cohesion: 0.14
+Nodes (0): 
+
+### Community 107 - "Community 107"
+Cohesion: 0.21
+Nodes (1): ApcStore
+
+### Community 108 - "Community 108"
 Cohesion: 0.17
 Nodes (1): NullStore
 
-### Community 107 - "Community 107"
-Cohesion: 0.15
-Nodes (0): 
-
-### Community 108 - "Community 108"
-Cohesion: 0.15
-Nodes (0): 
-
 ### Community 109 - "Community 109"
 Cohesion: 0.15
-Nodes (1): ArrayCollection
+Nodes (0): 
 
 ### Community 110 - "Community 110"
 Cohesion: 0.15
@@ -3389,30 +3389,30 @@ Nodes (0):
 
 ### Community 111 - "Community 111"
 Cohesion: 0.15
-Nodes (0): 
+Nodes (1): ArrayCollection
 
 ### Community 112 - "Community 112"
-Cohesion: 0.17
-Nodes (1): Transient
+Cohesion: 0.15
+Nodes (0): 
 
 ### Community 113 - "Community 113"
 Cohesion: 0.15
 Nodes (0): 
 
 ### Community 114 - "Community 114"
-Cohesion: 0.15
-Nodes (0): 
+Cohesion: 0.17
+Nodes (1): Transient
 
 ### Community 115 - "Community 115"
 Cohesion: 0.15
 Nodes (0): 
 
 ### Community 116 - "Community 116"
-Cohesion: 0.17
+Cohesion: 0.15
 Nodes (0): 
 
 ### Community 117 - "Community 117"
-Cohesion: 0.17
+Cohesion: 0.15
 Nodes (0): 
 
 ### Community 118 - "Community 118"
@@ -3421,22 +3421,22 @@ Nodes (0):
 
 ### Community 119 - "Community 119"
 Cohesion: 0.17
-Nodes (1): HandlerWrapper
+Nodes (0): 
 
 ### Community 120 - "Community 120"
-Cohesion: 0.21
-Nodes (1): GNUReadline
+Cohesion: 0.17
+Nodes (0): 
 
 ### Community 121 - "Community 121"
 Cohesion: 0.17
-Nodes (0): 
+Nodes (1): HandlerWrapper
 
 ### Community 122 - "Community 122"
 Cohesion: 0.17
 Nodes (0): 
 
 ### Community 123 - "Community 123"
-Cohesion: 0.18
+Cohesion: 0.17
 Nodes (0): 
 
 ### Community 124 - "Community 124"
@@ -3452,8 +3452,8 @@ Cohesion: 0.18
 Nodes (0): 
 
 ### Community 127 - "Community 127"
-Cohesion: 0.22
-Nodes (1): ConsoleTput
+Cohesion: 0.18
+Nodes (0): 
 
 ### Community 128 - "Community 128"
 Cohesion: 0.33
@@ -3493,39 +3493,39 @@ Nodes (0):
 
 ### Community 137 - "Community 137"
 Cohesion: 0.2
-Nodes (3): MemoryPeakUsageProcessor, MemoryProcessor, MemoryUsageProcessor
+Nodes (1): ArrowFunction
 
 ### Community 138 - "Community 138"
 Cohesion: 0.2
-Nodes (1): ArrowFunction
+Nodes (0): 
 
 ### Community 139 - "Community 139"
 Cohesion: 0.2
-Nodes (0): 
-
-### Community 140 - "Community 140"
-Cohesion: 0.2
 Nodes (1): DkimOptions
 
-### Community 141 - "Community 141"
+### Community 140 - "Community 140"
 Cohesion: 0.25
 Nodes (1): Pattern
+
+### Community 141 - "Community 141"
+Cohesion: 0.22
+Nodes (0): 
 
 ### Community 142 - "Community 142"
 Cohesion: 0.22
 Nodes (0): 
 
 ### Community 143 - "Community 143"
-Cohesion: 0.22
-Nodes (0): 
-
-### Community 144 - "Community 144"
 Cohesion: 0.25
 Nodes (1): Content
 
-### Community 145 - "Community 145"
+### Community 144 - "Community 144"
 Cohesion: 0.31
 Nodes (1): ComponentSlot
+
+### Community 145 - "Community 145"
+Cohesion: 0.36
+Nodes (1): Descriptor
 
 ### Community 146 - "Community 146"
 Cohesion: 0.22
@@ -3564,48 +3564,48 @@ Cohesion: 0.28
 Nodes (1): SimpleType
 
 ### Community 155 - "Community 155"
-Cohesion: 0.25
-Nodes (1): OutputFormatterStyleStack
-
-### Community 156 - "Community 156"
 Cohesion: 0.32
 Nodes (1): GenericLanguageInflectorFactory
 
-### Community 157 - "Community 157"
+### Community 156 - "Community 156"
 Cohesion: 0.25
 Nodes (1): InvalidEmail
 
-### Community 158 - "Community 158"
+### Community 157 - "Community 157"
 Cohesion: 0.25
 Nodes (0): 
 
-### Community 159 - "Community 159"
+### Community 158 - "Community 158"
 Cohesion: 0.25
 Nodes (1): ApcWrapper
 
-### Community 160 - "Community 160"
+### Community 159 - "Community 159"
 Cohesion: 0.25
 Nodes (0): 
 
-### Community 161 - "Community 161"
+### Community 160 - "Community 160"
 Cohesion: 0.32
 Nodes (1): ConnectionResolver
 
-### Community 162 - "Community 162"
+### Community 161 - "Community 161"
 Cohesion: 0.25
 Nodes (1): ModelInfo
 
-### Community 163 - "Community 163"
+### Community 162 - "Community 162"
 Cohesion: 0.25
 Nodes (1): JsonSchemaTypeFactory
 
-### Community 164 - "Community 164"
+### Community 163 - "Community 163"
 Cohesion: 0.29
 Nodes (1): Hub
 
-### Community 165 - "Community 165"
+### Community 164 - "Community 164"
 Cohesion: 0.25
 Nodes (1): Once
+
+### Community 165 - "Community 165"
+Cohesion: 0.25
+Nodes (0): 
 
 ### Community 166 - "Community 166"
 Cohesion: 0.25
@@ -3616,84 +3616,84 @@ Cohesion: 0.25
 Nodes (0): 
 
 ### Community 168 - "Community 168"
-Cohesion: 0.25
-Nodes (0): 
-
-### Community 169 - "Community 169"
 Cohesion: 0.29
 Nodes (1): ClassesThatExtendClass
 
-### Community 170 - "Community 170"
+### Community 169 - "Community 169"
 Cohesion: 0.29
 Nodes (1): ClassesThatImplementInterface
 
-### Community 171 - "Community 171"
+### Community 170 - "Community 170"
 Cohesion: 0.32
 Nodes (1): EventCollection
 
-### Community 172 - "Community 172"
+### Community 171 - "Community 171"
 Cohesion: 0.25
 Nodes (1): ExtensionLoadedFromPhar
 
-### Community 173 - "Community 173"
+### Community 172 - "Community 172"
 Cohesion: 0.25
 Nodes (1): Sorted
 
-### Community 174 - "Community 174"
+### Community 173 - "Community 173"
 Cohesion: 0.25
 Nodes (1): AbstractListener
 
-### Community 175 - "Community 175"
+### Community 174 - "Community 174"
 Cohesion: 0.25
 Nodes (0): 
 
-### Community 176 - "Community 176"
+### Community 175 - "Community 175"
 Cohesion: 0.25
 Nodes (1): Diff
 
-### Community 177 - "Community 177"
+### Community 176 - "Community 176"
 Cohesion: 0.25
 Nodes (1): NullOutputFormatter
 
-### Community 178 - "Community 178"
+### Community 177 - "Community 177"
 Cohesion: 0.25
 Nodes (1): NullOutputFormatterStyle
 
-### Community 179 - "Community 179"
+### Community 178 - "Community 178"
 Cohesion: 0.25
 Nodes (0): 
 
-### Community 180 - "Community 180"
+### Community 179 - "Community 179"
 Cohesion: 0.29
 Nodes (1): MessageDataCollector
 
-### Community 181 - "Community 181"
+### Community 180 - "Community 180"
 Cohesion: 0.25
 Nodes (0): 
 
-### Community 182 - "Community 182"
+### Community 181 - "Community 181"
 Cohesion: 0.29
 Nodes (1): Controller
 
-### Community 183 - "Community 183"
+### Community 182 - "Community 182"
 Cohesion: 0.48
 Nodes (1): Coordinates
+
+### Community 183 - "Community 183"
+Cohesion: 0.29
+Nodes (0): 
 
 ### Community 184 - "Community 184"
 Cohesion: 0.29
 Nodes (0): 
 
 ### Community 185 - "Community 185"
-Cohesion: 0.29
-Nodes (0): 
-
-### Community 186 - "Community 186"
 Cohesion: 0.33
 Nodes (1): TaskQueue
 
-### Community 187 - "Community 187"
+### Community 186 - "Community 186"
 Cohesion: 0.33
 Nodes (1): ContainerCommandLoader
+
+### Community 187 - "Community 187"
+Cohesion: 0.29
+Nodes (0): 
 
 ### Community 188 - "Community 188"
 Cohesion: 0.29
@@ -3705,23 +3705,23 @@ Nodes (0):
 
 ### Community 190 - "Community 190"
 Cohesion: 0.29
-Nodes (0): 
+Nodes (1): ArrayType
 
 ### Community 191 - "Community 191"
 Cohesion: 0.29
-Nodes (1): ArrayType
+Nodes (1): StringType
 
 ### Community 192 - "Community 192"
 Cohesion: 0.29
-Nodes (1): StringType
-
-### Community 193 - "Community 193"
-Cohesion: 0.29
 Nodes (0): 
 
-### Community 194 - "Community 194"
+### Community 193 - "Community 193"
 Cohesion: 0.38
 Nodes (1): HtmlString
+
+### Community 194 - "Community 194"
+Cohesion: 0.29
+Nodes (1): FilterEmailValidation
 
 ### Community 195 - "Community 195"
 Cohesion: 0.29
@@ -4005,15 +4005,15 @@ Nodes (1): FilterDirectory
 
 ### Community 265 - "Community 265"
 Cohesion: 0.33
-Nodes (0): 
+Nodes (1): download()
 
 ### Community 266 - "Community 266"
-Cohesion: 0.4
-Nodes (1): ReflectionNamespace
+Cohesion: 0.33
+Nodes (0): 
 
 ### Community 267 - "Community 267"
-Cohesion: 0.33
-Nodes (1): download()
+Cohesion: 0.4
+Nodes (1): ReflectionNamespace
 
 ### Community 268 - "Community 268"
 Cohesion: 0.33
@@ -5061,19 +5061,19 @@ Nodes (1): FileEngine
 
 ### Community 529 - "Community 529"
 Cohesion: 0.5
-Nodes (1): print()
+Nodes (1): AbstractEvent
 
 ### Community 530 - "Community 530"
 Cohesion: 0.5
-Nodes (1): AbstractEvent
+Nodes (1): DocumentParsedEvent
 
 ### Community 531 - "Community 531"
 Cohesion: 0.5
-Nodes (1): DocumentParsedEvent
+Nodes (1): CursorState
 
 ### Community 532 - "Community 532"
 Cohesion: 0.5
-Nodes (1): CursorState
+Nodes (0): 
 
 ### Community 533 - "Community 533"
 Cohesion: 0.5
@@ -5081,271 +5081,271 @@ Nodes (0):
 
 ### Community 534 - "Community 534"
 Cohesion: 0.5
-Nodes (0): 
+Nodes (1): HtmlDecorator
 
 ### Community 535 - "Community 535"
 Cohesion: 0.5
-Nodes (1): HtmlDecorator
+Nodes (1): PrioritizedList
 
 ### Community 536 - "Community 536"
 Cohesion: 0.5
-Nodes (1): PrioritizedList
+Nodes (1): UnreadableFileEncountered
 
 ### Community 537 - "Community 537"
 Cohesion: 0.5
-Nodes (1): UnreadableFileEncountered
+Nodes (1): ChainedPublicUrlGenerator
 
 ### Community 538 - "Community 538"
 Cohesion: 0.5
-Nodes (1): ChainedPublicUrlGenerator
+Nodes (1): ClosureWrapper
 
 ### Community 539 - "Community 539"
 Cohesion: 0.5
-Nodes (1): ClosureWrapper
+Nodes (1): Undefined
 
 ### Community 540 - "Community 540"
 Cohesion: 0.5
-Nodes (1): Undefined
+Nodes (1): AndAnyOtherArgs
 
 ### Community 541 - "Community 541"
 Cohesion: 0.5
-Nodes (1): AndAnyOtherArgs
+Nodes (1): Any
 
 ### Community 542 - "Community 542"
 Cohesion: 0.5
-Nodes (1): Any
+Nodes (1): AnyArgs
 
 ### Community 543 - "Community 543"
 Cohesion: 0.5
-Nodes (1): AnyArgs
+Nodes (1): HasKey
 
 ### Community 544 - "Community 544"
 Cohesion: 0.5
-Nodes (1): HasKey
+Nodes (1): HasValue
 
 ### Community 545 - "Community 545"
 Cohesion: 0.5
-Nodes (1): HasValue
+Nodes (1): MultiArgumentClosure
 
 ### Community 546 - "Community 546"
 Cohesion: 0.5
-Nodes (1): MultiArgumentClosure
+Nodes (1): MustBe
 
 ### Community 547 - "Community 547"
 Cohesion: 0.5
-Nodes (1): MustBe
+Nodes (1): Not
 
 ### Community 548 - "Community 548"
 Cohesion: 0.5
-Nodes (1): Not
-
-### Community 549 - "Community 549"
-Cohesion: 0.5
 Nodes (1): NotAnyOf
 
-### Community 550 - "Community 550"
+### Community 549 - "Community 549"
 Cohesion: 0.67
 Nodes (2): getDefaultFormatter(), getFormatter()
 
-### Community 551 - "Community 551"
+### Community 550 - "Community 550"
 Cohesion: 0.5
 Nodes (1): NoopHandler
 
-### Community 552 - "Community 552"
+### Community 551 - "Community 551"
 Cohesion: 0.5
 Nodes (1): HostnameProcessor
 
-### Community 553 - "Community 553"
+### Community 552 - "Community 552"
 Cohesion: 0.5
 Nodes (1): LoadAverageProcessor
 
-### Community 554 - "Community 554"
+### Community 553 - "Community 553"
 Cohesion: 0.5
 Nodes (1): ChainableFilter
 
-### Community 555 - "Community 555"
+### Community 554 - "Community 554"
 Cohesion: 0.5
 Nodes (1): PropertyMatcher
 
-### Community 556 - "Community 556"
+### Community 555 - "Community 555"
 Cohesion: 0.5
 Nodes (1): PropertyNameMatcher
 
-### Community 557 - "Community 557"
+### Community 556 - "Community 556"
 Cohesion: 0.5
 Nodes (1): AssignOp
 
-### Community 558 - "Community 558"
+### Community 557 - "Community 557"
 Cohesion: 0.5
 Nodes (1): BooleanAnd
 
-### Community 559 - "Community 559"
+### Community 558 - "Community 558"
 Cohesion: 0.5
 Nodes (1): BooleanOr
 
-### Community 560 - "Community 560"
+### Community 559 - "Community 559"
 Cohesion: 0.5
 Nodes (1): Equal
 
-### Community 561 - "Community 561"
+### Community 560 - "Community 560"
 Cohesion: 0.5
 Nodes (1): Greater
 
-### Community 562 - "Community 562"
+### Community 561 - "Community 561"
 Cohesion: 0.5
 Nodes (1): GreaterOrEqual
 
-### Community 563 - "Community 563"
+### Community 562 - "Community 562"
 Cohesion: 0.5
 Nodes (1): Identical
 
-### Community 564 - "Community 564"
+### Community 563 - "Community 563"
 Cohesion: 0.5
 Nodes (1): NotEqual
 
-### Community 565 - "Community 565"
+### Community 564 - "Community 564"
 Cohesion: 0.5
 Nodes (1): NotIdentical
 
-### Community 566 - "Community 566"
+### Community 565 - "Community 565"
 Cohesion: 0.5
 Nodes (1): Smaller
 
-### Community 567 - "Community 567"
+### Community 566 - "Community 566"
 Cohesion: 0.5
 Nodes (1): SmallerOrEqual
 
-### Community 568 - "Community 568"
+### Community 567 - "Community 567"
 Cohesion: 0.5
 Nodes (1): Dir
 
-### Community 569 - "Community 569"
+### Community 568 - "Community 568"
 Cohesion: 0.5
 Nodes (1): Nop
 
-### Community 570 - "Community 570"
+### Community 569 - "Community 569"
 Cohesion: 0.5
 Nodes (1): IgnitionSolutionsRepository
 
-### Community 571 - "Community 571"
+### Community 570 - "Community 570"
 Cohesion: 0.5
 Nodes (0): 
 
-### Community 572 - "Community 572"
+### Community 571 - "Community 571"
 Cohesion: 0.5
 Nodes (1): PhpExtensionRequirement
 
-### Community 573 - "Community 573"
+### Community 572 - "Community 572"
 Cohesion: 0.5
 Nodes (1): AbstractVersionConstraint
 
-### Community 574 - "Community 574"
+### Community 573 - "Community 573"
 Cohesion: 0.5
 Nodes (1): AnyVersionConstraint
 
-### Community 575 - "Community 575"
+### Community 574 - "Community 574"
 Cohesion: 0.5
 Nodes (1): CrapIndex
 
-### Community 576 - "Community 576"
+### Community 575 - "Community 575"
 Cohesion: 0.5
 Nodes (1): Tests
 
-### Community 577 - "Community 577"
+### Community 576 - "Community 576"
 Cohesion: 0.5
 Nodes (1): FileAnalyser
 
-### Community 578 - "Community 578"
+### Community 577 - "Community 577"
 Cohesion: 0.5
 Nodes (1): notify()
 
-### Community 579 - "Community 579"
+### Community 578 - "Community 578"
 Cohesion: 0.5
 Nodes (0): 
 
-### Community 580 - "Community 580"
+### Community 579 - "Community 579"
 Cohesion: 0.5
 Nodes (1): AllowMockObjectsWithoutExpectations
 
-### Community 581 - "Community 581"
+### Community 580 - "Community 580"
 Cohesion: 0.5
 Nodes (1): CoversNothing
 
-### Community 582 - "Community 582"
+### Community 581 - "Community 581"
 Cohesion: 0.5
 Nodes (1): Depends
 
-### Community 583 - "Community 583"
+### Community 582 - "Community 582"
 Cohesion: 0.5
 Nodes (1): DependsOnClassUsingDeepClone
 
-### Community 584 - "Community 584"
+### Community 583 - "Community 583"
 Cohesion: 0.5
 Nodes (1): DependsOnClassUsingShallowClone
 
-### Community 585 - "Community 585"
+### Community 584 - "Community 584"
 Cohesion: 0.5
 Nodes (1): DependsUsingDeepClone
 
-### Community 586 - "Community 586"
+### Community 585 - "Community 585"
 Cohesion: 0.5
 Nodes (1): DependsUsingShallowClone
 
-### Community 587 - "Community 587"
+### Community 586 - "Community 586"
 Cohesion: 0.5
 Nodes (1): DisableReturnValueGenerationForTestDoubles
 
-### Community 588 - "Community 588"
+### Community 587 - "Community 587"
 Cohesion: 0.5
 Nodes (1): IgnorePhpunitDeprecations
 
-### Community 589 - "Community 589"
+### Community 588 - "Community 588"
 Cohesion: 0.5
 Nodes (1): Ticket
 
-### Community 590 - "Community 590"
+### Community 589 - "Community 589"
 Cohesion: 0.5
 Nodes (1): IsFalse
 
-### Community 591 - "Community 591"
+### Community 590 - "Community 590"
 Cohesion: 0.5
 Nodes (1): IsTrue
 
-### Community 592 - "Community 592"
+### Community 591 - "Community 591"
 Cohesion: 0.5
 Nodes (1): IsInfinite
 
-### Community 593 - "Community 593"
+### Community 592 - "Community 592"
 Cohesion: 0.5
 Nodes (1): IsNan
 
-### Community 594 - "Community 594"
+### Community 593 - "Community 593"
 Cohesion: 0.5
 Nodes (1): AnyParameters
 
-### Community 595 - "Community 595"
+### Community 594 - "Community 594"
 Cohesion: 0.5
 Nodes (1): ReturnReference
 
-### Community 596 - "Community 596"
+### Community 595 - "Community 595"
 Cohesion: 0.5
 Nodes (1): ReturnStub
 
-### Community 597 - "Community 597"
+### Community 596 - "Community 596"
 Cohesion: 0.5
 Nodes (1): Junit
 
-### Community 598 - "Community 598"
+### Community 597 - "Community 597"
 Cohesion: 0.67
 Nodes (1): RemoveEmptyFilter
 
-### Community 599 - "Community 599"
+### Community 598 - "Community 598"
 Cohesion: 0.5
 Nodes (1): SchemaDetectionResult
 
-### Community 600 - "Community 600"
+### Community 599 - "Community 599"
 Cohesion: 0.5
 Nodes (1): NullPrinter
+
+### Community 600 - "Community 600"
+Cohesion: 0.5
+Nodes (1): print()
 
 ### Community 601 - "Community 601"
 Cohesion: 0.5
@@ -18470,16 +18470,16 @@ Nodes (0):
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `get()` connect `Community 8` to `Community 0`, `Community 1`, `Community 2`, `Community 3`, `Community 4`, `Community 5`, `Community 6`, `Community 7`, `Community 9`, `Community 10`, `Community 11`, `Community 12`, `Community 13`, `Community 14`, `Community 15`, `Community 16`, `Community 17`, `Community 18`, `Community 19`, `Community 20`, `Community 21`, `Community 22`, `Community 23`, `Community 24`, `Community 25`, `Community 28`, `Community 30`, `Community 31`, `Community 35`, `Community 36`, `Community 37`, `Community 39`, `Community 40`, `Community 41`, `Community 51`?**
-  _High betweenness centrality (0.041) - this node is a cross-community bridge._
-- **Why does `Arr` connect `Community 6` to `Community 0`, `Community 1`, `Community 2`, `Community 3`, `Community 4`, `Community 7`, `Community 10`, `Community 11`, `Community 12`, `Community 13`, `Community 14`, `Community 16`, `Community 17`, `Community 18`, `Community 19`, `Community 20`, `Community 21`, `Community 22`, `Community 23`, `Community 24`, `Community 27`, `Community 28`, `Community 29`, `Community 30`, `Community 31`, `Community 35`, `Community 37`, `Community 39`, `Community 40`, `Community 41`, `Community 44`, `Community 55`, `Community 65`?**
-  _High betweenness centrality (0.032) - this node is a cross-community bridge._
-- **Why does `Str` connect `Community 20` to `Community 0`, `Community 1`, `Community 2`, `Community 3`, `Community 4`, `Community 5`, `Community 6`, `Community 7`, `Community 8`, `Community 9`, `Community 10`, `Community 11`, `Community 12`, `Community 13`, `Community 14`, `Community 16`, `Community 17`, `Community 18`, `Community 19`, `Community 21`, `Community 22`, `Community 23`, `Community 24`, `Community 25`, `Community 26`, `Community 27`, `Community 28`, `Community 29`, `Community 31`, `Community 32`, `Community 33`, `Community 35`, `Community 36`, `Community 40`, `Community 41`, `Community 44`, `Community 50`, `Community 55`?**
-  _High betweenness centrality (0.022) - this node is a cross-community bridge._
+- **Why does `get()` connect `Community 3` to `Community 0`, `Community 1`, `Community 2`, `Community 4`, `Community 5`, `Community 6`, `Community 7`, `Community 8`, `Community 9`, `Community 10`, `Community 11`, `Community 12`, `Community 13`, `Community 14`, `Community 15`, `Community 16`, `Community 17`, `Community 18`, `Community 19`, `Community 20`, `Community 21`, `Community 22`, `Community 23`, `Community 24`, `Community 25`, `Community 26`, `Community 27`, `Community 28`, `Community 29`, `Community 30`, `Community 31`, `Community 32`, `Community 34`, `Community 36`, `Community 37`, `Community 38`, `Community 41`, `Community 43`, `Community 45`, `Community 46`?**
+  _High betweenness centrality (0.049) - this node is a cross-community bridge._
+- **Why does `Arr` connect `Community 15` to `Community 0`, `Community 1`, `Community 2`, `Community 3`, `Community 4`, `Community 6`, `Community 7`, `Community 8`, `Community 9`, `Community 10`, `Community 11`, `Community 12`, `Community 13`, `Community 17`, `Community 18`, `Community 19`, `Community 20`, `Community 21`, `Community 22`, `Community 23`, `Community 25`, `Community 26`, `Community 28`, `Community 29`, `Community 30`, `Community 31`, `Community 32`, `Community 33`, `Community 34`, `Community 36`, `Community 37`, `Community 38`, `Community 43`, `Community 44`, `Community 46`, `Community 58`, `Community 72`?**
+  _High betweenness centrality (0.028) - this node is a cross-community bridge._
+- **Why does `Str` connect `Community 18` to `Community 0`, `Community 1`, `Community 2`, `Community 3`, `Community 4`, `Community 5`, `Community 6`, `Community 8`, `Community 9`, `Community 10`, `Community 11`, `Community 13`, `Community 15`, `Community 17`, `Community 19`, `Community 20`, `Community 21`, `Community 22`, `Community 23`, `Community 24`, `Community 25`, `Community 26`, `Community 27`, `Community 28`, `Community 29`, `Community 30`, `Community 31`, `Community 32`, `Community 33`, `Community 34`, `Community 37`, `Community 38`, `Community 42`, `Community 44`, `Community 46`, `Community 58`?**
+  _High betweenness centrality (0.023) - this node is a cross-community bridge._
 - **Are the 455 inferred relationships involving `Str` (e.g. with `.createAccount()` and `.cycleRememberToken()`) actually correct?**
   _`Str` has 455 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 502 inferred relationships involving `get()` (e.g. with `.liste()` and `.test_the_application_returns_a_successful_response()`) actually correct?**
-  _`get()` has 502 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 513 inferred relationships involving `get()` (e.g. with `.liste()` and `.microcontroleur()`) actually correct?**
+  _`get()` has 513 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 3 inferred relationships involving `Configuration` (e.g. with `execute()` and `.handle()`) actually correct?**
   _`Configuration` has 3 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 407 inferred relationships involving `Arr` (e.g. with `.shouldLogin()` and `.raw()`) actually correct?**

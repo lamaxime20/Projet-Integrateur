@@ -55,9 +55,12 @@ function RapportsVentilateur() {
     const [erreurInstr, setErreurInstr] = useState(null);
 
     useEffect(() => {
-        charger_historique_actionneur_rapport("ventilateur", setHistorique);
-        charger_grandeurs_actionneur("ventilateur", setGrandeurs);
-        charger_instructions_actionneur("ventilateur", setInstructions);
+        const intervals = [
+            charger_historique_actionneur_rapport("ventilateur", setHistorique),
+            charger_grandeurs_actionneur("ventilateur", setGrandeurs),
+            charger_instructions_actionneur("ventilateur", setInstructions),
+        ];
+        return () => intervals.forEach(clearInterval);
     }, []);
 
     const handleToggleEtat = (etat) => setEtatsGraph((prev) => ({ ...prev, [etat]: !prev[etat] }));

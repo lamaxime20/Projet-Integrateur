@@ -259,6 +259,25 @@ CREATE TABLE donnees (
 );
 
 -- =========================================
+-- TABLE etats_capteurs
+-- =========================================
+
+CREATE TABLE etats_capteurs (
+  id dom_uuid NOT NULL DEFAULT uuid_generate_v4(),
+  etat dom_etat NOT NULL,
+  date_debut_etat dom_timestamp NOT NULL,
+  capteur_id dom_uuid NOT NULL,
+
+  CONSTRAINT etats_capteurs_pk001 PRIMARY KEY (id),
+
+  CONSTRAINT etats_capteurs_fk001 FOREIGN KEY (capteur_id)
+    REFERENCES capteurs(id)
+);
+
+CREATE INDEX etats_capteurs_idx001
+  ON etats_capteurs(capteur_id, date_debut_etat);
+
+-- =========================================
 -- TABLE instructions
 -- =========================================
 
@@ -279,6 +298,44 @@ CREATE TABLE instructions (
   CONSTRAINT instructions_fk002 FOREIGN KEY (actionneur_id)
     REFERENCES actionneurs(id)
 );
+
+-- =========================================
+-- TABLE etats_microcontroleurs
+-- =========================================
+
+CREATE TABLE etats_microcontroleurs (
+  id dom_uuid NOT NULL DEFAULT uuid_generate_v4(),
+  etat dom_etat NOT NULL,
+  date_debut_etat dom_timestamp NOT NULL,
+  microcontroleur_id dom_uuid NOT NULL,
+
+  CONSTRAINT etats_microcontroleurs_pk001 PRIMARY KEY (id),
+
+  CONSTRAINT etats_microcontroleurs_fk001 FOREIGN KEY (microcontroleur_id)
+    REFERENCES microcontroleurs(id)
+);
+
+CREATE INDEX etats_microcontroleurs_idx001
+  ON etats_microcontroleurs(microcontroleur_id, date_debut_etat);
+
+-- =========================================
+-- TABLE etats_actionneurs
+-- =========================================
+
+CREATE TABLE etats_actionneurs (
+  id dom_uuid NOT NULL DEFAULT uuid_generate_v4(),
+  etat dom_etat NOT NULL,
+  date_debut_etat dom_timestamp NOT NULL,
+  actionneur_id dom_uuid NOT NULL,
+
+  CONSTRAINT etats_actionneurs_pk001 PRIMARY KEY (id),
+
+  CONSTRAINT etats_actionneurs_fk001 FOREIGN KEY (actionneur_id)
+    REFERENCES actionneurs(id)
+);
+
+CREATE INDEX etats_actionneurs_idx001
+  ON etats_actionneurs(actionneur_id, date_debut_etat);
 
 -- =========================================
 -- TABLE TOKENS MICROCONTROLEURS

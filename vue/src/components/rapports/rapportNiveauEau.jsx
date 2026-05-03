@@ -20,8 +20,11 @@ function RapportNiveauEau() {
     const [erreur, setErreur] = useState(null);
 
     useEffect(() => {
-        charger_historique_capteur("niveau-eau", setHistorique);
-        charger_stats_capteur("niveau-eau", setStats);
+        const intervals = [
+            charger_historique_capteur("niveau-eau", setHistorique),
+            charger_stats_capteur("niveau-eau", setStats),
+        ];
+        return () => intervals.forEach(clearInterval);
     }, []);
 
     const handleToggleEtat = (etat) => setEtats((prev) => ({ ...prev, [etat]: !prev[etat] }));

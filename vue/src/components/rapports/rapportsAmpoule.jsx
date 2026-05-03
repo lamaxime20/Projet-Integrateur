@@ -53,9 +53,12 @@ function RapportsAmpoule() {
     const [erreurInstr, setErreurInstr] = useState(null);
 
     useEffect(() => {
-        charger_historique_actionneur_rapport("ampoule", setHistorique);
-        charger_grandeurs_actionneur("ampoule", setGrandeurs);
-        charger_instructions_actionneur("ampoule", setInstructions);
+        const intervals = [
+            charger_historique_actionneur_rapport("ampoule", setHistorique),
+            charger_grandeurs_actionneur("ampoule", setGrandeurs),
+            charger_instructions_actionneur("ampoule", setInstructions),
+        ];
+        return () => intervals.forEach(clearInterval);
     }, []);
 
     const handleToggleEtat = (etat) => setEtatsGraph((prev) => ({ ...prev, [etat]: !prev[etat] }));

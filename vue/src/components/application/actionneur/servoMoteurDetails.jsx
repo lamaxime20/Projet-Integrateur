@@ -20,12 +20,14 @@ function ServoMoteurDetails({ retourner }) {
     const [modalAction, setModalAction] = useState(null);
 
     useEffect(() => {
-        charger_etat_servo_moteur(setServoMoteurState);
-        charger_co2_actuel(setCo2);
+        const intervals = [
+            charger_etat_servo_moteur(setServoMoteurState),
+            charger_co2_actuel(setCo2),
+            charger_historique_servo_moteur(setHistoriqueServoMoteur),
+        ];
         chargerCo2Seuil(setCo2Seuils);
-        const intervalHistorique = charger_historique_servo_moteur(setHistoriqueServoMoteur);
 
-        return () => clearInterval(intervalHistorique);
+        return () => intervals.forEach(clearInterval);
     }, []);
 
     const retour = () => {

@@ -20,8 +20,11 @@ function RapportsHumiditeSol() {
     const [erreur, setErreur] = useState(null);
 
     useEffect(() => {
-        charger_historique_capteur("humidite-sol", setHistorique);
-        charger_stats_capteur("humidite-sol", setStats);
+        const intervals = [
+            charger_historique_capteur("humidite-sol", setHistorique),
+            charger_stats_capteur("humidite-sol", setStats),
+        ];
+        return () => intervals.forEach(clearInterval);
     }, []);
 
     const handleToggleEtat = (etat) => setEtats((prev) => ({ ...prev, [etat]: !prev[etat] }));

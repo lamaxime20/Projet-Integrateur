@@ -53,9 +53,12 @@ function RapportsPompe() {
     const [erreurInstr, setErreurInstr] = useState(null);
 
     useEffect(() => {
-        charger_historique_actionneur_rapport("pompe", setHistorique);
-        charger_grandeurs_actionneur("pompe", setGrandeurs);
-        charger_instructions_actionneur("pompe", setInstructions);
+        const intervals = [
+            charger_historique_actionneur_rapport("pompe", setHistorique),
+            charger_grandeurs_actionneur("pompe", setGrandeurs),
+            charger_instructions_actionneur("pompe", setInstructions),
+        ];
+        return () => intervals.forEach(clearInterval);
     }, []);
 
     const handleToggleEtat = (etat) => setEtatsGraph((prev) => ({ ...prev, [etat]: !prev[etat] }));
