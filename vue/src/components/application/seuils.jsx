@@ -1,32 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { 
     charger_seuils_actuels, 
-    enregistrer_nouveau_seuil, 
-    charger_historique_seuils 
+    enregistrer_nouveau_seuil
 } from '../../utils/seuils';
+import { charger_microcontroleur_local } from '../../utils/microcontroleur';
 import '../../assets/styles/components/application/seuils.css'
 
+const DEFAULT_MICROCONTROLEUR_ID = charger_microcontroleur_local();
+
 const Seuils = ({ microcontroleurId }) => {
+    const controllerId = microcontroleurId || DEFAULT_MICROCONTROLEUR_ID;
     const [capteurs, setCapteurs] = useState([]);
     const [selectedCapteur, setSelectedCapteur] = useState(null);
     const [formValues, setFormValues] = useState({ min: 0, max: 0 });
-    const [historique, setHistorique] = useState([]);
     const [loading, setLoading] = useState(true);
     const [message, setMessage] = useState({ type: '', text: '' });
 
     useEffect(() => {
         initialiserDonnees();
-    }, [microcontroleurId]);
+    }, [controllerId]);
 
     const initialiserDonnees = async () => {
         setLoading(true);
         try {
-            const [dataSeuils, dataHistory] = await Promise.all([
-                charger_seuils_actuels(microcontroleurId),
-                charger_historique_seuils(microcontroleurId)
-            ]);
+            const dataSeuils = await charger_seuils_actuels(controllerId);
             setCapteurs(dataSeuils);
-            setHistorique(dataHistory);
             if (dataSeuils.length > 0) {
                 selectCapteur(dataSeuils[0]);
             }
@@ -47,19 +45,27 @@ const Seuils = ({ microcontroleurId }) => {
         e.preventDefault();
         setMessage({ type: '', text: '' });
 
+        if (!selectedCapteur) {
+            setMessage({ type: 'error', text: 'Aucun seuil sélectionné.' });
+            return;
+        }
+
         try {
             const result = await enregistrer_nouveau_seuil({
-                microcontroleur_id: microcontroleurId,
-                grandeur_id: selectedCapteur.id,
-                valeur_min: formValues.min,
-                valeur_max: formValues.max
+                seuil_id: selectedCapteur.id,
+                valeur_min: parseFloat(formValues.min),
+                valeur_max: parseFloat(formValues.max)
             });
 
             if (result.success) {
                 setMessage({ type: 'success', text: result.message });
-                // Rafraîchir l'historique après modification
-                const newHistory = await charger_historique_seuils(microcontroleurId);
-                setHistorique(newHistory);
+                const updatedCapteurs = capteurs.map(capteur =>
+                    capteur.id === selectedCapteur.id
+                        ? { ...capteur, valeur_min: result.seuil.valeur_min, valeur_max: result.seuil.valeur_max }
+                        : capteur
+                );
+                setCapteurs(updatedCapteurs);
+                setSelectedCapteur(updatedCapteurs.find(c => c.id === selectedCapteur.id));
             }
         } catch (error) {
             setMessage({ type: 'error', text: error.message });
@@ -137,27 +143,6 @@ const Seuils = ({ microcontroleurId }) => {
                             </button>
                         </form>
                     )}
-                </section>
-
-                {/* Section Historique */}
-                <section className="history-section card">
-                    <h3>
-                        <span className="material-symbols-outlined" aria-hidden="true">history</span>
-                        Historique des changements
-                    </h3>
-                    <div className="history-list">
-                        {historique.map(h => (
-                            <div key={h.id} className="history-item">
-                                <div className="history-date">{h.date}</div>
-                                <div className="history-content">
-                                    <strong>{h.capteur}</strong> : passage de 
-                                    <span className="old-values"> [{h.ancien_min} - {h.ancien_max}] </span> à 
-                                    <span className="new-values"> [{h.nouveau_min} - {h.nouveau_max}] </span>
-                                    <span className="author">par {h.auteur}</span>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
                 </section>
             </div>
         </div>
