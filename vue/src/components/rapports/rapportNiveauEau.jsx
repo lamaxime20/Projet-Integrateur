@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import GrapheBatonnet from "../application/grapheBatonnet";
+import RapportCourbeCapteur from "./RapportCourbeCapteur";
 import { charger_historique_capteur, charger_stats_capteur } from "../../utils/statistiques";
 import { generer_rapport_capteur } from "../../utils/rapport";
 import "../../assets/styles/components/rapports/rapportCapteur.css";
@@ -98,6 +99,8 @@ function RapportNiveauEau() {
                         <div className="rapport-legende-item"><span className="rapport-dot rouge" aria-hidden="true"></span>Défaillant</div>
                     </div>
                 </section>
+
+                <RapportCourbeCapteur capteur="niveau-eau" titre="Niveau d'eau" unite="" />
 
                 <section className="rapport-section">
                     <div className="rapport-section-heading">

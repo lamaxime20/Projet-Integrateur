@@ -83,6 +83,23 @@ export async function generer_rapport_capteur(capteur, format, dateDebut, dateFi
     }
 }
 
+export async function generer_rapport_mesures_capteur(capteur, format, dateDebut, dateFin, setChargement, setErreur) {
+    setChargement(true);
+    setErreur(null);
+
+    try {
+        await telechargerRapport(`/rapports/capteurs/${capteur}/mesures`, {
+            format,
+            date_debut: dateDebut,
+            date_fin: dateFin,
+        }, `rapport_mesures_${capteur}_${dateDebut}_${dateFin}.${format}`);
+    } catch (error) {
+        setErreur(error.message);
+    } finally {
+        setChargement(false);
+    }
+}
+
 // ============================================================
 //  ACTIONNEURS — HISTORIQUE
 // ============================================================

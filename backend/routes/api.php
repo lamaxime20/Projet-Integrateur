@@ -52,6 +52,7 @@ Route::middleware('user.token')->group(function () {
     Route::get('/capteurs/{capteur}/actuelle', [RealtimeDataController::class, 'capteurValeurActuelle']);
     Route::get('/capteurs/{capteur}/actuel', [RealtimeDataController::class, 'capteurValeurActuelle']);
     Route::get('/capteurs/{capteur}/historique', [RealtimeDataController::class, 'capteurHistorique']);
+    Route::get('/capteurs/{capteur}/mesures', [RealtimeDataController::class, 'capteurMesures']);
     Route::get('/capteurs/{capteur}/stats', [RealtimeDataController::class, 'capteurStats']);
 
     Route::get('/actionneurs/temps-activation', [RealtimeDataController::class, 'actionneursTempsActivation']);
@@ -62,6 +63,7 @@ Route::middleware('user.token')->group(function () {
     Route::post('/instructions', [RealtimeDataController::class, 'creerInstruction']);
 
     Route::post('/rapports/microcontroleur', [RapportController::class, 'microcontroleur']);
+    Route::post('/rapports/capteurs/{capteur}/mesures', [RapportController::class, 'mesuresCapteur']);
     Route::post('/rapports/capteurs/{capteur}', [RapportController::class, 'capteur']);
     Route::post('/rapports/actionneurs/{actionneur}/instructions', [RapportController::class, 'instructions']);
     Route::post('/rapports/actionneurs/{actionneur}', [RapportController::class, 'actionneur']);

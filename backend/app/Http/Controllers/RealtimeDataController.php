@@ -258,6 +258,34 @@ class RealtimeDataController extends Controller
         ]);
     }
 
+    public function capteurMesures(Request $request, string $capteur)
+    {
+        $modele = $this->resolverCapteur($request, $capteur);
+        if (!$modele || !isset(self::CAPTEURS[$capteur])) {
+            return response()->json(['message' => 'Capteur introuvable.'], 404);
+        }
+
+        $debut = Carbon::parse($request->query('date_debut', now()->subDays(7)->toDateString()))->startOfDay();
+        $fin = Carbon::parse($request->query('date_fin', now()->toDateString()))->endOfDay();
+
+        $points = $modele->donnees()
+            ->whereBetween('date_arrivee', [$debut, $fin])
+            ->orderBy('date_arrivee')
+            ->get(['valeur', 'date_arrivee'])
+            ->map(fn (Donnee $donnee) => [
+                'valeur' => (float) $donnee->valeur,
+                'date_arrivee' => $donnee->date_arrivee?->toIso8601String(),
+            ]);
+
+        return response()->json([
+            'capteur' => $capteur,
+            'label' => self::CAPTEURS[$capteur][0],
+            'cle' => self::CAPTEURS[$capteur][1],
+            'unite' => self::CAPTEURS[$capteur][2],
+            'points' => $points,
+        ]);
+    }
+
     public function capteursMoyennes(Request $request)
     {
         $micro = $this->resolverMicrocontroleurAutorise($request);

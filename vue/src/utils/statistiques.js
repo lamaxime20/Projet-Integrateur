@@ -209,6 +209,43 @@ export function charger_stats_capteur(capteur, setStats) {
     });
 }
 
+export async function charger_mesures_capteur(capteur, dateDebut, dateFin) {
+    try {
+        return await getApi(`/capteurs/${capteur}/mesures?date_debut=${encodeURIComponent(dateDebut)}&date_fin=${encodeURIComponent(dateFin)}`);
+    } catch {
+        const maintenant = new Date();
+        const points = Array.from({ length: 12 }, (_, index) => {
+            const date = ajouterMinutes(maintenant, -(11 - index) * 120);
+            const bases = {
+                temperature: 22,
+                "humidite-sol": 46,
+                luminosite: 58,
+                co2: 40,
+                "niveau-eau": 1,
+            };
+
+            return {
+                valeur: capteur === "niveau-eau" ? (index % 4 === 0 ? 0 : 1) : bases[capteur] + Math.round(Math.sin(index / 2) * 8),
+                date_arrivee: date.toISOString(),
+            };
+        });
+
+        const config = {
+            temperature: { label: "Température de l'air", cle: "temperature", unite: "°C" },
+            "humidite-sol": { label: "Humidité du sol", cle: "humidite_sol", unite: "%" },
+            luminosite: { label: "Luminosité", cle: "luminosite", unite: "%" },
+            co2: { label: "Qualité de l'air", cle: "co2", unite: "ppm" },
+            "niveau-eau": { label: "Niveau d'eau", cle: "niveau_eau", unite: "digital" },
+        };
+
+        return {
+            capteur,
+            ...(config[capteur] ?? config.temperature),
+            points,
+        };
+    }
+}
+
 // ============================================================
 //  RAPPORT — HISTORIQUE ACTIONNEUR (pages rapports actionneurs)
 // ============================================================

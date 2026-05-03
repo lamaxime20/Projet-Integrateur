@@ -9,17 +9,18 @@ use App\Models\Microcontroleur;
 use App\Models\Session;
 use App\Models\Utilisateur;
 use App\Support\ApiTokenManager;
+use App\Support\SimplePdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class RapportController extends Controller
 {
     private const CAPTEURS = [
-        'temperature' => "Température de l'air",
-        'humidite-sol' => 'Humidité du sol',
-        'luminosite' => 'Luminosité',
-        'co2' => "Qualité de l'air",
-        'niveau-eau' => "Niveau d'eau",
+        'temperature' => ["Température de l'air", 'temperature', '°C'],
+        'humidite-sol' => ['Humidité du sol', 'humidite_sol', '%'],
+        'luminosite' => ['Luminosité', 'luminosite', '%'],
+        'co2' => ["Qualité de l'air", 'co2', 'ppm'],
+        'niveau-eau' => ["Niveau d'eau", 'niveau_eau', 'digital'],
     ];
 
     private const ACTIONNEURS = [
@@ -36,11 +37,15 @@ class RapportController extends Controller
     {
         $micro = $this->resolverMicrocontroleurAutorise($request);
         if (!$micro) return response()->json(['message' => 'Microcontrôleur introuvable.'], 404);
-        if ($request->input('format') === 'pdf') return $this->pdfNonDisponible();
 
         $lignes = [['Date', 'État', 'Début', 'Fin', 'Durée']];
-        foreach ($this->filtrerPeriodes($micro->historiquesEtats()->orderBy('date_debut_etat')->get(), $request) as $periode) {
+        $periodes = $this->filtrerPeriodes($micro->historiquesEtats()->orderBy('date_debut_etat')->get(), $request);
+        foreach ($periodes as $periode) {
             $lignes[] = $this->lignePeriode($periode);
+        }
+
+        if ($request->input('format') === 'pdf') {
+            return $this->pdfTimeline('Rapport microcontrôleur', 'États du microcontrôleur', $periodes, $lignes, 'rapport_microcontroleur.pdf');
         }
 
         return $this->csv($lignes, 'rapport_microcontroleur.csv');
@@ -50,25 +55,69 @@ class RapportController extends Controller
     {
         $modele = $this->resolverCapteur($request, $capteur);
         if (!$modele) return response()->json(['message' => 'Capteur introuvable.'], 404);
-        if ($request->input('format') === 'pdf') return $this->pdfNonDisponible();
 
         $lignes = [['Date', 'État', 'Début', 'Fin', 'Durée']];
-        foreach ($this->filtrerPeriodes($modele->historiquesEtats()->orderBy('date_debut_etat')->get(), $request) as $periode) {
+        $periodes = $this->filtrerPeriodes($modele->historiquesEtats()->orderBy('date_debut_etat')->get(), $request);
+        foreach ($periodes as $periode) {
             $lignes[] = $this->lignePeriode($periode);
         }
 
+        if ($request->input('format') === 'pdf') {
+            return $this->pdfTimeline("Rapport {$capteur}", 'Historique des états du capteur', $periodes, $lignes, "rapport_{$capteur}.pdf");
+        }
+
         return $this->csv($lignes, "rapport_{$capteur}.csv");
+    }
+
+    public function mesuresCapteur(Request $request, string $capteur)
+    {
+        $modele = $this->resolverCapteur($request, $capteur);
+        if (!$modele || !isset(self::CAPTEURS[$capteur])) {
+            return response()->json(['message' => 'Capteur introuvable.'], 404);
+        }
+
+        $points = $this->pointsMesures($modele, $request);
+        $unite = self::CAPTEURS[$capteur][2];
+        $lignes = [['Date', 'Heure', 'Valeur', 'Unité']];
+
+        foreach ($points as $point) {
+            $date = Carbon::parse($point['date_arrivee']);
+            $lignes[] = [
+                $date->format('Y-m-d'),
+                $date->format('H:i:s'),
+                $point['valeur'],
+                $unite,
+            ];
+        }
+
+        if ($request->input('format') === 'pdf') {
+            return $this->pdfCourbe(
+                "Rapport mesures {$capteur}",
+                'Valeurs mesurées en fonction du temps',
+                $points,
+                self::CAPTEURS[$capteur][0],
+                $unite === 'digital' ? '' : $unite,
+                $lignes,
+                "rapport_mesures_{$capteur}.pdf"
+            );
+        }
+
+        return $this->csv($lignes, "rapport_mesures_{$capteur}.csv");
     }
 
     public function actionneur(Request $request, string $actionneur)
     {
         $modele = $this->resolverActionneur($request, $actionneur);
         if (!$modele) return response()->json(['message' => 'Actionneur introuvable.'], 404);
-        if ($request->input('format') === 'pdf') return $this->pdfNonDisponible();
 
         $lignes = [['Date', 'État', 'Début', 'Fin', 'Durée']];
-        foreach ($this->filtrerPeriodes($modele->historiquesEtats()->orderBy('date_debut_etat')->get(), $request) as $periode) {
+        $periodes = $this->filtrerPeriodes($modele->historiquesEtats()->orderBy('date_debut_etat')->get(), $request);
+        foreach ($periodes as $periode) {
             $lignes[] = $this->lignePeriode($periode);
+        }
+
+        if ($request->input('format') === 'pdf') {
+            return $this->pdfTimeline("Rapport {$actionneur}", "Historique des états de l'actionneur", $periodes, $lignes, "rapport_{$actionneur}.pdf");
         }
 
         return $this->csv($lignes, "rapport_{$actionneur}.csv");
@@ -78,7 +127,6 @@ class RapportController extends Controller
     {
         $modele = $this->resolverActionneur($request, $actionneur);
         if (!$modele) return response()->json(['message' => 'Actionneur introuvable.'], 404);
-        if ($request->input('format') === 'pdf') return $this->pdfNonDisponible();
 
         $debut = Carbon::parse($request->input('date_debut', now()->subDays(7)->toDateString()))->startOfDay();
         $fin = Carbon::parse($request->input('date_fin', now()->toDateString()))->endOfDay();
@@ -92,6 +140,10 @@ class RapportController extends Controller
                 $instruction->duree !== null ? round($instruction->duree / 60) . 'min' : '',
                 $instruction->statut,
             ];
+        }
+
+        if ($request->input('format') === 'pdf') {
+            return $this->pdfTable("Rapport instructions {$actionneur}", 'Instructions envoyées à l’actionneur', $lignes, "rapport_instructions_{$actionneur}.pdf");
         }
 
         return $this->csv($lignes, "rapport_instructions_{$actionneur}.csv");
@@ -131,7 +183,7 @@ class RapportController extends Controller
         $micro = $this->resolverMicrocontroleurAutorise($request);
         if (!$micro || !isset(self::CAPTEURS[$slug])) return null;
 
-        $grandeur = Grandeur::where('name', self::CAPTEURS[$slug])->first();
+        $grandeur = Grandeur::where('name', self::CAPTEURS[$slug][0])->first();
         if (!$grandeur) return null;
 
         return $micro->capteurs()->where('type_mesure', $grandeur->id)->first();
@@ -174,6 +226,22 @@ class RapportController extends Controller
         ];
     }
 
+    private function pointsMesures(Capteur $capteur, Request $request): array
+    {
+        $debut = Carbon::parse($request->input('date_debut', now()->subDays(7)->toDateString()))->startOfDay();
+        $fin = Carbon::parse($request->input('date_fin', now()->toDateString()))->endOfDay();
+
+        return $capteur->donnees()
+            ->whereBetween('date_arrivee', [$debut, $fin])
+            ->orderBy('date_arrivee')
+            ->get(['valeur', 'date_arrivee'])
+            ->map(fn ($donnee) => [
+                'valeur' => (float) $donnee->valeur,
+                'date_arrivee' => $donnee->date_arrivee?->toIso8601String(),
+            ])
+            ->all();
+    }
+
     private function etatFrontend(?string $etat): string
     {
         return match ($etat) {
@@ -195,8 +263,37 @@ class RapportController extends Controller
         ]);
     }
 
-    private function pdfNonDisponible()
+    private function pdfTimeline(string $titre, string $sousTitre, array $periodes, array $lignes, string $nomFichier)
     {
-        return response()->json(['message' => 'La génération PDF n’est pas encore disponible côté backend.'], 501);
+        $pdf = new SimplePdf($titre, $sousTitre);
+        $pdf->drawTimeline($periodes, 'Graphe des états');
+        $pdf->table($lignes[0] ?? [], array_slice($lignes, 1), 54, 430);
+
+        return $this->pdfResponse($pdf, $nomFichier);
+    }
+
+    private function pdfCourbe(string $titre, string $sousTitre, array $points, string $label, string $unite, array $lignes, string $nomFichier)
+    {
+        $pdf = new SimplePdf($titre, $sousTitre);
+        $pdf->drawLineChart($points, $label, $unite);
+        $pdf->table($lignes[0] ?? [], array_slice($lignes, 1), 54, 390);
+
+        return $this->pdfResponse($pdf, $nomFichier);
+    }
+
+    private function pdfTable(string $titre, string $sousTitre, array $lignes, string $nomFichier)
+    {
+        $pdf = new SimplePdf($titre, $sousTitre);
+        $pdf->table($lignes[0] ?? [], array_slice($lignes, 1), 54, 650, 36);
+
+        return $this->pdfResponse($pdf, $nomFichier);
+    }
+
+    private function pdfResponse(SimplePdf $pdf, string $nomFichier)
+    {
+        return response($pdf->output(), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="' . $nomFichier . '"',
+        ]);
     }
 }

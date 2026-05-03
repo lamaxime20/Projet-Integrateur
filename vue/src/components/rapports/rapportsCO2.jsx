@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import GrapheBatonnet from "../application/grapheBatonnet";
+import RapportCourbeCapteur from "./RapportCourbeCapteur";
 import { charger_historique_capteur, charger_stats_capteur } from "../../utils/statistiques";
 import { generer_rapport_capteur } from "../../utils/rapport";
 import "../../assets/styles/components/rapports/rapportCapteur.css";
@@ -115,6 +116,8 @@ function RapportsCO2() {
                         <div className="rapport-legende-item"><span className="rapport-dot rouge" aria-hidden="true"></span>Défaillant</div>
                     </div>
                 </section>
+
+                <RapportCourbeCapteur capteur="co2" titre="Qualité de l'air" unite="ppm" />
 
                 {stats && stats.unite !== "digital" && (
                     <section className="rapport-section">

@@ -1,0 +1,62 @@
+.rapportCourbe-root {
+    gap: var(--space-lg);
+}
+
+.rapportCourbe-graph {
+    width: 100%;
+    min-height: 17rem;
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(248, 251, 248, 0.42)),
+        linear-gradient(90deg, rgba(46, 125, 50, 0.08), rgba(2, 136, 209, 0.04));
+    border: 1px solid rgba(46, 125, 50, 0.1);
+    overflow-x: auto;
+}
+
+.rapportCourbe-graph svg {
+    display: block;
+    width: 100%;
+    min-width: 34rem;
+    height: auto;
+}
+
+.rapportCourbe-axis {
+    stroke: rgba(20, 32, 19, 0.28);
+    stroke-width: 1.5;
+}
+
+.rapportCourbe-line {
+    fill: none;
+    stroke: var(--secondary-color-dark);
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.rapportCourbe-point {
+    fill: var(--accent-color);
+    stroke: #fff;
+    stroke-width: 1.5;
+}
+
+.rapportCourbe-label {
+    fill: rgba(20, 32, 19, 0.62);
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.rapportCourbe-message {
+    margin: 0;
+    color: rgba(20, 32, 19, 0.62);
+    font-weight: 700;
+}
+
+.rapportCourbe-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    color: rgba(20, 32, 19, 0.62);
+    font-size: 0.86rem;
+    font-weight: 700;
+}
