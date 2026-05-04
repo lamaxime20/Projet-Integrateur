@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Actionneur;
-use App\Models\Capteur;
+use App\Mail\AlerteIoTMail;
+use App\Models\Alerte;
 use App\Models\Donnee;
 use App\Models\EtatActionneur;
 use App\Models\EtatCapteur;
@@ -11,6 +11,7 @@ use App\Models\EtatMicrocontroleur;
 use App\Models\Grandeur;
 use App\Models\Instruction;
 use App\Models\Microcontroleur;
+use App\Services\MailService;
 use Illuminate\Support\Facades\Log;
 use PhpMqtt\Client\ConnectionSettings;
 use PhpMqtt\Client\MqttClient;
@@ -33,6 +34,15 @@ class MqttController extends Controller
         'Humidité du sol'       => ['hum_min',  'hum_max'],
         "Température de l'air"  => ['temp_min', 'temp_max'],
         "Qualité de l'air"      => ['co2_min',  'co2_max'],
+    ];
+
+    // Nom de Grandeur → unité d'affichage
+    private const GRANDEUR_UNITES = [
+        "Température de l'air" => '°C',
+        'Humidité du sol'      => '%',
+        "Qualité de l'air"     => ' ppm',
+        'Luminosité'           => ' lux',
+        "Niveau d'eau"         => ' cm',
     ];
 
     // =========================================================
@@ -63,6 +73,8 @@ class MqttController extends Controller
             ]);
 
             $capteur->update(['last_seen' => $now]);
+
+            $this->verifierEtAlerter($micro, $grandeur, (float) $valeur);
         }
     }
 
@@ -121,7 +133,7 @@ class MqttController extends Controller
     // ENTRANT — agriculture/+/status
     // {"device_id":"esp32_01","id_instruction":"uuid","status":"terminee"}
     // =========================================================
-    public function handleStatus(string $deviceId, array $data): void
+    public function handleStatus(string $_deviceId, array $data): void
     {
         $id     = $data['id_instruction'] ?? null;
         $status = $data['status']         ?? null;
@@ -169,8 +181,6 @@ class MqttController extends Controller
 
     // =========================================================
     // SORTANT — agriculture/{device_id}/seuils (retain = true)
-    // Publie le JSON des seuils vers l'ESP32.
-    // À appeler depuis SeuilController après chaque mise à jour.
     // =========================================================
     public static function publishSeuils(string $deviceId): void
     {
@@ -197,7 +207,7 @@ class MqttController extends Controller
                 "agriculture/{$deviceId}/seuils",
                 json_encode($payload),
                 1,
-                true  // retain — l'ESP32 récupère les seuils même après redémarrage
+                true
             );
             $mqtt->disconnect();
         } catch (\Throwable $e) {
@@ -207,10 +217,6 @@ class MqttController extends Controller
 
     // =========================================================
     // SORTANT — agriculture/{device_id}/instructions
-    // Publie une instruction vers l'ESP32.
-    // À appeler depuis RealtimeDataController::creerInstruction.
-    // Format attendu par l'ESP32 :
-    //   { id_instruction, action, duree (secondes), actionneur }
     // =========================================================
     public static function publishInstruction(Instruction $instruction): void
     {
@@ -233,6 +239,59 @@ class MqttController extends Controller
             $mqtt->disconnect();
         } catch (\Throwable $e) {
             Log::error("MQTT publishInstruction [{$instruction->id}] : " . $e->getMessage());
+        }
+    }
+
+    // =========================================================
+    // DÉTECTION D'ANOMALIE + ALERTE IN-APP + EMAIL
+    // =========================================================
+    private function verifierEtAlerter(Microcontroleur $micro, Grandeur $grandeur, float $valeur): void
+    {
+        $seuil = $micro->seuils()
+            ->where('type_mesure', $grandeur->id)
+            ->first();
+
+        if (!$seuil) return;
+        if ($valeur >= $seuil->valeur_min && $valeur <= $seuil->valeur_max) return;
+
+        $user = $micro->utilisateur;
+        if (!$user) return;
+
+        // Anti-spam : pas plus d'une alerte identique par 30 minutes
+        $alerteRecente = Alerte::where('user_id', $user->id)
+            ->where('type', $grandeur->name)
+            ->where('date_arrivee', '>=', now()->subMinutes(30))
+            ->exists();
+
+        if ($alerteRecente) return;
+
+        $unite     = self::GRANDEUR_UNITES[$grandeur->name] ?? '';
+        $direction = $valeur < $seuil->valeur_min ? 'trop bas' : 'trop élevé';
+        $message   = "{$grandeur->name} : {$valeur}{$unite} ({$direction}) — seuils : [{$seuil->valeur_min}, {$seuil->valeur_max}]";
+
+        Alerte::create([
+            'type'        => $grandeur->name,
+            'message'     => $message,
+            'vu'          => false,
+            'date_arrivee' => now(),
+            'user_id'     => $user->id,
+        ]);
+
+        try {
+            app(MailService::class)->queue(
+                $user->email,
+                new AlerteIoTMail(
+                    prenom:   $user->prenom,
+                    grandeur: $grandeur->name,
+                    valeur:   $valeur,
+                    unite:    $unite,
+                    seuilMin: (float) $seuil->valeur_min,
+                    seuilMax: (float) $seuil->valeur_max,
+                    deviceId: $micro->nom,
+                )
+            );
+        } catch (\Throwable $e) {
+            Log::error("[MQTT] Impossible d'envoyer l'email d'alerte : " . $e->getMessage());
         }
     }
 

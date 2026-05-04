@@ -10,6 +10,10 @@ use App\Http\Controllers\SeuilController;
 use App\Http\Controllers\RealtimeDataController;
 use App\Http\Controllers\RapportController;
 use App\Http\Controllers\AlerteController;
+use App\Http\Controllers\TestMailController;
+
+// Validation intégration email Brevo — à retirer en production
+Route::get('/test-email', [TestMailController::class, 'send']);
 
 Route::post('/device/token', [DeviceController::class, 'getToken']);
 
