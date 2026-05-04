@@ -21,7 +21,7 @@ const char* password = "Lamine19yamal";
 // ============================================================
 // API TOKEN
 // ============================================================
-const char* apiUrl = "https://projet-integrateur-do3r.onrender.com/api/device/token";
+const char* apiUrl = "https://amused-presence-production-a3ec.up.railway.app//api/device/token";
 String identifiant_user = "user_123";
 String token = "";
 
