@@ -42,7 +42,7 @@ class ListenMQTT extends Command
                     $deviceId = explode('/', $topic)[1];
                     $data = json_decode($message, true);
                     if (is_array($data)) {
-                        $this->info($data);
+                        $this->info(json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
                         $ctrl->handleData($deviceId, $data);
                     }
                 }, 1);
@@ -54,7 +54,10 @@ class ListenMQTT extends Command
                     $deviceId = explode('/', $topic)[1];
                     $data = json_decode($message, true);
                     if (is_array($data)) {
-                        $this->info($data);
+                        $this->info("essaie component");
+                        $this->info($deviceId);
+                        $this->info("Les informations sont");
+                        $this->info(json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
                         $ctrl->handleComponents($deviceId, $data);
                     }
                 }, 1);
@@ -66,7 +69,7 @@ class ListenMQTT extends Command
                     $deviceId = explode('/', $topic)[1];
                     $data = json_decode($message, true);
                     if (is_array($data)) {
-                        $this->info($data);
+                        $this->info(json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
                         $ctrl->handleStatus($deviceId, $data);
                     }
                 }, 1);

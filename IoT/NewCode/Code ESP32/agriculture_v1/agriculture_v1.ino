@@ -65,8 +65,8 @@ Servo servoPorte;
 WiFiClientSecure espClient;
 PubSubClient client(espClient);
 
-#define DIAG_DELAY 15000   // 15 secondes avant analyse
-#define VARIATION_MIN 3.0  // variation minimale (%)
+#define DIAG_DELAY 15000
+#define VARIATION_MIN 3.0
 
 // ============================================================
 // SEUILS
@@ -120,6 +120,17 @@ ComponentState components[] = {
   {"niveau_eau","capteur",""}
 };
 
+// ============================================================
+// HISTORIQUE CAPTEURS
+// ============================================================
+float lastTemp = 0;
+float lastHumSol = 0;
+float lastLum = 0;
+float lastCO2 = 0;
+
+int stableTemp = 0;
+int stableCO2 = 0;
+
 struct DiagnosticState {
   bool actif;
   unsigned long startTime;
@@ -136,11 +147,21 @@ DiagnosticState diagPorte   = {false, 0, 0};
 // ============================================================
 float readAverage(int pin){
   long sum = 0;
+  int minVal = 4095;
+  int maxVal = 0;
+
   for(int i=0;i<5;i++){
-    sum += analogRead(pin);
+    int val = analogRead(pin);
+    sum += val;
+    if(val < minVal) minVal = val;
+    if(val > maxVal) maxVal = val;
     delay(5);
   }
-  return sum/5.0;
+
+  sum -= minVal;
+  sum -= maxVal;
+
+  return sum / 3.0;
 }
 
 // ============================================================
@@ -213,14 +234,44 @@ void publierEtatComposant(String nom,String type,String etat){
   String payload;
   serializeJson(doc,payload);
   client.publish(TOPIC_COMPONENT_STATUS,payload.c_str());
+  Serial.println("J'ai publié " + payload + " sur le topic " + TOPIC_COMPONENT_STATUS);
 }
 
 // ============================================================
-// DETECTION
+// DETECTION AVANCÉE CAPTEURS
 // ============================================================
-String detectEtatCapteur(float valeur){
-  if(isnan(valeur)) return "defaillant";
-  if(valeur==0) return "eteint";
+String detectEtatDHT(float val, float &lastVal, int &stableCount){
+  if(isnan(val)){
+    stableCount++;
+    if(stableCount > 5) return "eteint";
+    return "defaillant";
+  }
+
+  if(abs(val - lastVal) < 0.01){
+    stableCount++;
+    if(stableCount > 50) return "defaillant";
+  } else {
+    stableCount = 0;
+  }
+
+  lastVal = val;
+  return "actif";
+}
+
+String detectEtatAnalog(float val){
+  if(val == 0) return "eteint";
+  if(val >= 4095) return "defaillant";
+  return "actif";
+}
+
+String detectEtatLDR(float val){
+  if(val <= 0 || val >= 100) return "eteint";
+  return "actif";
+}
+
+String detectEtatSol(float val){
+  if(val >= 100) return "eteint";
+  if(val <= 0) return "defaillant";
   return "actif";
 }
 
@@ -233,15 +284,25 @@ String detectEtatPorte(){
 }
 
 // ============================================================
+// PUBLISH SAFE
+// ============================================================
+void publierSiChangement(ComponentState &comp, String nouvelEtat, String type){
+  if(comp.lastState != nouvelEtat){
+    comp.lastState = nouvelEtat;
+    publierEtatComposant(comp.name, type, nouvelEtat);
+  }
+}
+
+// ============================================================
 // SURVEILLANCE
 // ============================================================
 void verifierEtats(float hum_sol,float temp,float lum,float co2,int eau){
 
   String capteurs[]={
-    detectEtatCapteur(hum_sol),
-    detectEtatCapteur(temp),
-    detectEtatCapteur(lum),
-    detectEtatCapteur(co2),
+    detectEtatSol(hum_sol),
+    detectEtatDHT(temp, lastTemp, stableTemp),
+    detectEtatLDR(lum),
+    detectEtatDHT(co2, lastCO2, stableCO2),
     (eau==HIGH?"ok":"bas")
   };
 
@@ -255,18 +316,12 @@ void verifierEtats(float hum_sol,float temp,float lum,float co2,int eau){
   int index=0;
 
   for(int i=0;i<4;i++){
-    if(components[index].lastState!=actionneurs[i]){
-      components[index].lastState=actionneurs[i];
-      publierEtatComposant(components[index].name,"actionneur",actionneurs[i]);
-    }
+    publierSiChangement(components[index], actionneurs[i], "actionneur");
     index++;
   }
 
   for(int i=0;i<5;i++){
-    if(components[index].lastState!=capteurs[i]){
-      components[index].lastState=capteurs[i];
-      publierEtatComposant(components[index].name,"capteur",capteurs[i]);
-    }
+    publierSiChangement(components[index], capteurs[i], "capteur");
     index++;
   }
 }
@@ -494,6 +549,11 @@ void setup(){
 
   client.setServer(mqtt_server,mqtt_port);
   client.setCallback(callback);
+
+  // Initialisation des états pour éviter spam au démarrage
+  for(int i=0;i<9;i++){
+    components[i].lastState = "";
+  }
 }
 
 // ============================================================
