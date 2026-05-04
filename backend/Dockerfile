@@ -24,4 +24,4 @@ EXPOSE 8000
 # Lance le serveur HTTP en arrière-plan puis l'écouteur MQTT au premier plan.
 # L'écouteur MQTT gère la reconnexion automatique au broker.
 # Si l'un des deux processus s'arrête, le conteneur redémarre (Render le relance).
-CMD sh -c "php artisan serve --host=0.0.0.0 --port=${PORT:-8000} & php artisan queue:work --tries=3 --backoff=30"
+CMD sh -c "php artisan serve --host=0.0.0.0 --port=${PORT:-8000} & php artisan queue:work --tries=3 --backoff=30 & php artisan mqtt:listen"
