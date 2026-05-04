@@ -28,7 +28,7 @@ function App() {
 
     try {
       const response = await fetch(
-        "https://projet-integrateur-do3r.onrender.com/api/microcontroleurs/create",
+        "http://localhost:8000/api/microcontroleurs/create",
         {
           method: "POST",
           headers: {

@@ -300,7 +300,10 @@ class MqttController extends Controller
     // =========================================================
     private function trouverMicro(string $deviceId): ?Microcontroleur
     {
-        return Microcontroleur::where('nom', $deviceId)->first();
+        $identifiant = trim($deviceId);
+
+        return Microcontroleur::where('identifiant_user', $identifiant)
+            ->first();
     }
 
     private function normaliserEtat(string $etat): ?string

@@ -42,6 +42,7 @@ class ListenMQTT extends Command
                     $deviceId = explode('/', $topic)[1];
                     $data = json_decode($message, true);
                     if (is_array($data)) {
+                        $this->info($data);
                         $ctrl->handleData($deviceId, $data);
                     }
                 }, 1);
@@ -53,6 +54,7 @@ class ListenMQTT extends Command
                     $deviceId = explode('/', $topic)[1];
                     $data = json_decode($message, true);
                     if (is_array($data)) {
+                        $this->info($data);
                         $ctrl->handleComponents($deviceId, $data);
                     }
                 }, 1);
@@ -64,6 +66,7 @@ class ListenMQTT extends Command
                     $deviceId = explode('/', $topic)[1];
                     $data = json_decode($message, true);
                     if (is_array($data)) {
+                        $this->info($data);
                         $ctrl->handleStatus($deviceId, $data);
                     }
                 }, 1);
@@ -73,6 +76,9 @@ class ListenMQTT extends Command
                 // "online" ou "offline"
                 $mqtt->subscribe('agriculture/+/availability', function (string $topic, string $message) use ($ctrl) {
                     $deviceId = explode('/', $topic)[1];
+                    $this->info($message);
+                    $this->info($topic);
+                    $this->info($deviceId);
                     $ctrl->handleAvailability($deviceId, $message);
                 }, 1);
 

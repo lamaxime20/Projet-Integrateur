@@ -21,7 +21,7 @@ const char* password = "Lamine19yamal";
 // ============================================================
 // API TOKEN
 // ============================================================
-const char* apiUrl = "https://amused-presence-production-a3ec.up.railway.app//api/device/token";
+const char* apiUrl = "https://amused-presence-production-a3ec.up.railway.app/api/device/token";
 String identifiant_user = "user_123";
 String token = "";
 
@@ -150,7 +150,15 @@ void setup_wifi(){
   WiFi.begin(ssid,password);
   while(WiFi.status()!=WL_CONNECTED){
     delay(500);
+    Serial.print(".");
   }
+
+  Serial.println("");
+  Serial.println("WiFi connecté !");
+
+  // ✅ Ligne ajoutée pour vérifier la connexion Internet
+  Serial.print("Connexion Internet OK | IP: ");
+  Serial.println(WiFi.localIP());
 }
 
 // ============================================================
@@ -173,6 +181,7 @@ void getToken(){
     StaticJsonDocument<256> res;
     deserializeJson(res,http.getString());
     token=res["token"].as<String>();
+    Serial.print("Voici le token " + token);
   }
   http.end();
 }
