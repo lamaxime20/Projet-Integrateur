@@ -45,21 +45,27 @@ String device_id = "esp32_01";
 // ============================================================
 // PINS
 // ============================================================
-#define SOIL_PIN 36
-#define LDR_PIN 39
-#define CO2_PIN 34
-#define WATER_PIN 14
-#define DHT_PIN 4
+// ============================================================
+// PINS CAPTEURS (ADC1 = OK AVEC WIFI)
+// ============================================================
+#define SOIL_PIN   34
+#define LDR_PIN    39
+#define CO2_PIN    36
+#define WATER_PIN  35
+#define DHT_PIN    4
 
-#define POMPE_PIN 5
-#define VENTIL_PIN 12
+// ============================================================
+// ACTIONNEURS
+// ============================================================
+#define POMPE_PIN   25
+#define VENTIL_PIN  26
 #define ECLAIRE_PIN 13
-#define SERVO_PIN 18
+#define SERVO_PIN   18
 
 // ============================================================
 // OBJETS
 // ============================================================
-#define DHT_TYPE DHT22
+#define DHT_TYPE DHT11
 DHT dht(DHT_PIN, DHT_TYPE);
 Servo servoPorte;
 WiFiClientSecure espClient;
@@ -67,6 +73,7 @@ PubSubClient client(espClient);
 
 #define DIAG_DELAY 15000
 #define VARIATION_MIN 3.0
+#define DATA_VARIATION_PERCENT 10.0
 
 // ============================================================
 // SEUILS
@@ -131,6 +138,15 @@ float lastCO2 = 0;
 int stableTemp = 0;
 int stableCO2 = 0;
 
+// ============================================================
+// DERNIÈRES DONNÉES PUBLIÉES
+// ============================================================
+float lastPublishedHumSol = NAN;
+float lastPublishedTemp = NAN;
+float lastPublishedLum = NAN;
+float lastPublishedCO2 = NAN;
+float lastPublishedEau = NAN;
+
 struct DiagnosticState {
   bool actif;
   unsigned long startTime;
@@ -162,6 +178,46 @@ float readAverage(int pin){
   sum -= maxVal;
 
   return sum / 3.0;
+}
+
+float readDhtTemperatureAverage(){
+  float sum = 0;
+  int count = 0;
+
+  for(int i=0;i<5;i++){
+    float val = dht.readTemperature();
+    if(!isnan(val)){
+      sum += val;
+      count++;
+    }
+    delay(20);
+  }
+
+  if(count == 0) return NAN;
+  return sum / count;
+}
+
+float readWaterLevelAverage(){
+  float sum = 0;
+
+  for(int i=0;i<5;i++){
+    sum += digitalRead(WATER_PIN) == HIGH ? 100.0 : 0.0;
+    delay(5);
+  }
+
+  return sum / 5.0;
+}
+
+float valeurAbsolue(float valeur){
+  return valeur < 0 ? -valeur : valeur;
+}
+
+bool variationSuffisante(float valeur, float derniereValeur){
+  if(isnan(valeur)) return false;
+  if(isnan(derniereValeur)) return true;
+  if(derniereValeur == 0) return valeur != 0;
+
+  return valeurAbsolue(valeur - derniereValeur) >= valeurAbsolue(derniereValeur) * (DATA_VARIATION_PERCENT / 100.0);
 }
 
 // ============================================================
@@ -234,7 +290,60 @@ void publierEtatComposant(String nom,String type,String etat){
   String payload;
   serializeJson(doc,payload);
   client.publish(TOPIC_COMPONENT_STATUS,payload.c_str());
-  Serial.println("J'ai publié " + payload + " sur le topic " + TOPIC_COMPONENT_STATUS);
+}
+
+// ============================================================
+// DONNÉES CAPTEURS
+// ============================================================
+void publierDonneesSiVariation(float hum_sol,float temp,float lum,float co2,float niveauEau){
+  String etatTemp = detectEtatDHT(temp, lastTemp, stableTemp);
+  String etatHumSol = detectEtatSol(hum_sol);
+  String etatCO2 = detectEtatDHT(co2, lastCO2, stableCO2);
+  String etatLum = detectEtatLDR(lum);
+
+  bool tempActif = etatTemp == "actif";
+  bool humSolActif = etatHumSol == "actif";
+  bool co2Actif = etatCO2 == "actif";
+  bool lumActif = etatLum == "actif";
+
+  bool publierTemp = tempActif
+    ? variationSuffisante(temp, lastPublishedTemp)
+    : variationSuffisante(0, lastPublishedTemp);
+
+  bool publierHumSol = humSolActif
+    ? variationSuffisante(hum_sol, lastPublishedHumSol)
+    : variationSuffisante(0, lastPublishedHumSol);
+
+  bool publierCO2 = co2Actif
+    ? variationSuffisante(co2, lastPublishedCO2)
+    : variationSuffisante(0, lastPublishedCO2);
+
+  bool publierLum = lumActif
+    ? variationSuffisante(lum, lastPublishedLum)
+    : variationSuffisante(0, lastPublishedLum);
+
+  bool publierEau = variationSuffisante(niveauEau, lastPublishedEau);
+
+  if(!publierTemp && !publierHumSol && !publierCO2 && !publierLum && !publierEau) return;
+
+  StaticJsonDocument<256> doc;
+
+  if(publierTemp) doc["temperature"] = tempActif ? temp : 0;
+  if(publierHumSol) doc["humidite"] = humSolActif ? hum_sol : 0;
+  if(publierCO2) doc["co2"] = co2Actif ? co2 : 0;
+  if(publierLum) doc["luminosite"] = lumActif ? lum : 0;
+  if(publierEau) doc["niveau_eau"] = niveauEau;
+
+  String payload;
+  serializeJson(doc,payload);
+  client.publish(TOPIC_DATA,payload.c_str());
+  Serial.println("Données publiées " + payload + " sur le topic " + TOPIC_DATA);
+
+  if(publierTemp) lastPublishedTemp = tempActif ? temp : 0;
+  if(publierHumSol) lastPublishedHumSol = humSolActif ? hum_sol : 0;
+  if(publierCO2) lastPublishedCO2 = co2Actif ? co2 : 0;
+  if(publierLum) lastPublishedLum = lumActif ? lum : 0;
+  if(publierEau) lastPublishedEau = niveauEau;
 }
 
 // ============================================================
@@ -565,10 +674,13 @@ void loop(){
   client.loop();
 
   float hum_sol = map(readAverage(SOIL_PIN),4095,0,0,100);
-  float temp = dht.readTemperature();
+  float temp = readDhtTemperatureAverage();
   float lum = map(readAverage(LDR_PIN),0,4095,0,100);
   float co2 = map(readAverage(CO2_PIN),0,4095,0,100);
-  int eau = digitalRead(WATER_PIN);
+  float niveauEau = readWaterLevelAverage();
+  int eau = niveauEau >= 50.0 ? HIGH : LOW;
+
+  publierDonneesSiVariation(hum_sol,temp,lum,co2,niveauEau);
 
   appliquerActionneurs(lum,hum_sol,temp,co2,eau);
 
