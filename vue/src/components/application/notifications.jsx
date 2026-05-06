@@ -49,6 +49,7 @@ function Notifications() {
     const [selection, setSelection] = useState(() => new Set());
     const [erreur, setErreur] = useState(null);
     const [chargementAction, setChargementAction] = useState(false);
+    const [notificationEnCours, setNotificationEnCours] = useState(null);
     const longPressTimer = useRef(null);
     const longPressDeclenche = useRef(false);
 
@@ -91,6 +92,8 @@ function Notifications() {
     };
 
     const handleNotificationClick = async (notification) => {
+        if (chargementAction || notificationEnCours) return;
+
         if (longPressDeclenche.current) {
             longPressDeclenche.current = false;
             return;
@@ -103,11 +106,13 @@ function Notifications() {
 
         try {
             if (!notification.vu) {
+                setNotificationEnCours(notification.id);
                 await marquer_notification_lue(notification.id);
             }
         } catch (error) {
             setErreur(error.message);
         } finally {
+            setNotificationEnCours(null);
             navigate(obtenir_route_notification(notification));
         }
     };
@@ -252,6 +257,7 @@ function Notifications() {
                             key={notification.id}
                             className={`notifications-card ${notification.vu ? "is-read" : "is-unread"} ${estSelectionnee ? "is-selected" : ""}`}
                             onClick={() => handleNotificationClick(notification)}
+                            aria-busy={notificationEnCours === notification.id}
                             onPointerDown={(event) => demarrerLongPress(notification, event)}
                             onPointerUp={arreterLongPress}
                             onPointerLeave={arreterLongPress}
@@ -260,6 +266,7 @@ function Notifications() {
                                 <input
                                     type="checkbox"
                                     checked={estSelectionnee}
+                                    disabled={chargementAction || Boolean(notificationEnCours)}
                                     onChange={() => {
                                         setSelectionActive(true);
                                         basculerSelection(notification.id);

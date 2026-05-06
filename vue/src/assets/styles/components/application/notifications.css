@@ -143,6 +143,11 @@
     transition: transform 160ms ease, border-color 160ms ease, background-color 160ms ease;
 }
 
+.notifications-card[aria-busy="true"] {
+    cursor: progress;
+    opacity: 0.74;
+}
+
 .notifications-card:hover,
 .notifications-card:focus-within {
     transform: translateY(-1px);

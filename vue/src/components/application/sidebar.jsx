@@ -1,15 +1,16 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { charger_microcontroleur_local, charger_etat_microcontroleur_temps_reel } from "../../utils/microcontroleur";
 import { changer_microcontroleur_user } from "../../utils/microcontroleur";
-import { logoutFromDatabase } from "../../utils/user";
 import { DASHBOARD, ACTIONNEUR, SEUIL, STATISTIQUE, NOTIFICATION } from "../../utils/sidebar-constants";
 import '../../assets/styles/components/application/sidebar.css'
 import { useAuth } from "../../hooks/useAuth";
 
 function Sidebar({ongletActif}) {
+    const navigate = useNavigate();
     const [microcontroleur, setMicrocontroleur] = useState(charger_microcontroleur_local());
     const [sidebarEpinglee, setSidebarEpinglee] = useState(false);
+    const [isLoggingOut, setIsLoggingOut] = useState(false);
     const logout = useAuth().logout;
 
     useEffect(() => {
@@ -29,10 +30,13 @@ function Sidebar({ongletActif}) {
         { id: NOTIFICATION, label: "Notification", href: "/application/notification", icon: "notifications" },
     ];
 
-    const handleLogout = () => {
-        logout();
+    const handleLogout = async () => {
+        if (isLoggingOut) return;
+
+        setIsLoggingOut(true);
+        await logout();
         localStorage.clear();
-        window.location.href = "/";
+        navigate("/", { replace: true });
     }
 
     return (
@@ -92,9 +96,10 @@ function Sidebar({ongletActif}) {
                     type="button"
                     className="sidebar-otherPages-logout"
                     onClick={() => handleLogout()}
+                    disabled={isLoggingOut}
                 >
                     <span className="material-symbols-outlined" aria-hidden="true">logout</span>
-                    <span className="sidebar-label">Déconnexion</span>
+                    <span className="sidebar-label">{isLoggingOut ? "Déconnexion..." : "Déconnexion"}</span>
                 </button>
             </section>
         </nav>

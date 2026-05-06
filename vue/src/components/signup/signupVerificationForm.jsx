@@ -33,13 +33,14 @@ function SignupVerificationForm({
                             value={digit}
                             onChange={(event) => onDigitChange(index, event.target.value)}
                             onKeyDown={(event) => onDigitKeyDown(index, event)}
+                            disabled={isSubmitting}
                         />
                     </label>
                 ))}
             </div>
 
             <div className="signup-step-actions signup-step-actions-inline">
-                <button type="button" className="signup-button-ghost" onClick={onPrevious}>
+                <button type="button" className="signup-button-ghost" onClick={onPrevious} disabled={isSubmitting}>
                     Précédent
                 </button>
                 <button type="submit" disabled={isSubmitting}>

@@ -1,17 +1,20 @@
 import { useState } from "react";
 import "../../../assets/styles/components/application/actionneur/instructionModal.css";
 
-function InstructionModal({ actionneur, action, isOpen, onClose, onConfirm }) {
+function InstructionModal({ actionneur, action, isOpen, isSubmitting = false, onClose, onConfirm }) {
     const [duree, setDuree] = useState(30);
 
     if (!isOpen) return null;
 
     const handleConfirm = () => {
+        if (isSubmitting) return;
+
         onConfirm(duree);
-        setDuree(30);
     };
 
     const handleCancel = () => {
+        if (isSubmitting) return;
+
         onClose();
         setDuree(30);
     };
@@ -34,6 +37,7 @@ function InstructionModal({ actionneur, action, isOpen, onClose, onConfirm }) {
                                 type="button"
                                 className="instructionModal-duree-btn"
                                 onClick={() => setDuree(Math.max(1, duree - 5))}
+                                disabled={isSubmitting}
                             >
                                 −
                             </button>
@@ -45,11 +49,13 @@ function InstructionModal({ actionneur, action, isOpen, onClose, onConfirm }) {
                                 value={duree}
                                 onChange={(e) => setDuree(Math.max(1, Math.min(1440, parseInt(e.target.value) || 1)))}
                                 className="instructionModal-duree-input"
+                                disabled={isSubmitting}
                             />
                             <button
                                 type="button"
                                 className="instructionModal-duree-btn"
                                 onClick={() => setDuree(Math.min(1440, duree + 5))}
+                                disabled={isSubmitting}
                             >
                                 +
                             </button>
@@ -65,6 +71,7 @@ function InstructionModal({ actionneur, action, isOpen, onClose, onConfirm }) {
                             type="button"
                             className="instructionModal-btn-cancel"
                             onClick={handleCancel}
+                            disabled={isSubmitting}
                         >
                             Annuler
                         </button>
@@ -72,8 +79,9 @@ function InstructionModal({ actionneur, action, isOpen, onClose, onConfirm }) {
                             type="button"
                             className="instructionModal-btn-confirm"
                             onClick={handleConfirm}
+                            disabled={isSubmitting}
                         >
-                            Confirmer
+                            {isSubmitting ? "Envoi en cours..." : "Confirmer"}
                         </button>
                     </div>
                 </div>

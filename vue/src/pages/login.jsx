@@ -31,12 +31,20 @@ function Login() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        if (isSubmitting) return;
+
         setErrorMessage("");
         setIsSubmitting(true);
 
-        const success = await login(formData);
+        let success = false;
 
-        setIsSubmitting(false);
+        try {
+            success = await login(formData);
+        } catch {
+            success = false;
+        } finally {
+            setIsSubmitting(false);
+        }
 
         if (!success) {
             setErrorMessage("Impossible d'ouvrir la session. Vérifie tes informations.");
@@ -87,6 +95,7 @@ function Login() {
                                 value={formData.email}
                                 onChange={handleChange}
                                 placeholder="example@mail.com"
+                                disabled={isSubmitting}
                             />
 
                             <input
@@ -97,6 +106,7 @@ function Login() {
                                 value={formData.password}
                                 onChange={handleChange}
                                 placeholder="Entre ton mot de passe"
+                                disabled={isSubmitting}
                             />
 
                             <a

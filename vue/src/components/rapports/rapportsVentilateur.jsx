@@ -44,6 +44,7 @@ function RapportsVentilateur() {
     const [erreurGraph, setErreurGraph] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalAction, setModalAction] = useState(null);
+    const [isSendingInstruction, setIsSendingInstruction] = useState(false);
 
     // Section 2
     const [instructions, setInstructions] = useState([]);
@@ -74,11 +75,19 @@ function RapportsVentilateur() {
     };
 
     const handleConfirmInstruction = async (dureeMinutes) => {
-        await creer_instruction_simule("ventilateur", modalAction, dureeMinutes);
-        if (modalAction === "allumer") setEtatVentilateur("running");
-        else if (modalAction === "arreter") setEtatVentilateur("stopped");
-        setIsModalOpen(false);
-        setModalAction(null);
+        if (isSendingInstruction) return;
+
+        setIsSendingInstruction(true);
+
+        try {
+            await creer_instruction_simule("ventilateur", modalAction, dureeMinutes);
+            if (modalAction === "allumer") setEtatVentilateur("running");
+            else if (modalAction === "arreter") setEtatVentilateur("stopped");
+            setIsModalOpen(false);
+            setModalAction(null);
+        } finally {
+            setIsSendingInstruction(false);
+        }
     };
 
     const handleGenererInstructions = () => {
@@ -173,14 +182,14 @@ function RapportsVentilateur() {
                         {etatVentilateur === "running" && (
                             <>
                                 <p>Le ventilateur est en marche</p>
-                                <button type="button" className="rapport-btn-instruction" onClick={() => { setModalAction("arreter"); setIsModalOpen(true); }} disabled={!microcontroleurAllume}>Arrêter</button>
+                                <button type="button" className="rapport-btn-instruction" onClick={() => { setModalAction("arreter"); setIsModalOpen(true); }} disabled={!microcontroleurAllume || isSendingInstruction}>Arrêter</button>
                                 {!microcontroleurAllume && <p className="rapport-warning">Microcontrôleur éteint — impossible d'envoyer l'instruction.</p>}
                             </>
                         )}
                         {etatVentilateur === "stopped" && (
                             <>
                                 <p>Le ventilateur est arrêté</p>
-                                <button type="button" className="rapport-btn-instruction" onClick={() => { setModalAction("allumer"); setIsModalOpen(true); }} disabled={!microcontroleurAllume}>Allumer</button>
+                                <button type="button" className="rapport-btn-instruction" onClick={() => { setModalAction("allumer"); setIsModalOpen(true); }} disabled={!microcontroleurAllume || isSendingInstruction}>Allumer</button>
                                 {!microcontroleurAllume && <p className="rapport-warning">Microcontrôleur éteint — impossible d'envoyer l'instruction.</p>}
                             </>
                         )}
@@ -282,6 +291,7 @@ function RapportsVentilateur() {
                 actionneur="ventilateur"
                 action={modalAction}
                 isOpen={isModalOpen}
+                isSubmitting={isSendingInstruction}
                 onClose={() => { setIsModalOpen(false); setModalAction(null); }}
                 onConfirm={handleConfirmInstruction}
             />

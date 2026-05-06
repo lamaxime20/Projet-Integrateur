@@ -14,6 +14,7 @@ function VentilateurDetails({retourner}) {
     });
     const [microcontroleurAllume, setMicrocontroleurAllume] = useState(microcontroleur_est_actif());
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isSendingInstruction, setIsSendingInstruction] = useState(false);
     const [modalAction, setModalAction] = useState(null);
 
     useEffect(() => {
@@ -43,17 +44,25 @@ function VentilateurDetails({retourner}) {
     };
 
     const handleConfirmInstruction = async (dureeMinutes) => {
-        const instruction = await creer_instruction_simule("ventilateur", modalAction, dureeMinutes);
-        console.log("Instruction créée :", instruction);
+        if (isSendingInstruction) return;
 
-        // Simuler le changement d'état
-        if (modalAction === "allumer") {
-            setVentilateurState("running");
-        } else if (modalAction === "arreter") {
-            setVentilateurState("stopped");
+        setIsSendingInstruction(true);
+
+        try {
+            const instruction = await creer_instruction_simule("ventilateur", modalAction, dureeMinutes);
+            console.log("Instruction créée :", instruction);
+
+            // Simuler le changement d'état
+            if (modalAction === "allumer") {
+                setVentilateurState("running");
+            } else if (modalAction === "arreter") {
+                setVentilateurState("stopped");
+            }
+
+            handleCloseModal();
+        } finally {
+            setIsSendingInstruction(false);
         }
-
-        handleCloseModal();
     };
 
     return (
@@ -111,7 +120,7 @@ function VentilateurDetails({retourner}) {
                                 <button
                                     type="button"
                                     onClick={() => handleOpenModal("arreter")}
-                                    disabled={!microcontroleurAllume}
+                                    disabled={!microcontroleurAllume || isSendingInstruction}
                                 >
                                     Arrêter
                                 </button>
@@ -125,7 +134,7 @@ function VentilateurDetails({retourner}) {
                                 <button
                                     type="button"
                                     onClick={() => handleOpenModal("allumer")}
-                                    disabled={!microcontroleurAllume}
+                                    disabled={!microcontroleurAllume || isSendingInstruction}
                                 >
                                     Allumer
                                 </button>
@@ -160,6 +169,7 @@ function VentilateurDetails({retourner}) {
                 actionneur="ventilateur"
                 action={modalAction}
                 isOpen={isModalOpen}
+                isSubmitting={isSendingInstruction}
                 onClose={handleCloseModal}
                 onConfirm={handleConfirmInstruction}
             />

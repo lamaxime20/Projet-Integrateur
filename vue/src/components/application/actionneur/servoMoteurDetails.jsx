@@ -19,6 +19,7 @@ function ServoMoteurDetails({ retourner }) {
     const [historiqueServoMoteur, setHistoriqueServoMoteur] = useState([]);
     const [microcontroleurAllume, setMicrocontroleurAllume] = useState(microcontroleur_est_actif());
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isSendingInstruction, setIsSendingInstruction] = useState(false);
     const [modalAction, setModalAction] = useState(null);
 
     useEffect(() => {
@@ -48,16 +49,24 @@ function ServoMoteurDetails({ retourner }) {
     };
 
     const handleConfirmInstruction = async (dureeMinutes) => {
-        const instruction = await creer_instruction_simule("porte", modalAction, dureeMinutes);
-        console.log("Instruction créée :", instruction);
+        if (isSendingInstruction) return;
 
-        if (modalAction === "allumer") {
-            setServoMoteurState("running");
-        } else if (modalAction === "arreter") {
-            setServoMoteurState("stopped");
+        setIsSendingInstruction(true);
+
+        try {
+            const instruction = await creer_instruction_simule("porte", modalAction, dureeMinutes);
+            console.log("Instruction créée :", instruction);
+
+            if (modalAction === "allumer") {
+                setServoMoteurState("running");
+            } else if (modalAction === "arreter") {
+                setServoMoteurState("stopped");
+            }
+
+            handleCloseModal();
+        } finally {
+            setIsSendingInstruction(false);
         }
-
-        handleCloseModal();
     };
 
     return (
@@ -111,7 +120,7 @@ function ServoMoteurDetails({ retourner }) {
                                 <button
                                     type="button"
                                     onClick={() => handleOpenModal("arreter")}
-                                    disabled={!microcontroleurAllume}
+                                    disabled={!microcontroleurAllume || isSendingInstruction}
                                 >
                                     Fermer
                                 </button>
@@ -125,7 +134,7 @@ function ServoMoteurDetails({ retourner }) {
                                 <button
                                     type="button"
                                     onClick={() => handleOpenModal("allumer")}
-                                    disabled={!microcontroleurAllume}
+                                    disabled={!microcontroleurAllume || isSendingInstruction}
                                 >
                                     Ouvrir
                                 </button>
@@ -163,6 +172,7 @@ function ServoMoteurDetails({ retourner }) {
                 actionneur="porte"
                 action={modalAction}
                 isOpen={isModalOpen}
+                isSubmitting={isSendingInstruction}
                 onClose={handleCloseModal}
                 onConfirm={handleConfirmInstruction}
             />

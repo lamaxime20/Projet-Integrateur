@@ -82,23 +82,28 @@ function VerificationPassword() {
 
     const handleEmailSubmit = async (event) => {
         event.preventDefault();
+        if (isSubmitting) return;
+
         setIsSubmitting(true);
         setGlobalError("");
 
-        const result = await submitPasswordResetEmail(formData.email);
+        try {
+            const result = await submitPasswordResetEmail(formData.email);
 
-        setIsSubmitting(false);
-        setEmailError(result.fieldError);
+            setEmailError(result.fieldError);
 
-        if (!result.ok) {
-            setGlobalError(result.globalError);
-            return;
+            if (!result.ok) {
+                setGlobalError(result.globalError);
+                return;
+            }
+
+            setCooldownSeconds(result.verification?.lastSentAt
+                ? getPasswordResetResendRemaining(result.verification.lastSentAt)
+                : 0);
+            setCurrentStep(2);
+        } finally {
+            setIsSubmitting(false);
         }
-
-        setCooldownSeconds(result.verification?.lastSentAt
-            ? getPasswordResetResendRemaining(result.verification.lastSentAt)
-            : 0);
-        setCurrentStep(2);
     };
 
     const handleCodeDigitChange = (index, rawValue) => {
@@ -129,64 +134,77 @@ function VerificationPassword() {
 
     const handleCodeSubmit = async (event) => {
         event.preventDefault();
+        if (isSubmitting) return;
+
         setIsSubmitting(true);
         setGlobalError("");
 
-        const result = await verifyPasswordResetCode(codeDigits);
+        try {
+            const result = await verifyPasswordResetCode(codeDigits);
 
-        setIsSubmitting(false);
+            if (!result.ok) {
+                setGlobalError(result.globalError);
+                return;
+            }
 
-        if (!result.ok) {
-            setGlobalError(result.globalError);
-            return;
+            setCurrentStep(3);
+        } finally {
+            setIsSubmitting(false);
         }
-
-        setCurrentStep(3);
     };
 
     const handleResend = async () => {
+        if (isResending) return;
+
         setIsResending(true);
         setGlobalError("");
 
-        const result = await resendPasswordResetCode();
+        try {
+            const result = await resendPasswordResetCode();
 
-        setIsResending(false);
+            if (!result.ok) {
+                setGlobalError(result.globalError);
+                return;
+            }
 
-        if (!result.ok) {
-            setGlobalError(result.globalError);
-            return;
+            setCodeDigits(splitPasswordResetCode(""));
+            setCooldownSeconds(result.verification?.lastSentAt
+                ? getPasswordResetResendRemaining(result.verification.lastSentAt)
+                : 0);
+        } finally {
+            setIsResending(false);
         }
-
-        setCodeDigits(splitPasswordResetCode(""));
-        setCooldownSeconds(result.verification?.lastSentAt
-            ? getPasswordResetResendRemaining(result.verification.lastSentAt)
-            : 0);
     };
 
     const handlePasswordSubmit = async (event) => {
         event.preventDefault();
+        if (isSubmitting) return;
+
         setIsSubmitting(true);
         setGlobalError("");
 
-        const result = await completePasswordReset({
-            password: formData.password,
-            confirmPassword: formData.confirmPassword,
-        });
+        try {
+            const result = await completePasswordReset({
+                password: formData.password,
+                confirmPassword: formData.confirmPassword,
+            });
 
-        setIsSubmitting(false);
-        setPasswordErrors(result.fieldErrors);
+            setPasswordErrors(result.fieldErrors);
 
-        if (!result.ok) {
-            setGlobalError(result.globalError);
-            return;
+            if (!result.ok) {
+                setGlobalError(result.globalError);
+                return;
+            }
+
+            navigate("/login", {
+                replace: true,
+                state: {
+                    passwordResetSuccess: true,
+                },
+            });
+        } finally {
+            setIsSubmitting(false);
         }
-
-        navigate("/login", {
-            replace: true,
-            state: {
-                passwordResetSuccess: true,
-            },
-        });
     };
 
     const progressValue = Math.round((currentStep / 3) * 100);

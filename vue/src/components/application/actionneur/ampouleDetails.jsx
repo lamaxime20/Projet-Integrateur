@@ -22,6 +22,7 @@ function AmpouleDetails({ retourner }) {
     });
     const [microcontroleurAllume, setMicrocontroleurAllume] = useState(microcontroleur_est_actif());
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isSendingInstruction, setIsSendingInstruction] = useState(false);
     const [modalAction, setModalAction] = useState(null);
 
     useEffect(() => {
@@ -51,16 +52,24 @@ function AmpouleDetails({ retourner }) {
     };
 
     const handleConfirmInstruction = async (dureeMinutes) => {
-        const instruction = await creer_instruction_simule("ampoule", modalAction, dureeMinutes);
-        console.log("Instruction créée :", instruction);
+        if (isSendingInstruction) return;
 
-        if (modalAction === "allumer") {
-            setAmpouleState("running");
-        } else if (modalAction === "arreter") {
-            setAmpouleState("stopped");
+        setIsSendingInstruction(true);
+
+        try {
+            const instruction = await creer_instruction_simule("ampoule", modalAction, dureeMinutes);
+            console.log("Instruction créée :", instruction);
+
+            if (modalAction === "allumer") {
+                setAmpouleState("running");
+            } else if (modalAction === "arreter") {
+                setAmpouleState("stopped");
+            }
+
+            handleCloseModal();
+        } finally {
+            setIsSendingInstruction(false);
         }
-
-        handleCloseModal();
     };
 
     return (
@@ -114,7 +123,7 @@ function AmpouleDetails({ retourner }) {
                                 <button
                                     type="button"
                                     onClick={() => handleOpenModal("arreter")}
-                                    disabled={!microcontroleurAllume}
+                                    disabled={!microcontroleurAllume || isSendingInstruction}
                                 >
                                     Éteindre
                                 </button>
@@ -128,7 +137,7 @@ function AmpouleDetails({ retourner }) {
                                 <button
                                     type="button"
                                     onClick={() => handleOpenModal("allumer")}
-                                    disabled={!microcontroleurAllume}
+                                    disabled={!microcontroleurAllume || isSendingInstruction}
                                 >
                                     Allumer
                                 </button>
@@ -163,6 +172,7 @@ function AmpouleDetails({ retourner }) {
                 actionneur="ampoule"
                 action={modalAction}
                 isOpen={isModalOpen}
+                isSubmitting={isSendingInstruction}
                 onClose={handleCloseModal}
                 onConfirm={handleConfirmInstruction}
             />

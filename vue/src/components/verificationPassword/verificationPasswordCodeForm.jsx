@@ -36,6 +36,7 @@ function VerificationPasswordCodeForm({
                             value={digit}
                             onChange={(event) => onDigitChange(index, event.target.value)}
                             onKeyDown={(event) => onDigitKeyDown(index, event)}
+                            disabled={isSubmitting || isResending}
                         />
                     </label>
                 ))}
@@ -46,7 +47,7 @@ function VerificationPasswordCodeForm({
                     type="button"
                     className="verificationPassword-button-link"
                     onClick={onResend}
-                    disabled={isResending || Boolean(cooldownLabel)}
+                    disabled={isSubmitting || isResending || Boolean(cooldownLabel)}
                 >
                     {isResending ? "Renvoi..." : "Renvoyer le code"}
                 </button>
@@ -54,7 +55,7 @@ function VerificationPasswordCodeForm({
             </div>
 
             <div className="verificationPassword-step-actions verificationPassword-step-actions-inline">
-                <button type="button" className="verificationPassword-button-ghost" onClick={onPrevious}>
+                <button type="button" className="verificationPassword-button-ghost" onClick={onPrevious} disabled={isSubmitting || isResending}>
                     Précédent
                 </button>
                 <button type="submit" disabled={isSubmitting}>

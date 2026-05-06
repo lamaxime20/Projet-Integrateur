@@ -48,6 +48,8 @@ function Microcontroleur() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (isSubmitting) return;
+
         const { identifiant, password } = infos_microcontroleur;
 
         if (!identifiant.trim() || !password.trim()) {
@@ -58,18 +60,22 @@ function Microcontroleur() {
         }
 
         setIsSubmitting(true);
-        const result = await enregistrer_microcontroleur_user(infos_microcontroleur);
-        setIsSubmitting(false);
 
-        if (!result.success) {
-            setErreur(result.message);
-            enregistrer_erreur_enregistrement(result.message);
-            return;
+        try {
+            const result = await enregistrer_microcontroleur_user(infos_microcontroleur);
+
+            if (!result.success) {
+                setErreur(result.message);
+                enregistrer_erreur_enregistrement(result.message);
+                return;
+            }
+
+            enregistrer_erreur_enregistrement("");
+            enregistrer_microcontroleur_local(result.microcontroleur);
+            navigate("/application", { replace: true });
+        } finally {
+            setIsSubmitting(false);
         }
-
-        enregistrer_erreur_enregistrement("");
-        enregistrer_microcontroleur_local(result.microcontroleur);
-        navigate("/application", { replace: true });
     };
 
     return (
@@ -100,6 +106,7 @@ function Microcontroleur() {
                                 placeholder="Ex: kit-serre-024"
                                 onChange={changeContenuChamp}
                                 value={infos_microcontroleur.identifiant}
+                                disabled={isSubmitting}
                             />
                         </label>
                         <label className="microcontroleur-input" htmlFor="password">
@@ -111,6 +118,7 @@ function Microcontroleur() {
                                 placeholder="Entre la clé fournie"
                                 onChange={changeContenuChamp}
                                 value={infos_microcontroleur.password}
+                                disabled={isSubmitting}
                             />
                         </label>
                     </div>

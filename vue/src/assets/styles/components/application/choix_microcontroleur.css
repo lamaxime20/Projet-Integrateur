@@ -126,7 +126,8 @@
 }
 
 .choix_microcontroleur-empty button,
-.choix_microcontroleur-secondary {
+.choix_microcontroleur-secondary,
+.choix_microcontroleur-logout {
     width: fit-content;
     min-height: 3.2rem;
     padding: 0 var(--space-lg);
@@ -140,18 +141,36 @@
     box-shadow: 0 16px 28px rgba(46, 125, 50, 0.18);
 }
 
+.choix_microcontroleur-logout {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    background: transparent;
+    color: var(--alertes-critique);
+    box-shadow: none;
+}
+
 .choix_microcontroleur-secondary {
     background: rgba(2, 136, 209, 0.1);
     color: var(--accent-color);
     box-shadow: none;
 }
 
-.choix_microcontroleur-empty button:hover,
-.choix_microcontroleur-empty button:focus-visible,
-.choix_microcontroleur-secondary:hover,
-.choix_microcontroleur-secondary:focus-visible {
+.choix_microcontroleur-empty button:hover:not(:disabled),
+.choix_microcontroleur-empty button:focus-visible:not(:disabled),
+.choix_microcontroleur-secondary:hover:not(:disabled),
+.choix_microcontroleur-secondary:focus-visible:not(:disabled),
+.choix_microcontroleur-logout:hover:not(:disabled),
+.choix_microcontroleur-logout:focus-visible:not(:disabled) {
     transform: translateY(-1px);
     outline: none;
+}
+
+.choix_microcontroleur-empty button:disabled,
+.choix_microcontroleur-secondary:disabled,
+.choix_microcontroleur-logout:disabled {
+    cursor: progress;
+    opacity: 0.68;
 }
 
 @media (min-width: 48rem) {

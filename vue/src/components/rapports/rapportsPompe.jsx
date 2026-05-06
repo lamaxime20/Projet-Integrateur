@@ -43,6 +43,7 @@ function RapportsPompe() {
     const [erreurGraph, setErreurGraph] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalAction, setModalAction] = useState(null);
+    const [isSendingInstruction, setIsSendingInstruction] = useState(false);
 
     const [instructions, setInstructions] = useState([]);
     const [dateDebutInstr, setDateDebutInstr] = useState(IL_Y_A_7J);
@@ -72,11 +73,19 @@ function RapportsPompe() {
     };
 
     const handleConfirmInstruction = async (dureeMinutes) => {
-        await creer_instruction_simule("pompe", modalAction, dureeMinutes);
-        if (modalAction === "allumer") setEtatPompe("running");
-        else if (modalAction === "arreter") setEtatPompe("stopped");
-        setIsModalOpen(false);
-        setModalAction(null);
+        if (isSendingInstruction) return;
+
+        setIsSendingInstruction(true);
+
+        try {
+            await creer_instruction_simule("pompe", modalAction, dureeMinutes);
+            if (modalAction === "allumer") setEtatPompe("running");
+            else if (modalAction === "arreter") setEtatPompe("stopped");
+            setIsModalOpen(false);
+            setModalAction(null);
+        } finally {
+            setIsSendingInstruction(false);
+        }
     };
 
     const handleGenererInstructions = () => {
@@ -150,8 +159,8 @@ function RapportsPompe() {
                     </div>
 
                     <div className="rapport-instruction-zone">
-                        {etatPompe === "running" && (<><p>La pompe est en marche</p><button type="button" className="rapport-btn-instruction" onClick={() => { setModalAction("arreter"); setIsModalOpen(true); }} disabled={!microcontroleurAllume}>Arrêter</button>{!microcontroleurAllume && <p className="rapport-warning">Microcontrôleur éteint — impossible d'envoyer l'instruction.</p>}</>)}
-                        {etatPompe === "stopped" && (<><p>La pompe est arrêtée</p><button type="button" className="rapport-btn-instruction" onClick={() => { setModalAction("allumer"); setIsModalOpen(true); }} disabled={!microcontroleurAllume}>Allumer</button>{!microcontroleurAllume && <p className="rapport-warning">Microcontrôleur éteint — impossible d'envoyer l'instruction.</p>}</>)}
+                        {etatPompe === "running" && (<><p>La pompe est en marche</p><button type="button" className="rapport-btn-instruction" onClick={() => { setModalAction("arreter"); setIsModalOpen(true); }} disabled={!microcontroleurAllume || isSendingInstruction}>Arrêter</button>{!microcontroleurAllume && <p className="rapport-warning">Microcontrôleur éteint — impossible d'envoyer l'instruction.</p>}</>)}
+                        {etatPompe === "stopped" && (<><p>La pompe est arrêtée</p><button type="button" className="rapport-btn-instruction" onClick={() => { setModalAction("allumer"); setIsModalOpen(true); }} disabled={!microcontroleurAllume || isSendingInstruction}>Allumer</button>{!microcontroleurAllume && <p className="rapport-warning">Microcontrôleur éteint — impossible d'envoyer l'instruction.</p>}</>)}
                         {etatPompe === "defaillant" && (<><p>La pompe est défaillante</p><button type="button" className="rapport-btn-instruction" disabled>Arrêter</button></>)}
                     </div>
 
@@ -231,6 +240,7 @@ function RapportsPompe() {
                 actionneur="pompe"
                 action={modalAction}
                 isOpen={isModalOpen}
+                isSubmitting={isSendingInstruction}
                 onClose={() => { setIsModalOpen(false); setModalAction(null); }}
                 onConfirm={handleConfirmInstruction}
             />

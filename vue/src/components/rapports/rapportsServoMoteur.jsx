@@ -43,6 +43,7 @@ function RapportsServoMoteur() {
     const [erreurGraph, setErreurGraph] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalAction, setModalAction] = useState(null);
+    const [isSendingInstruction, setIsSendingInstruction] = useState(false);
 
     const [instructions, setInstructions] = useState([]);
     const [dateDebutInstr, setDateDebutInstr] = useState(IL_Y_A_7J);
@@ -72,11 +73,19 @@ function RapportsServoMoteur() {
     };
 
     const handleConfirmInstruction = async (dureeMinutes) => {
-        await creer_instruction_simule("servo-moteur", modalAction, dureeMinutes);
-        if (modalAction === "allumer") setEtatPorte("running");
-        else if (modalAction === "arreter") setEtatPorte("stopped");
-        setIsModalOpen(false);
-        setModalAction(null);
+        if (isSendingInstruction) return;
+
+        setIsSendingInstruction(true);
+
+        try {
+            await creer_instruction_simule("servo-moteur", modalAction, dureeMinutes);
+            if (modalAction === "allumer") setEtatPorte("running");
+            else if (modalAction === "arreter") setEtatPorte("stopped");
+            setIsModalOpen(false);
+            setModalAction(null);
+        } finally {
+            setIsSendingInstruction(false);
+        }
     };
 
     const handleGenererInstructions = () => {
@@ -150,8 +159,8 @@ function RapportsServoMoteur() {
                     </div>
 
                     <div className="rapport-instruction-zone">
-                        {etatPorte === "running" && (<><p>La porte est ouverte</p><button type="button" className="rapport-btn-instruction" onClick={() => { setModalAction("arreter"); setIsModalOpen(true); }} disabled={!microcontroleurAllume}>Fermer</button>{!microcontroleurAllume && <p className="rapport-warning">Microcontrôleur éteint — impossible d'envoyer l'instruction.</p>}</>)}
-                        {etatPorte === "stopped" && (<><p>La porte est fermée</p><button type="button" className="rapport-btn-instruction" onClick={() => { setModalAction("allumer"); setIsModalOpen(true); }} disabled={!microcontroleurAllume}>Ouvrir</button>{!microcontroleurAllume && <p className="rapport-warning">Microcontrôleur éteint — impossible d'envoyer l'instruction.</p>}</>)}
+                        {etatPorte === "running" && (<><p>La porte est ouverte</p><button type="button" className="rapport-btn-instruction" onClick={() => { setModalAction("arreter"); setIsModalOpen(true); }} disabled={!microcontroleurAllume || isSendingInstruction}>Fermer</button>{!microcontroleurAllume && <p className="rapport-warning">Microcontrôleur éteint — impossible d'envoyer l'instruction.</p>}</>)}
+                        {etatPorte === "stopped" && (<><p>La porte est fermée</p><button type="button" className="rapport-btn-instruction" onClick={() => { setModalAction("allumer"); setIsModalOpen(true); }} disabled={!microcontroleurAllume || isSendingInstruction}>Ouvrir</button>{!microcontroleurAllume && <p className="rapport-warning">Microcontrôleur éteint — impossible d'envoyer l'instruction.</p>}</>)}
                         {etatPorte === "defaillant" && (<><p>La porte est défaillante</p><button type="button" className="rapport-btn-instruction" disabled>Fermer</button></>)}
                     </div>
 
@@ -222,6 +231,7 @@ function RapportsServoMoteur() {
                 actionneur="servo-moteur"
                 action={modalAction}
                 isOpen={isModalOpen}
+                isSubmitting={isSendingInstruction}
                 onClose={() => { setIsModalOpen(false); setModalAction(null); }}
                 onConfirm={handleConfirmInstruction}
             />

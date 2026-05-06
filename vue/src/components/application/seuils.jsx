@@ -14,6 +14,7 @@ const Seuils = ({ microcontroleurId }) => {
     const [selectedCapteur, setSelectedCapteur] = useState(null);
     const [formValues, setFormValues] = useState({ min: 0, max: 0 });
     const [loading, setLoading] = useState(true);
+    const [isSaving, setIsSaving] = useState(false);
     const [message, setMessage] = useState({ type: '', text: '' });
 
     useEffect(() => {
@@ -43,12 +44,16 @@ const Seuils = ({ microcontroleurId }) => {
 
     const handleSave = async (e) => {
         e.preventDefault();
+        if (isSaving) return;
+
         setMessage({ type: '', text: '' });
 
         if (!selectedCapteur) {
             setMessage({ type: 'error', text: 'Aucun seuil sélectionné.' });
             return;
         }
+
+        setIsSaving(true);
 
         try {
             const result = await enregistrer_nouveau_seuil({
@@ -69,6 +74,8 @@ const Seuils = ({ microcontroleurId }) => {
             }
         } catch (error) {
             setMessage({ type: 'error', text: error.message });
+        } finally {
+            setIsSaving(false);
         }
     };
 
@@ -90,6 +97,7 @@ const Seuils = ({ microcontroleurId }) => {
                                 key={c.id}
                                 className={`capteur-btn ${selectedCapteur?.id === c.id ? 'active' : ''}`}
                                 onClick={() => selectCapteur(c)}
+                                disabled={isSaving}
                             >
                                 <span className="material-symbols-outlined" aria-hidden="true">
                                     {c.code === 'temperature' ? 'device_thermostat' 
@@ -113,6 +121,7 @@ const Seuils = ({ microcontroleurId }) => {
                                     step="0.1"
                                     value={formValues.min} 
                                     onChange={(e) => setFormValues({...formValues, min: e.target.value})}
+                                    disabled={isSaving}
                                 />
                                 <small>L'actionneur s'activera en dessous de cette valeur.</small>
                             </div>
@@ -124,6 +133,7 @@ const Seuils = ({ microcontroleurId }) => {
                                     step="0.1"
                                     value={formValues.max} 
                                     onChange={(e) => setFormValues({...formValues, max: e.target.value})}
+                                    disabled={isSaving}
                                 />
                                 <small>L'actionneur s'arrêtera au-dessus de cette valeur.</small>
                             </div>
@@ -137,9 +147,9 @@ const Seuils = ({ microcontroleurId }) => {
                                 </div>
                             )}
 
-                            <button type="submit" className="save-btn">
+                            <button type="submit" className="save-btn" disabled={isSaving}>
                                 <span className="material-symbols-outlined" aria-hidden="true">save</span>
-                                Enregistrer les modifications
+                                {isSaving ? "Enregistrement..." : "Enregistrer les modifications"}
                             </button>
                         </form>
                     )}

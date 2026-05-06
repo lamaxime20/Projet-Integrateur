@@ -260,6 +260,12 @@
     color: var(--alertes-critique);
 }
 
+.sidebar-otherPages button:disabled,
+.sidebar-change_microcontroleur:disabled {
+    cursor: progress;
+    opacity: 0.68;
+}
+
 @media (min-width: 48rem) {
     .sidebar-root {
         --sidebar-closed: 4.75rem;

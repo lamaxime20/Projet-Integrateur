@@ -24,6 +24,7 @@ function VerificationPasswordEmailForm({
                         value={email}
                         onChange={onChange}
                         placeholder="example@mail.com"
+                        disabled={isSubmitting}
                     />
                     <p>{emailError}</p>
                 </label>

@@ -43,6 +43,7 @@ function RapportsAmpoule() {
     const [erreurGraph, setErreurGraph] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalAction, setModalAction] = useState(null);
+    const [isSendingInstruction, setIsSendingInstruction] = useState(false);
 
     const [instructions, setInstructions] = useState([]);
     const [dateDebutInstr, setDateDebutInstr] = useState(IL_Y_A_7J);
@@ -72,11 +73,19 @@ function RapportsAmpoule() {
     };
 
     const handleConfirmInstruction = async (dureeMinutes) => {
-        await creer_instruction_simule("ampoule", modalAction, dureeMinutes);
-        if (modalAction === "allumer") setEtatAmpoule("running");
-        else if (modalAction === "arreter") setEtatAmpoule("stopped");
-        setIsModalOpen(false);
-        setModalAction(null);
+        if (isSendingInstruction) return;
+
+        setIsSendingInstruction(true);
+
+        try {
+            await creer_instruction_simule("ampoule", modalAction, dureeMinutes);
+            if (modalAction === "allumer") setEtatAmpoule("running");
+            else if (modalAction === "arreter") setEtatAmpoule("stopped");
+            setIsModalOpen(false);
+            setModalAction(null);
+        } finally {
+            setIsSendingInstruction(false);
+        }
     };
 
     const handleGenererInstructions = () => {
@@ -150,8 +159,8 @@ function RapportsAmpoule() {
                     </div>
 
                     <div className="rapport-instruction-zone">
-                        {etatAmpoule === "running" && (<><p>L'ampoule est allumée</p><button type="button" className="rapport-btn-instruction" onClick={() => { setModalAction("arreter"); setIsModalOpen(true); }} disabled={!microcontroleurAllume}>Éteindre</button>{!microcontroleurAllume && <p className="rapport-warning">Microcontrôleur éteint — impossible d'envoyer l'instruction.</p>}</>)}
-                        {etatAmpoule === "stopped" && (<><p>L'ampoule est éteinte</p><button type="button" className="rapport-btn-instruction" onClick={() => { setModalAction("allumer"); setIsModalOpen(true); }} disabled={!microcontroleurAllume}>Allumer</button>{!microcontroleurAllume && <p className="rapport-warning">Microcontrôleur éteint — impossible d'envoyer l'instruction.</p>}</>)}
+                        {etatAmpoule === "running" && (<><p>L'ampoule est allumée</p><button type="button" className="rapport-btn-instruction" onClick={() => { setModalAction("arreter"); setIsModalOpen(true); }} disabled={!microcontroleurAllume || isSendingInstruction}>Éteindre</button>{!microcontroleurAllume && <p className="rapport-warning">Microcontrôleur éteint — impossible d'envoyer l'instruction.</p>}</>)}
+                        {etatAmpoule === "stopped" && (<><p>L'ampoule est éteinte</p><button type="button" className="rapport-btn-instruction" onClick={() => { setModalAction("allumer"); setIsModalOpen(true); }} disabled={!microcontroleurAllume || isSendingInstruction}>Allumer</button>{!microcontroleurAllume && <p className="rapport-warning">Microcontrôleur éteint — impossible d'envoyer l'instruction.</p>}</>)}
                         {etatAmpoule === "defaillant" && (<><p>L'ampoule est défaillante</p><button type="button" className="rapport-btn-instruction" disabled>Éteindre</button></>)}
                     </div>
 
@@ -222,6 +231,7 @@ function RapportsAmpoule() {
                 actionneur="ampoule"
                 action={modalAction}
                 isOpen={isModalOpen}
+                isSubmitting={isSendingInstruction}
                 onClose={() => { setIsModalOpen(false); setModalAction(null); }}
                 onConfirm={handleConfirmInstruction}
             />

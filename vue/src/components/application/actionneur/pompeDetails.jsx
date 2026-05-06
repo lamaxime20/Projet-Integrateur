@@ -25,6 +25,7 @@ function PompeDetails({ retourner }) {
     });
     const [microcontroleurAllume, setMicrocontroleurAllume] = useState(microcontroleur_est_actif());
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isSendingInstruction, setIsSendingInstruction] = useState(false);
     const [modalAction, setModalAction] = useState(null);
 
     useEffect(() => {
@@ -55,16 +56,24 @@ function PompeDetails({ retourner }) {
     };
 
     const handleConfirmInstruction = async (dureeMinutes) => {
-        const instruction = await creer_instruction_simule("pompe", modalAction, dureeMinutes);
-        console.log("Instruction créée :", instruction);
+        if (isSendingInstruction) return;
 
-        if (modalAction === "allumer") {
-            setPompeState("running");
-        } else if (modalAction === "arreter") {
-            setPompeState("stopped");
+        setIsSendingInstruction(true);
+
+        try {
+            const instruction = await creer_instruction_simule("pompe", modalAction, dureeMinutes);
+            console.log("Instruction créée :", instruction);
+
+            if (modalAction === "allumer") {
+                setPompeState("running");
+            } else if (modalAction === "arreter") {
+                setPompeState("stopped");
+            }
+
+            handleCloseModal();
+        } finally {
+            setIsSendingInstruction(false);
         }
-
-        handleCloseModal();
     };
 
     return (
@@ -118,7 +127,7 @@ function PompeDetails({ retourner }) {
                                 <button
                                     type="button"
                                     onClick={() => handleOpenModal("arreter")}
-                                    disabled={!microcontroleurAllume}
+                                    disabled={!microcontroleurAllume || isSendingInstruction}
                                 >
                                     Arrêter
                                 </button>
@@ -132,7 +141,7 @@ function PompeDetails({ retourner }) {
                                 <button
                                     type="button"
                                     onClick={() => handleOpenModal("allumer")}
-                                    disabled={!microcontroleurAllume}
+                                    disabled={!microcontroleurAllume || isSendingInstruction}
                                 >
                                     Allumer
                                 </button>
@@ -169,6 +178,7 @@ function PompeDetails({ retourner }) {
                 actionneur="pompe"
                 action={modalAction}
                 isOpen={isModalOpen}
+                isSubmitting={isSendingInstruction}
                 onClose={handleCloseModal}
                 onConfirm={handleConfirmInstruction}
             />

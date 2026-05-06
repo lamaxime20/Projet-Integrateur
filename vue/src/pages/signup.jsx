@@ -54,20 +54,25 @@ function Signup() {
 
     const handleIdentitySubmit = async (event) => {
         event.preventDefault();
+        if (isSubmitting) return;
+
         setIsSubmitting(true);
         setGlobalError("");
 
-        const result = await submitSignupIdentity(formData);
+        try {
+            const result = await submitSignupIdentity(formData);
 
-        setIsSubmitting(false);
-        setIdentityErrors(result.fieldErrors);
+            setIdentityErrors(result.fieldErrors);
 
-        if (!result.ok) {
-            setGlobalError(result.globalError);
-            return;
+            if (!result.ok) {
+                setGlobalError(result.globalError);
+                return;
+            }
+
+            setCurrentStep(2);
+        } finally {
+            setIsSubmitting(false);
         }
-
-        setCurrentStep(2);
     };
 
     const handleCodeDigitChange = (index, rawValue) => {
@@ -98,47 +103,58 @@ function Signup() {
 
     const handleVerificationSubmit = async (event) => {
         event.preventDefault();
+        if (isSubmitting) return;
+
         setIsSubmitting(true);
         setGlobalError("");
 
-        const result = await verifySignupCode(codeDigits);
+        try {
+            const result = await verifySignupCode(codeDigits);
 
-        setIsSubmitting(false);
+            if (!result.ok) {
+                setGlobalError(result.globalError);
+                return;
+            }
 
-        if (!result.ok) {
-            setGlobalError(result.globalError);
-            return;
+            setCurrentStep(3);
+        } finally {
+            setIsSubmitting(false);
         }
-
-        setCurrentStep(3);
     };
 
     const handlePasswordSubmit = async (event) => {
         event.preventDefault();
+        if (isSubmitting) return;
+
         setIsSubmitting(true);
         setGlobalError("");
 
-        const result = await completeSignup({
-            password: formData.password,
-            confirmPassword: formData.confirmPassword,
-        });
+        try {
+            const result = await completeSignup({
+                password: formData.password,
+                confirmPassword: formData.confirmPassword,
+            });
 
-        setIsSubmitting(false);
-        setPasswordErrors(result.fieldErrors);
+            setPasswordErrors(result.fieldErrors);
 
-        if (!result.ok) {
-            setGlobalError(result.globalError);
-            return;
+            if (!result.ok) {
+                setGlobalError(result.globalError);
+                return;
+            }
+
+            const loginSucceeded = await login(result.credentials);
+
+            if (!loginSucceeded) {
+                setGlobalError("Le compte a été créé, mais la connexion automatique a échoué.");
+                return;
+            }
+
+            navigate("/application", { replace: true });
+        } catch {
+            setGlobalError("Erreur réseau. Réessaie.");
+        } finally {
+            setIsSubmitting(false);
         }
-
-        const loginSucceeded = await login(result.credentials);
-
-        if (!loginSucceeded) {
-            setGlobalError("Le compte a été créé, mais la connexion automatique a échoué.");
-            return;
-        }
-
-        navigate("/application", { replace: true });
     };
 
     const progressValue = Math.round((currentStep / 3) * 100);

@@ -1,4 +1,4 @@
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../assets/styles/components/application/choix_microcontroleur.css";
 import {
@@ -13,40 +13,93 @@ function Choix_microcontroleur() {
     const [listeMicrocontroleur_user, setListeMicrocontroleur_user] = useState([]);
     const [erreur, setErreur] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [isLoggingOut, setIsLoggingOut] = useState(false);
 
     useEffect(() => {
         charger_liste();
     }, []);
 
-    const handleLogout = () => {
-        logout();
+    const handleLogout = async () => {
+        if (isLoggingOut) return;
+
+        setIsLoggingOut(true);
+        await logout();
         localStorage.clear();
-        window.location.href = "/";
+        navigate("/", { replace: true });
     }
 
     const charger_liste = async () => {
         setIsLoading(true);
-        const data = await charger_liste_microcontroleurs_user();
-        setIsLoading(false);
 
-        if (Array.isArray(data)) {
-            setListeMicrocontroleur_user(data);
-        }else {
+        try {
+            const data = await charger_liste_microcontroleurs_user();
+
+            if (Array.isArray(data)) {
+                setListeMicrocontroleur_user(data);
+            }else {
+                setErreur("Erreur réseau, réessaie plus tard.");
+            }
+        } catch {
             setErreur("Erreur réseau, réessaie plus tard.");
+        } finally {
+            setIsLoading(false);
         }
     };
 
     const choixMicrocontroleur = async (microcontroleur) => {
-        setIsLoading(true);
-        const success = await charger_microcontroleur_user(microcontroleur.nom);
-        setIsLoading(false);
+        if (isLoading) return;
 
-        if (success) {
-            window.location.href = "/application";
-        }else {
+        setIsLoading(true);
+
+        try {
+            const success = await charger_microcontroleur_user(microcontroleur.nom);
+
+            if (success) {
+                navigate("/application", { replace: true });
+            }else {
+                setErreur("Erreur réseau, réessaie plus tard.");
+            }
+        } catch {
             setErreur("Erreur réseau, réessaie plus tard.");
+        } finally {
+            setIsLoading(false);
         }
     };
+
+    const allerEnregistrementKit = () => {
+        if (isLoading || isLoggingOut) return;
+
+        navigate("/microcontroleur");
+    };
+
+    if (isLoading && listeMicrocontroleur_user.length === 0) {
+        return (
+            <section className="choix_microcontroleur-root" aria-busy="true">
+                <header className="choix_microcontroleur-header">
+                    <p className="choix_microcontroleur-kicker">Sélection du kit</p>
+                    <h1>Chargement des kits...</h1>
+                    <p>On récupère les microcontrôleurs associés à ton compte.</p>
+                </header>
+            </section>
+        );
+    }
+
+    if (erreur && listeMicrocontroleur_user.length === 0 && !isLoading) {
+        return (
+            <section className="choix_microcontroleur-root">
+                <header className="choix_microcontroleur-header">
+                    <p className="choix_microcontroleur-kicker">Sélection du kit</p>
+                    <h1>Impossible de charger les kits</h1>
+                    <p>{erreur}</p>
+                </header>
+                <div className="choix_microcontroleur-empty">
+                    <button type="button" onClick={charger_liste}>
+                        Réessayer
+                    </button>
+                </div>
+            </section>
+        );
+    }
 
     return (
         <section className="choix_microcontroleur-root">
@@ -64,19 +117,20 @@ function Choix_microcontroleur() {
                 <div className="choix_microcontroleur-empty">
                     <button
                         type="button"
-                        onClick={() => {
-                            navigate("/microcontroleur");
-                        }}
+                        onClick={allerEnregistrementKit}
+                        disabled={isLoggingOut}
                     >
                         Enregistrer un kit
                     </button>
-                    <span
+                    <button
+                        type="button"
                         className="choix_microcontroleur-logout"
                         onClick={() => handleLogout()}
+                        disabled={isLoggingOut}
                     >
                         <span className="material-symbols-outlined" aria-hidden="true">logout</span>
-                        <span>Déconnexion</span>
-                    </span>
+                        <span>{isLoggingOut ? "Déconnexion..." : "Déconnexion"}</span>
+                    </button>
                 </div>
             ):(
                 <>
@@ -102,9 +156,8 @@ function Choix_microcontroleur() {
                         <button
                             type="button"
                             className="choix_microcontroleur-secondary"
-                            onClick={() => {
-                                navigate("/microcontroleur");
-                            }}
+                            onClick={allerEnregistrementKit}
+                            disabled={isLoading}
                         >
                             Enregistrer un autre kit
                         </button>

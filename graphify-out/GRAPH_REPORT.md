@@ -1,7 +1,7 @@
 # Graph Report - D:\Desktop\X2\Projet Integrateur  (2026-05-06)
 
 ## Corpus Check
-- 8179 files · ~4,334,701 words
+- 8179 files · ~4,334,960 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -18893,11 +18893,11 @@ Nodes (0):
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `get()` connect `Community 5` to `Community 0`, `Community 1`, `Community 2`, `Community 3`, `Community 6`, `Community 7`, `Community 8`, `Community 9`, `Community 10`, `Community 11`, `Community 12`, `Community 13`, `Community 14`, `Community 15`, `Community 16`, `Community 17`, `Community 18`, `Community 19`, `Community 20`, `Community 21`, `Community 22`, `Community 23`, `Community 25`, `Community 26`, `Community 27`, `Community 28`, `Community 29`, `Community 30`, `Community 34`, `Community 35`, `Community 37`, `Community 39`, `Community 40`, `Community 42`, `Community 43`, `Community 44`, `Community 47`?**
-  _High betweenness centrality (0.057) - this node is a cross-community bridge._
-- **Why does `Str` connect `Community 26` to `Community 0`, `Community 1`, `Community 3`, `Community 4`, `Community 5`, `Community 6`, `Community 7`, `Community 8`, `Community 9`, `Community 10`, `Community 13`, `Community 14`, `Community 15`, `Community 16`, `Community 17`, `Community 18`, `Community 19`, `Community 20`, `Community 21`, `Community 22`, `Community 23`, `Community 25`, `Community 28`, `Community 29`, `Community 30`, `Community 31`, `Community 34`, `Community 35`, `Community 36`, `Community 37`, `Community 39`, `Community 43`, `Community 44`, `Community 55`?**
-  _High betweenness centrality (0.029) - this node is a cross-community bridge._
+  _High betweenness centrality (0.043) - this node is a cross-community bridge._
 - **Why does `Eloquent` connect `Community 4` to `Community 1`?**
-  _High betweenness centrality (0.025) - this node is a cross-community bridge._
+  _High betweenness centrality (0.021) - this node is a cross-community bridge._
+- **Why does `Str` connect `Community 26` to `Community 0`, `Community 1`, `Community 3`, `Community 4`, `Community 5`, `Community 6`, `Community 7`, `Community 8`, `Community 9`, `Community 10`, `Community 13`, `Community 14`, `Community 15`, `Community 16`, `Community 17`, `Community 18`, `Community 19`, `Community 20`, `Community 21`, `Community 22`, `Community 23`, `Community 25`, `Community 28`, `Community 29`, `Community 30`, `Community 31`, `Community 34`, `Community 35`, `Community 36`, `Community 37`, `Community 39`, `Community 43`, `Community 44`, `Community 55`?**
+  _High betweenness centrality (0.019) - this node is a cross-community bridge._
 - **Are the 462 inferred relationships involving `Str` (e.g. with `.createAccount()` and `.detectHelpers()`) actually correct?**
   _`Str` has 462 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 552 inferred relationships involving `get()` (e.g. with `.liste()` and `.liste()`) actually correct?**

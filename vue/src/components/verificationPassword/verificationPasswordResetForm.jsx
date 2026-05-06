@@ -26,6 +26,7 @@ function VerificationPasswordResetForm({
                         value={values.password}
                         onChange={onChange}
                         placeholder="Au moins 8 caractères"
+                        disabled={isSubmitting}
                     />
                     <p>{errors.password}</p>
                 </label>
@@ -39,13 +40,14 @@ function VerificationPasswordResetForm({
                         value={values.confirmPassword}
                         onChange={onChange}
                         placeholder="Répète le mot de passe"
+                        disabled={isSubmitting}
                     />
                     <p>{errors.confirmPassword}</p>
                 </label>
             </div>
 
             <div className="verificationPassword-step-actions verificationPassword-step-actions-inline">
-                <button type="button" className="verificationPassword-button-ghost" onClick={onPrevious}>
+                <button type="button" className="verificationPassword-button-ghost" onClick={onPrevious} disabled={isSubmitting}>
                     Précédent
                 </button>
                 <button type="submit" disabled={isSubmitting}>

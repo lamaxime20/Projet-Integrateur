@@ -25,6 +25,7 @@ function SignupIdentityForm({
                         value={values.nom}
                         onChange={onChange}
                         placeholder="Ton nom"
+                        disabled={isSubmitting}
                     />
                     <p>{errors.nom}</p>
                 </label>
@@ -38,6 +39,7 @@ function SignupIdentityForm({
                         value={values.prenom}
                         onChange={onChange}
                         placeholder="Ton prénom"
+                        disabled={isSubmitting}
                     />
                     <p>{errors.prenom}</p>
                 </label>
@@ -51,6 +53,7 @@ function SignupIdentityForm({
                         value={values.email}
                         onChange={onChange}
                         placeholder="example@mail.com"
+                        disabled={isSubmitting}
                     />
                     <p>{errors.email}</p>
                 </label>
