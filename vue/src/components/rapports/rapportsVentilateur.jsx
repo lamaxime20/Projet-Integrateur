@@ -57,6 +57,16 @@ function RapportsVentilateur() {
     const [erreurInstr, setErreurInstr] = useState(null);
 
     useEffect(() => {
+        // Charger les données du localStorage
+        const cachedHistorique = localStorage.getItem('historique_actionneur_ventilateur');
+        if (cachedHistorique) setHistorique(JSON.parse(cachedHistorique));
+
+        const cachedGrandeurs = localStorage.getItem('grandeurs_actionneur_ventilateur');
+        if (cachedGrandeurs) setGrandeurs(JSON.parse(cachedGrandeurs));
+
+        const cachedInstructions = localStorage.getItem('instructions_actionneur_ventilateur');
+        if (cachedInstructions) setInstructions(JSON.parse(cachedInstructions));
+
         const intervals = [
             charger_etat_ventilateur(setEtatVentilateur),
             charger_historique_actionneur_rapport("ventilateur", setHistorique),

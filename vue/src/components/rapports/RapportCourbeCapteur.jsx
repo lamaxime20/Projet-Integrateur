@@ -48,6 +48,10 @@ function RapportCourbeCapteur({ capteur, titre, unite: uniteFallback }) {
     useEffect(() => {
         let actif = true;
 
+        // Charger les données du localStorage
+        const cached = localStorage.getItem(`mesures_capteur_${capteur}_${dateDebut}_${dateFin}`);
+        if (cached) setMesures(JSON.parse(cached));
+
         const charger = async () => {
             setChargement(true);
             setErreur(null);

@@ -54,7 +54,15 @@ function RapportsServoMoteur() {
     const [chargementInstr, setChargementInstr] = useState(false);
     const [erreurInstr, setErreurInstr] = useState(null);
 
-    useEffect(() => {
+    useEffect(() => {        // Charger les données du localStorage
+        const cachedHistorique = localStorage.getItem('historique_actionneur_servo-moteur');
+        if (cachedHistorique) setHistorique(JSON.parse(cachedHistorique));
+
+        const cachedGrandeurs = localStorage.getItem('grandeurs_actionneur_servo-moteur');
+        if (cachedGrandeurs) setGrandeurs(JSON.parse(cachedGrandeurs));
+
+        const cachedInstructions = localStorage.getItem('instructions_actionneur_servo-moteur');
+        if (cachedInstructions) setInstructions(JSON.parse(cachedInstructions));
         const intervals = [
             charger_etat_servo_moteur(setEtatPorte),
             charger_historique_actionneur_rapport("servo-moteur", setHistorique),

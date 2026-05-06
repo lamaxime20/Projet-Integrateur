@@ -139,7 +139,9 @@ function chargerEtatActionneur(actionneur, setter, fallback) {
     return lancerChargementTempsReel(async () => {
         try {
             const data = await getApi(`/actionneurs/${actionneur}/etat`);
-            setter(normaliserEtat(data.etat));
+            const etat = normaliserEtat(data.etat);
+            setter(etat);
+            localStorage.setItem(`etat_actionneur_${actionneur}`, JSON.stringify(etat));
         } catch {
             setter(fallback);
         }

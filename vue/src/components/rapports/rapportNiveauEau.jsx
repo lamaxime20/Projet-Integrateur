@@ -21,6 +21,13 @@ function RapportNiveauEau() {
     const [erreur, setErreur] = useState(null);
 
     useEffect(() => {
+        // Charger les données du localStorage
+        const cachedHistorique = localStorage.getItem('historique_capteur_niveau-eau');
+        if (cachedHistorique) setHistorique(JSON.parse(cachedHistorique));
+
+        const cachedStats = localStorage.getItem('stats_capteur_niveau-eau');
+        if (cachedStats) setStats(JSON.parse(cachedStats));
+
         const intervals = [
             charger_historique_capteur("niveau-eau", setHistorique),
             charger_stats_capteur("niveau-eau", setStats),

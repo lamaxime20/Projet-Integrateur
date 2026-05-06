@@ -21,6 +21,13 @@ function RapportsHumiditeSol() {
     const [erreur, setErreur] = useState(null);
 
     useEffect(() => {
+        // Charger les données du localStorage
+        const cachedHistorique = localStorage.getItem('historique_capteur_humidite-sol');
+        if (cachedHistorique) setHistorique(JSON.parse(cachedHistorique));
+
+        const cachedStats = localStorage.getItem('stats_capteur_humidite-sol');
+        if (cachedStats) setStats(JSON.parse(cachedStats));
+
         const intervals = [
             charger_historique_capteur("humidite-sol", setHistorique),
             charger_stats_capteur("humidite-sol", setStats),

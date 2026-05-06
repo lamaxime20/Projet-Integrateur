@@ -184,6 +184,31 @@ class MqttController extends Controller
             'last_connexion' => $allume ? $now : $micro->last_connexion,
         ]);
 
+        if(! $allume) {
+            $listeActionneurs = $micro->actionneurs()->get();
+            $listeCapteurs    = $micro->capteurs()->get();
+
+            foreach ($listeActionneurs as $actionneur) {
+                $actionneur->update(['etat' => 'inactif', 'last_seen' => $now]);
+
+                EtatActionneur::create([
+                    'etat'            => 'inactif',
+                    'date_debut_etat' => $now,
+                    'actionneur_id'   => $actionneur->id,
+                ]);
+            }
+
+            foreach ($listeCapteurs as $capteur) {
+                $capteur->update(['etat' => 'inactif', 'last_seen' => $now]);
+
+                EtatCapteur::create([
+                    'etat'            => 'inactif',
+                    'date_debut_etat' => $now,
+                    'capteur_id'      => $capteur->id,
+                ]);
+            }
+        }
+
         EtatMicrocontroleur::create([
             'etat'               => $etat,
             'date_debut_etat'    => $now,

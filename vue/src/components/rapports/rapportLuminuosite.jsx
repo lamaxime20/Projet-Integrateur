@@ -21,6 +21,13 @@ function RapportLuminuosite() {
     const [erreur, setErreur] = useState(null);
 
     useEffect(() => {
+        // Charger les données du localStorage
+        const cachedHistorique = localStorage.getItem('historique_capteur_luminosite');
+        if (cachedHistorique) setHistorique(JSON.parse(cachedHistorique));
+
+        const cachedStats = localStorage.getItem('stats_capteur_luminosite');
+        if (cachedStats) setStats(JSON.parse(cachedStats));
+
         const intervals = [
             charger_historique_capteur("luminosite", setHistorique),
             charger_stats_capteur("luminosite", setStats),
