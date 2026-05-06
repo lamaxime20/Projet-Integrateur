@@ -16,8 +16,8 @@
 // ============================================================
 // CONFIGURATION
 // ============================================================
-const char* ssid        = "Avengers";
-const char* password    = "Lamine19yamal";
+const char* ssid        = "Orange-9173";
+const char* password    = "6NAEhdHhFR9";
 const char* apiUrl      = "https://amused-presence-production-a3ec.up.railway.app/api/device/token";
 const char* mqtt_server = "b1d946f5edb84d23ade6058bd316610b.s1.eu.hivemq.cloud";
 const int   mqtt_port   = 8883;
@@ -95,10 +95,10 @@ struct EtatComposant {
 };
 
 EtatComposant etats[] = {
-  {"pompe",        "actionneur", ""},
-  {"ampoule",      "actionneur", ""},
-  {"ventilateur",  "actionneur", ""},
-  {"porte",        "actionneur", ""},
+  {"pompe classique",        "actionneur", ""},
+  {"ampoule classique",      "actionneur", ""},
+  {"ventilateur classique",  "actionneur", ""},
+  {"servomoteur classique", "actionneur", ""},
   {"humidite_sol", "capteur",    ""},
   {"temperature",  "capteur",    ""},
   {"luminosite",   "capteur",    ""},
@@ -121,6 +121,8 @@ static float pubHum  = NAN;
 static float pubLum  = NAN;
 static float pubCO2  = NAN;
 static float pubEau  = NAN;
+
+bool porteOuverte = false;
 
 // ============================================================
 // UTILITAIRES
@@ -278,11 +280,11 @@ void getToken() {
 // ============================================================
 Instruction* trouverInstruction(String cible) {
   cible = normaliser(cible);
-  if (cible.indexOf("pompe")        >= 0) return &instrPompe;
-  if (cible.indexOf("ampoule")      >= 0) return &instrLampe;
-  if (cible.indexOf("ventilateur")  >= 0) return &instrVentil;
+  if (cible.indexOf("pompe classique")        >= 0) return &instrPompe;
+  if (cible.indexOf("ampoule classique")      >= 0) return &instrLampe;
+  if (cible.indexOf("ventilateur classique")  >= 0) return &instrVentil;
   if (cible.indexOf("porte")        >= 0 ||
-      cible.indexOf("servo")        >= 0) return &instrPorte;
+      cible.indexOf("servomoteur classique")        >= 0) return &instrPorte;
   return nullptr;
 }
 
@@ -298,14 +300,14 @@ int indexActionneur(String cible) {
 
 void appliquerPin(String cible, bool allumer) {
   cible = normaliser(cible);
-  if (cible.indexOf("pompe")       >= 0)
+  if (cible.indexOf("pompe classique")       >= 0)
     digitalWrite(POMPE_PIN,   allumer ? ACTIONNEUR_ON : ACTIONNEUR_OFF);
-  else if (cible.indexOf("ampoule") >= 0)
+  else if (cible.indexOf("ampoule classique") >= 0)
     digitalWrite(ECLAIRE_PIN, allumer ? ACTIONNEUR_ON : ACTIONNEUR_OFF);
-  else if (cible.indexOf("ventilateur") >= 0)
+  else if (cible.indexOf("ventilateur classique") >= 0)
     digitalWrite(VENTIL_PIN,  allumer ? ACTIONNEUR_ON : ACTIONNEUR_OFF);
-  else if (cible.indexOf("porte") >= 0 || cible.indexOf("servo") >= 0)
-    servoPorte.write(allumer ? 90 : 0);
+  else if (cible.indexOf("porte") >= 0 || cible.indexOf("servomoteur classique") >= 0)
+    servoPorte.write(allumer ? 90 : 0); porteOuverte = allumer;
 }
 
 // ============================================================
@@ -403,27 +405,63 @@ void reconnect() {
 void appliquerActionneurs(float lum, float hum, float temp, float co2, bool eauOK) {
   // Ampoule : luminosité < min → OFF | luminosité > max → ON
   if (!instrLampe.actif) {
-    if      (lum < seuils.lum_min) digitalWrite(ECLAIRE_PIN, ACTIONNEUR_OFF);
-    else if (lum > seuils.lum_max) digitalWrite(ECLAIRE_PIN, ACTIONNEUR_ON);
+    Serial.print("lumiere ");
+    Serial.println(lum);
+    if      (lum < seuils.lum_min) {
+      digitalWrite(ECLAIRE_PIN, ACTIONNEUR_OFF);
+      publierSiChangement(etats[1], "eteint");
+    }
+    else if (lum > seuils.lum_max) {
+      digitalWrite(ECLAIRE_PIN, ACTIONNEUR_ON);
+      publierSiChangement(etats[1], "allume");
+    }
   }
 
   // Pompe : eau basse → OFF (prioritaire) | hum < min → ON | hum > max → OFF
   if (!instrPompe.actif) {
-    if      (!eauOK)               digitalWrite(POMPE_PIN, ACTIONNEUR_OFF);
-    else if (hum < seuils.hum_min) digitalWrite(POMPE_PIN, ACTIONNEUR_ON);
-    else if (hum > seuils.hum_max) digitalWrite(POMPE_PIN, ACTIONNEUR_OFF);
+    Serial.print("humidite du sol ");
+    Serial.println(hum);
+    if      (!eauOK)               {
+      Serial.println("eau vide");
+      digitalWrite(POMPE_PIN, ACTIONNEUR_OFF);
+      publierSiChangement(etats[0], "eteint");
+    }
+    else if (hum < seuils.hum_min) {
+      digitalWrite(POMPE_PIN, ACTIONNEUR_ON);
+      publierSiChangement(etats[0], "allume");
+    }
+    else if (hum > seuils.hum_max) {
+      digitalWrite(POMPE_PIN, ACTIONNEUR_OFF);
+      publierSiChangement(etats[0], "eteint");
+    }
   }
 
   // Ventilateur : temp > max → ON | temp < min → OFF
   if (!instrVentil.actif && !isnan(temp)) {
-    if      (temp > seuils.temp_max) digitalWrite(VENTIL_PIN, ACTIONNEUR_ON);
-    else if (temp < seuils.temp_min) digitalWrite(VENTIL_PIN, ACTIONNEUR_OFF);
+    Serial.print("temperature ");
+    Serial.println(temp);
+    if      (temp > seuils.temp_max) {
+      digitalWrite(VENTIL_PIN, ACTIONNEUR_ON);
+      publierSiChangement(etats[2], "allume");
+    }
+    else if (temp < seuils.temp_min) {
+      digitalWrite(VENTIL_PIN, ACTIONNEUR_OFF);
+      publierSiChangement(etats[2], "eteint");
+    }
   }
 
   // Porte : qualité air (MQ) — co2 > max → ouverte (ventilation) | co2 < min → fermée
   if (!instrPorte.actif) {
-    if      (co2 > seuils.co2_max) servoPorte.write(90);
-    else if (co2 < seuils.co2_min) servoPorte.write(0);
+    Serial.print("CO2 ");
+    Serial.println(co2);
+    if      (co2 > seuils.co2_max) {
+      servoPorte.write(90);
+      publierSiChangement(etats[3], "ouverte");
+    }
+    else if (co2 < seuils.co2_min) {
+      servoPorte.write(0);
+      publierSiChangement(etats[3], "fermee");
+    }
   }
 }
 
@@ -446,6 +484,11 @@ void setup() {
   dht.begin();
   servoPorte.attach(SERVO_PIN);
   servoPorte.write(0);
+
+  publierSiChangement(etats[0], "eteint");
+  publierSiChangement(etats[1], "eteint");
+  publierSiChangement(etats[2], "eteint");
+  publierSiChangement(etats[3], "fermee");
 
   TOPIC_DATA         = "agriculture/" + device_id + "/data";
   TOPIC_INSTR        = "agriculture/" + device_id + "/instructions";
@@ -557,14 +600,6 @@ void loop() {
       client.publish(TOPIC_DATA.c_str(), payload.c_str());
     }
   }
-
-  // ——— 6. ÉTATS COMPOSANTS — publish si changement ———
-
-  // Actionneurs : seulement allume / eteint / ouverte / fermee (pas de defaillant)
-  publierSiChangement(etats[0], digitalRead(POMPE_PIN)   == ACTIONNEUR_ON ? "allume"  : "eteint");
-  publierSiChangement(etats[1], digitalRead(ECLAIRE_PIN) == ACTIONNEUR_ON ? "allume"  : "eteint");
-  publierSiChangement(etats[2], digitalRead(VENTIL_PIN)  == ACTIONNEUR_ON ? "allume"  : "eteint");
-  publierSiChangement(etats[3], servoPorte.read() > 45   ? "ouverte" : "fermee");
 
   // Capteurs : actif / defaillant (+ ok/bas pour le niveau d'eau)
   publierSiChangement(etats[4], etatHumSol);

@@ -59,9 +59,6 @@ void setup() {
 // LOOP
 // ============================================================
 void loop() {
-  while(true) {
-    digitalWrite(VENTIL_PIN, HIGH);
-  }
   Serial.println("\n--- Nouvelle lecture ---");
 
   // ================================

@@ -27,14 +27,20 @@ void setup() {
 
 void loop() {
   while(true) {
-    
-    servo.write(0);
-    digitalWrite(ECLAIRE_PIN, HIGH);
-    digitalWrite(VENTIL_PIN, HIGH);
     digitalWrite(POMPE_PIN, HIGH);
-    servo.write(90);
-
-    delay(5000);
+    delay(3000);
+    digitalWrite(POMPE_PIN, LOW);
+    digitalWrite(VENTIL_PIN, HIGH);
+    delay(3000);
+    digitalWrite(VENTIL_PIN, LOW);
+    digitalWrite(ECLAIRE_PIN, HIGH);
+    delay(3000);
+    digitalWrite(ECLAIRE_PIN, LOW);
+    digitalWrite(SERVO_PIN, HIGH);
+    servo.write(180);
+    delay(3000);
+    digitalWrite(SERVO_PIN, LOW);
+    servo.write(0);
   }
   // TEST POMPE
   Serial.println("LED Pompe (G25) : ALLUMÉE");
