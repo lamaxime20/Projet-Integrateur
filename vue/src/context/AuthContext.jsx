@@ -1,4 +1,5 @@
 import { createContext, useCallback, useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
     clearSession,
     createSessionTimeout,
@@ -18,6 +19,7 @@ const AuthContext = createContext({
 });
 
 export function AuthProvider({ children }) {
+    const navigate = useNavigate();
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [user, setUser] = useState(null);
@@ -34,9 +36,31 @@ export function AuthProvider({ children }) {
         setUser(null);
     }, []);
 
-    const applyAuthenticatedSession = useCallback((session) => {
-        if (!session || isSessionExpired(session.expiresAt)) {
+    const logout = useCallback(async () => {
+        if (!getSessionSnapshot()) {
             clearAuthState();
+            return true;
+        }
+
+        const success = await logoutFromDatabase();
+
+        clearAuthState();
+        return success;
+    }, [clearAuthState]);
+
+    const logoutAndRedirectToLogin = useCallback(async () => {
+        await logout();
+        navigate("/login", { replace: true });
+    }, [logout, navigate]);
+
+    const applyAuthenticatedSession = useCallback((session) => {
+        if (!session) {
+            clearAuthState();
+            return false;
+        }
+
+        if (isSessionExpired(session.expiresAt)) {
+            logoutAndRedirectToLogin();
             return false;
         }
 
@@ -45,13 +69,13 @@ export function AuthProvider({ children }) {
         }
 
         sessionTimeoutRef.current = createSessionTimeout(session.expiresAt, () => {
-            clearAuthState();
+            logoutAndRedirectToLogin();
         });
 
         setUser(session.user);
         setIsAuthenticated(true);
         return true;
-    }, [clearAuthState]);
+    }, [clearAuthState, logoutAndRedirectToLogin]);
 
     useEffect(() => {
         let isMounted = true;
@@ -87,18 +111,6 @@ export function AuthProvider({ children }) {
         }
 
         return applyAuthenticatedSession(result);
-    };
-
-    const logout = async () => {
-        if (!getSessionSnapshot()) {
-            clearAuthState();
-            return true;
-        }
-
-        const success = await logoutFromDatabase();
-
-        clearAuthState();
-        return success;
     };
 
     return (

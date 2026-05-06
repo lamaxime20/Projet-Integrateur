@@ -30,7 +30,8 @@ class AuthController extends Controller
             return response()->json(['error' => 'Account is not active'], 403);
         }
 
-        $result = $this->tokenManager->issueToken($user, $user->role, Carbon::now()->addDays(7));
+        $expiresAt = Carbon::now()->addDays(7);
+        $result = $this->tokenManager->issueToken($user, $user->role, $expiresAt);
 
         $userData = [
             'id' => $user->id,
@@ -38,6 +39,7 @@ class AuthController extends Controller
             'name' => $user->nom . ' ' . $user->prenom,
             'role' => $user->role,
             'jour_expiration' => 7,
+            'expires_at' => $expiresAt->toISOString(),
         ];
 
         return response()->json($userData)

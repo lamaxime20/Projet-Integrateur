@@ -2,8 +2,21 @@ import API_BASE_URL from './config.js';
 
 const SESSION_STORAGE_KEY = "agrico-tech-session";
 
+function parseBackendExpiration(user) {
+    const backendExpiration = user?.expires_at ?? user?.expiration ?? user?.date_expiration;
+
+    if (!backendExpiration) {
+        return null;
+    }
+
+    const expiresAt = Date.parse(backendExpiration);
+
+    return Number.isNaN(expiresAt) ? null : expiresAt;
+}
+
 function buildSession(user) {
-    const expiresAt = Date.now() + (user.jour_expiration * 24 * 60 * 60 * 1000); // real days
+    const expiresAt = parseBackendExpiration(user)
+        ?? Date.now() + (user.jour_expiration * 24 * 60 * 60 * 1000);
 
     return {
         user,

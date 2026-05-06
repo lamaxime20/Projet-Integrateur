@@ -125,6 +125,7 @@ class SignupController extends Controller
             'name' => $user->nom . ' ' . $user->prenom,
             'role' => $user->role,
             'jour_expiration' => 7,
+            'expires_at' => $expiresAt->toISOString(),
         ];
 
         return response()->json($userData)

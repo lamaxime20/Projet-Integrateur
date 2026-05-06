@@ -103,6 +103,12 @@ class MqttController extends Controller
 
             $actionneur->update(['etat' => $etat, 'last_seen' => $now]);
 
+            $dernierEtat = $actionneur->historiquesEtats()
+                ->latest('date_debut_etat')
+                ->first();
+
+            if ($dernierEtat?->etat === $etat) return;
+
             EtatActionneur::create([
                 'etat'            => $etat,
                 'date_debut_etat' => $now,
@@ -120,6 +126,12 @@ class MqttController extends Controller
             if (!$capteur) return;
 
             $capteur->update(['etat' => $etat, 'last_seen' => $now]);
+
+            $dernierEtat = $capteur->historiquesEtats()
+                ->latest('date_debut_etat')
+                ->first();
+
+            if ($dernierEtat?->etat === $etat) return;
 
             EtatCapteur::create([
                 'etat'            => $etat,
