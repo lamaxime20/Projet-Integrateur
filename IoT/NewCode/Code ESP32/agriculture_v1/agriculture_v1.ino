@@ -62,6 +62,9 @@ String device_id = "esp32_01";
 #define ECLAIRE_PIN 13
 #define SERVO_PIN   18
 
+#define ACTIONNEUR_ON  HIGH
+#define ACTIONNEUR_OFF LOW
+
 // ============================================================
 // OBJETS
 // ============================================================
@@ -201,7 +204,13 @@ float readWaterLevelAverage(){
   float sum = 0;
 
   for(int i=0;i<5;i++){
-    sum += digitalRead(WATER_PIN) == HIGH ? 100.0 : 0.0;
+    // On considère qu'il y a assez d'eau si la valeur dépasse 500 
+    // (à ajuster selon vos tests, l'air sec = 0)
+    int eau_brut = analogRead(WATER_PIN);
+    int niveau_eau = LOW;
+    bool assez_eau = (eau_brut > 500); 
+    if(assez_eau) niveau_eau = HIGH;
+    sum += niveau_eau == HIGH ? 100.0 : 0.0;
     delay(5);
   }
 
@@ -218,6 +227,56 @@ bool variationSuffisante(float valeur, float derniereValeur){
   if(derniereValeur == 0) return valeur != 0;
 
   return valeurAbsolue(valeur - derniereValeur) >= valeurAbsolue(derniereValeur) * (DATA_VARIATION_PERCENT / 100.0);
+}
+
+String normaliserTexte(String valeur){
+  valeur.replace("\r", "");
+  valeur.replace("\n", "");
+  valeur.replace("\t", " ");
+  valeur.replace("\xC2\xA0", " ");
+  valeur.trim();
+  valeur.toLowerCase();
+
+  while(valeur.indexOf("  ") >= 0){
+    valeur.replace("  ", " ");
+  }
+
+  return valeur;
+}
+
+bool actionDemandeAllumage(String action){
+  action = normaliserTexte(action);
+  return action == "allumer" || action == "ouvrir";
+}
+
+InstructionState* trouverEtatInstruction(String cible){
+  cible = normaliserTexte(cible);
+
+  if(cible == "pompe classique" || cible == "pompe") return &pompeState;
+  if(cible == "ampoule classique" || cible == "ampoule") return &lampeState;
+  if(cible == "ventilateur classique" || cible == "ventilateur") return &ventilState;
+  if(cible == "servomoteur classique" || cible == "servo-moteur classique" || cible == "porte") return &porteState;
+
+  return nullptr;
+}
+
+void appliquerInstructionImmediate(String cible, String action){
+  bool allumer = actionDemandeAllumage(action);
+  cible = normaliserTexte(cible);
+
+  if(cible.indexOf("pompe") >= 0){
+    digitalWrite(POMPE_PIN, allumer ? ACTIONNEUR_ON : ACTIONNEUR_OFF);
+  } else if(cible.indexOf("ampoule") >= 0){
+    digitalWrite(ECLAIRE_PIN, allumer ? ACTIONNEUR_ON : ACTIONNEUR_OFF);
+  } else if(cible.indexOf("ventilateur") >= 0){
+    digitalWrite(VENTIL_PIN, allumer ? ACTIONNEUR_ON : ACTIONNEUR_OFF);
+    Serial.print("VENTIL_PIN GPIO ");
+    Serial.print(VENTIL_PIN);
+    Serial.print(" -> ");
+    Serial.println(digitalRead(VENTIL_PIN) == HIGH ? "HIGH" : "LOW");
+  } else if(cible.indexOf("servo") >= 0 || cible.indexOf("porte") >= 0){
+    servoPorte.write(allumer ? 90 : 0);
+  }
 }
 
 // ============================================================
@@ -337,7 +396,6 @@ void publierDonneesSiVariation(float hum_sol,float temp,float lum,float co2,floa
   String payload;
   serializeJson(doc,payload);
   client.publish(TOPIC_DATA,payload.c_str());
-  Serial.println("Données publiées " + payload + " sur le topic " + TOPIC_DATA);
 
   if(publierTemp) lastPublishedTemp = tempActif ? temp : 0;
   if(publierHumSol) lastPublishedHumSol = humSolActif ? hum_sol : 0;
@@ -385,7 +443,7 @@ String detectEtatSol(float val){
 }
 
 String detectEtatActionneur(int pin){
-  return digitalRead(pin)==HIGH?"allume":"eteint";
+  return digitalRead(pin)==ACTIONNEUR_ON?"allume":"eteint";
 }
 
 String detectEtatPorte(){
@@ -440,7 +498,7 @@ void verifierPannes(float hum_sol, float temp, float lum, float co2) {
   unsigned long now = millis();
 
   // ================= POMPE =================
-  if (digitalRead(POMPE_PIN) == HIGH) {
+  if (digitalRead(POMPE_PIN) == ACTIONNEUR_ON) {
 
     if (!diagPompe.actif) {
       diagPompe.actif = true;
@@ -462,7 +520,7 @@ void verifierPannes(float hum_sol, float temp, float lum, float co2) {
   }
 
   // ================= VENTILATEUR =================
-  if (digitalRead(VENTIL_PIN) == HIGH) {
+  if (digitalRead(VENTIL_PIN) == ACTIONNEUR_ON) {
 
     if (!diagVentil.actif) {
       diagVentil.actif = true;
@@ -484,7 +542,7 @@ void verifierPannes(float hum_sol, float temp, float lum, float co2) {
   }
 
   // ================= LAMPE =================
-  if (digitalRead(ECLAIRE_PIN) == HIGH) {
+  if (digitalRead(ECLAIRE_PIN) == ACTIONNEUR_ON) {
 
     if (!diagLampe.actif) {
       diagLampe.actif = true;
@@ -560,20 +618,21 @@ void callback(char* topic,byte* payload,unsigned int length){
     if(deserializeJson(doc,message)) return;
 
     String id=doc["id_instruction"];
-    String action=doc["action"];
-    String cible=doc["actionneur"];
+    String action=normaliserTexte(doc["action"].as<String>());
+    String cible=normaliserTexte(doc["actionneur"].as<String>());
     int duree=doc["duree"];
+
+    Serial.println("instruction reçue : action=" + action + " | cible=" + cible + " | durée=" + duree);
 
     if(action=="redemarrer") ESP.restart();
 
-    InstructionState* state=nullptr;
+    InstructionState* state=trouverEtatInstruction(cible);
 
-    if(cible=="pompe") state=&pompeState;
-    else if(cible=="ampoule") state=&lampeState;
-    else if(cible=="ventilateur") state=&ventilState;
-    else if(cible=="porte") state=&porteState;
-
-    if(state==nullptr) return;
+    if(state==nullptr){
+      Serial.println("Instruction ignorée : actionneur inconnu -> " + cible);
+      publierStatutInstruction(id,"interrompue");
+      return;
+    }
 
     if(state->actif){
       publierStatutInstruction(state->id_instruction,"interrompue");
@@ -583,6 +642,8 @@ void callback(char* topic,byte* payload,unsigned int length){
     state->id_instruction=id;
     state->action=action;
     state->endTime=millis()+(duree*1000);
+
+    appliquerInstructionImmediate(cible, action);
   }
 }
 
@@ -614,20 +675,20 @@ void reconnect(){
 void appliquerActionneurs(float lum,float hum,float temp,float co2,int eau){
 
   if(!lampeState.actif){
-    if(lum<seuils.lum_min) digitalWrite(ECLAIRE_PIN,HIGH);
-    else if(lum>seuils.lum_max) digitalWrite(ECLAIRE_PIN,LOW);
+    if(lum<seuils.lum_min) digitalWrite(ECLAIRE_PIN,ACTIONNEUR_ON);
+    else if(lum>seuils.lum_max) digitalWrite(ECLAIRE_PIN,ACTIONNEUR_OFF);
   }
 
   if(!pompeState.actif){
-    if(eau==LOW) digitalWrite(POMPE_PIN,LOW);
-    else if(hum<seuils.hum_min) digitalWrite(POMPE_PIN,HIGH);
-    else if(hum>seuils.hum_max) digitalWrite(POMPE_PIN,LOW);
+    if(eau==LOW) digitalWrite(POMPE_PIN,ACTIONNEUR_OFF);
+    else if(hum<seuils.hum_min) digitalWrite(POMPE_PIN,ACTIONNEUR_ON);
+    else if(hum>seuils.hum_max) digitalWrite(POMPE_PIN,ACTIONNEUR_OFF);
   }
 
   if(!ventilState.actif && !isnan(temp)){
     if(temp<seuils.temp_min || temp>seuils.temp_max)
-      digitalWrite(VENTIL_PIN,HIGH);
-    else digitalWrite(VENTIL_PIN,LOW);
+      digitalWrite(VENTIL_PIN,ACTIONNEUR_ON);
+    else digitalWrite(VENTIL_PIN,ACTIONNEUR_OFF);
   }
 
   if(!porteState.actif){
@@ -647,6 +708,11 @@ void setup(){
   pinMode(VENTIL_PIN,OUTPUT);
   pinMode(ECLAIRE_PIN,OUTPUT);
   pinMode(WATER_PIN,INPUT);
+
+  digitalWrite(POMPE_PIN,ACTIONNEUR_OFF);
+  digitalWrite(VENTIL_PIN,ACTIONNEUR_OFF);
+  digitalWrite(ECLAIRE_PIN,ACTIONNEUR_OFF);
+
   Serial.println("--- DEMARRAGE DU SYSTEME ---");
 
   dht.begin();
@@ -691,7 +757,7 @@ void loop(){
   unsigned long now=millis();
 
   if(pompeState.actif){
-    digitalWrite(POMPE_PIN,pompeState.action=="allumer");
+    digitalWrite(POMPE_PIN,actionDemandeAllumage(pompeState.action) ? ACTIONNEUR_ON : ACTIONNEUR_OFF);
     if(now>=pompeState.endTime){
       publierStatutInstruction(pompeState.id_instruction,"terminee");
       pompeState.actif=false;
@@ -699,7 +765,7 @@ void loop(){
   }
 
   if(lampeState.actif){
-    digitalWrite(ECLAIRE_PIN,lampeState.action=="allumer");
+    digitalWrite(ECLAIRE_PIN,actionDemandeAllumage(lampeState.action) ? ACTIONNEUR_ON : ACTIONNEUR_OFF);
     if(now>=lampeState.endTime){
       publierStatutInstruction(lampeState.id_instruction,"terminee");
       lampeState.actif=false;
@@ -707,7 +773,7 @@ void loop(){
   }
 
   if(ventilState.actif){
-    digitalWrite(VENTIL_PIN,ventilState.action=="allumer");
+    digitalWrite(VENTIL_PIN,actionDemandeAllumage(ventilState.action) ? ACTIONNEUR_ON : ACTIONNEUR_OFF);
     if(now>=ventilState.endTime){
       publierStatutInstruction(ventilState.id_instruction,"terminee");
       ventilState.actif=false;
@@ -715,7 +781,7 @@ void loop(){
   }
 
   if(porteState.actif){
-    servoPorte.write(porteState.action=="allumer"?90:0);
+    servoPorte.write(actionDemandeAllumage(porteState.action)?90:0);
     if(now>=porteState.endTime){
       publierStatutInstruction(porteState.id_instruction,"terminee");
       porteState.actif=false;

@@ -155,6 +155,10 @@ Contrairement à l’approche initiale, les données ne sont pas envoyées une p
 
 Cela permet de réduire le nombre de messages et d’optimiser les performances globales du système.
 
+Si la valeur d'un capteur n'a pas varié de 10%, tu ne publies pas la valeur de ce capteur lors du publish des valeurs
+
+Si un capteur est défaillant ou éteint, tu publies 0 comme ses valeurs
+
 Côté backend, Laravel est abonné au topic :
 
 agriculture/+/data
@@ -183,6 +187,15 @@ client.subscribe("agriculture/esp32_01/seuils");
 Ainsi, dès qu’un nouveau seuil est publié, il est reçu automatiquement.
 
 👉 Ces messages sont envoyés avec l’option retain = true, ce qui permet au microcontrôleur de récupérer immédiatement les derniers seuils même après un redémarrage.
+
+luminuosité < seuil_min -> ampoule OFF
+luminuosite > seuil_max -> ampoule ON
+temperature > seuil_max -> ventilateur ON
+temperature < seuil_min -> ventilateur OFF
+Humidite_sol > seuil_max -> pompe OFF
+Humidite_sol < seuil_min -> pompe ON
+niveau_eau = LOW -> pompe OFF
+int eau_brut = analogRead(WATER_PIN); 
 
 Le même principe est utilisé pour les instructions :
 
@@ -413,11 +426,6 @@ Tu vas abonner le microcontrôleur au topic agriculture/nom_device/instructions 
 ### Gestion des états des capteurs et actionneurs
 le microcontroleur doit détecter si un capteur/un actionneur est allumé, éteint, ou défaillant (absent ou ne marche pas) et publish A chaque loop, il vérifie l'état de chaque capteur/actionneur, si l'état d'un change, il envoit un JSON indiquant le capteur/l'actionneur et le nouvel état
 
-Détection réelle de panne matérielle :
-
-pompe ON mais humidité ne monte pas → pompe HS
-ventilateur ON mais température ne baisse pas → ventilateur HS
-
 ### Mécanisme de surveillance de l'état (LWT & Retain)
 
 Pour que le backend Laravel et l'interface React sachent en temps réel si le microcontrôleur est allumé ou éteint, nous utilisons une combinaison de deux fonctionnalités MQTT :
@@ -448,6 +456,3 @@ Le flag `retain = true` indique au broker de garder en mémoire le dernier messa
 5. Laravel broadcast un événement WebSocket vers React pour mettre à jour l'interface (ex: passage d'une icône au rouge).
 
 Ce mécanisme est bien plus efficace qu'un système de "ping" manuel car il ne consomme aucune bande passante supplémentaire et repose sur la détection native du protocole MQTT.
-
-### Note : 
-publishSeuils() est prêt mais n'est appelé nulle part encore — à brancher dans SeuilController dès qu'un endpoint de mise à jour des seuils sera ajouté.

@@ -235,7 +235,7 @@ class MqttController extends Controller
 
         try {
             $mqtt = self::mqttClient();
-            $mqtt->publish("agriculture/{$micro->nom}/instructions", $payload, 1);
+            $mqtt->publish("agriculture/{$micro->identifiant_user}/instructions", $payload, 1);
             $mqtt->disconnect();
         } catch (\Throwable $e) {
             Log::error("MQTT publishInstruction [{$instruction->id}] : " . $e->getMessage());

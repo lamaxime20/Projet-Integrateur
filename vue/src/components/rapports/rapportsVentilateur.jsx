@@ -8,7 +8,7 @@ import {
     charger_instructions_actionneur,
 } from "../../utils/statistiques";
 import { generer_rapport_actionneur, generer_rapport_instructions } from "../../utils/rapport";
-import { creer_instruction_simule, microcontroleur_est_actif } from "../../utils/actionneur";
+import { creer_instruction_simule, microcontroleur_est_actif, charger_etat_ventilateur } from "../../utils/actionneur";
 import "../../assets/styles/components/rapports/rapportActionneur.css";
 
 const AUJOURD_HUI = new Date().toISOString().split("T")[0];
@@ -57,6 +57,7 @@ function RapportsVentilateur() {
 
     useEffect(() => {
         const intervals = [
+            charger_etat_ventilateur(setEtatVentilateur),
             charger_historique_actionneur_rapport("ventilateur", setHistorique),
             charger_grandeurs_actionneur("ventilateur", setGrandeurs),
             charger_instructions_actionneur("ventilateur", setInstructions),

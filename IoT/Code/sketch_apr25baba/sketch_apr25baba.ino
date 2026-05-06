@@ -59,6 +59,9 @@ void setup() {
 // LOOP
 // ============================================================
 void loop() {
+  while(true) {
+    digitalWrite(VENTIL_PIN, HIGH);
+  }
   Serial.println("\n--- Nouvelle lecture ---");
 
   // ================================
@@ -127,6 +130,7 @@ void loop() {
   Serial.print(eau_brut);
   Serial.print(" -> État : ");
   Serial.println(assez_eau ? "OK" : "BAS / VIDE");
+  if(assez_eau) niveau_eau = HIGH;
 
   // ============================================================
   // LOGIQUE AUTOMATIQUE
@@ -144,7 +148,7 @@ void loop() {
   }
 
   // VENTILATION
-  if (!isnan(temperature) && temperature > 35) {
+  if (!isnan(temperature) && temperature > 25) {
     digitalWrite(VENTIL_PIN, HIGH);
     Serial.println("Ventilation : ON");
   } else {

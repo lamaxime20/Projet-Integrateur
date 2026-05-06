@@ -8,7 +8,7 @@ import {
     charger_instructions_actionneur,
 } from "../../utils/statistiques";
 import { generer_rapport_actionneur, generer_rapport_instructions } from "../../utils/rapport";
-import { creer_instruction_simule, microcontroleur_est_actif } from "../../utils/actionneur";
+import { creer_instruction_simule, microcontroleur_est_actif, charger_etat_ampoule } from "../../utils/actionneur";
 import "../../assets/styles/components/rapports/rapportActionneur.css";
 
 const AUJOURD_HUI = new Date().toISOString().split("T")[0];
@@ -55,6 +55,7 @@ function RapportsAmpoule() {
 
     useEffect(() => {
         const intervals = [
+            charger_etat_ampoule(setEtatAmpoule),
             charger_historique_actionneur_rapport("ampoule", setHistorique),
             charger_grandeurs_actionneur("ampoule", setGrandeurs),
             charger_instructions_actionneur("ampoule", setInstructions),
