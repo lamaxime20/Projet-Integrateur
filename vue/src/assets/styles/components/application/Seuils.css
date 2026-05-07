@@ -131,7 +131,7 @@
     transform: none;
 }
 
-.capteur-btn i {
+.capteur-btn > .material-symbols-outlined {
     grid-row: span 2;
     display: inline-flex;
     align-items: center;
@@ -144,7 +144,7 @@
     font-size: 1rem;
 }
 
-.capteur-btn.active i {
+.capteur-btn.active > .material-symbols-outlined {
     background: #e1f3fc;
     color: #0277bd;
 }
@@ -190,6 +190,10 @@
     background: #e8f5e9;
     color: #2e7d32;
     font-size: 1.15rem;
+}
+
+.seuils-icon-wrap .material-symbols-outlined {
+    font-size: 1.45rem;
 }
 
 .seuils-form .input-group {
@@ -281,7 +285,7 @@
     text-align: center;
 }
 
-.seuils-empty i {
+.seuils-empty > .material-symbols-outlined {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -291,6 +295,7 @@
     border-radius: 8px;
     background: #eef7f0;
     color: #2e7d32;
+    font-size: 1.55rem;
 }
 
 .seuils-empty p {
@@ -319,6 +324,16 @@
 
     100% {
         background-position: -200% 0;
+    }
+}
+
+.seuils-spin {
+    animation: seuils-spin 900ms linear infinite;
+}
+
+@keyframes seuils-spin {
+    to {
+        transform: rotate(360deg);
     }
 }
 

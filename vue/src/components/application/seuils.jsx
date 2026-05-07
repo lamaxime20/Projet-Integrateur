@@ -7,6 +7,17 @@ import {
 import { charger_microcontroleur_local } from '../../utils/microcontroleur';
 import '../../assets/styles/components/application/Seuils.css'
 
+const ICONES_SEUILS = {
+    temperature: 'device_thermostat',
+    humidite_sol: 'water_drop',
+    co2: 'air',
+    luminosite: 'light_mode',
+};
+
+function obtenirIconeSeuil(code) {
+    return ICONES_SEUILS[code] ?? 'tune';
+}
+
 const Seuils = ({ microcontroleurId }) => {
     const controllerId = useMemo(() => {
         if (typeof microcontroleurId === 'string') return microcontroleurId;
@@ -112,7 +123,9 @@ const Seuils = ({ microcontroleurId }) => {
                     disabled={loading || isSaving}
                     aria-label="Rafraîchir les seuils"
                 >
-                    <i className={`fa-solid fa-rotate${loading ? ' fa-spin' : ''}`} aria-hidden="true"></i>
+                    <span className={`material-symbols-outlined ${loading ? 'seuils-spin' : ''}`} aria-hidden="true">
+                        refresh
+                    </span>
                 </button>
             </header>
 
@@ -139,7 +152,9 @@ const Seuils = ({ microcontroleurId }) => {
                                     onClick={() => selectCapteur(c)}
                                     disabled={isSaving}
                                 >
-                                    <i className={c.icone} aria-hidden="true"></i>
+                                    <span className="material-symbols-outlined" aria-hidden="true">
+                                        {obtenirIconeSeuil(c.code)}
+                                    </span>
                                     <span>{c.nom}</span>
                                     <small>{c.valeur_min} - {c.valeur_max} {c.unite}</small>
                                 </button>
@@ -153,7 +168,9 @@ const Seuils = ({ microcontroleurId }) => {
                         <form className="seuils-form" onSubmit={handleSave}>
                             <div className="seuils-form-title">
                                 <span className="seuils-icon-wrap">
-                                    <i className={selectedCapteur.icone} aria-hidden="true"></i>
+                                    <span className="material-symbols-outlined" aria-hidden="true">
+                                        {obtenirIconeSeuil(selectedCapteur.code)}
+                                    </span>
                                 </span>
                                 <div>
                                     <h2>{selectedCapteur.nom}</h2>
@@ -189,19 +206,23 @@ const Seuils = ({ microcontroleurId }) => {
 
                             {message.text && (
                                 <div className={`alert-message ${message.type}`}>
-                                    <i className={`fa-solid ${message.type === 'success' ? 'fa-circle-check' : 'fa-triangle-exclamation'}`} aria-hidden="true"></i>
+                                    <span className="material-symbols-outlined" aria-hidden="true">
+                                        {message.type === 'success' ? 'check_circle' : 'warning'}
+                                    </span>
                                     <span>{message.text}</span>
                                 </div>
                             )}
 
                             <button type="submit" className="save-btn" disabled={isSaving}>
-                                <i className={`fa-solid ${isSaving ? 'fa-circle-notch fa-spin' : 'fa-floppy-disk'}`} aria-hidden="true"></i>
+                                <span className={`material-symbols-outlined ${isSaving ? 'seuils-spin' : ''}`} aria-hidden="true">
+                                    {isSaving ? 'progress_activity' : 'save'}
+                                </span>
                                 {isSaving ? "Enregistrement..." : "Enregistrer les modifications"}
                             </button>
                         </form>
                     ) : (
                         <div className="seuils-empty">
-                            <i className="fa-solid fa-sliders" aria-hidden="true"></i>
+                            <span className="material-symbols-outlined" aria-hidden="true">tune</span>
                             <h2>Aucun seuil disponible</h2>
                             {message.text && <p>{message.text}</p>}
                         </div>
