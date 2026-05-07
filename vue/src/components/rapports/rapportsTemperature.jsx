@@ -21,18 +21,11 @@ function RapportsTemperature() {
     const [erreur, setErreur] = useState(null);
 
     useEffect(() => {
-        // Charger les données du localStorage
-        const cachedHistorique = localStorage.getItem('historique_capteur_temperature');
-        if (cachedHistorique) setHistorique(JSON.parse(cachedHistorique));
-
-        const cachedStats = localStorage.getItem('stats_capteur_temperature');
-        if (cachedStats) setStats(JSON.parse(cachedStats));
-
-        const intervals = [
+        const cleanups = [
             charger_historique_capteur("temperature", setHistorique),
             charger_stats_capteur("temperature", setStats),
         ];
-        return () => intervals.forEach(clearInterval);
+        return () => cleanups.forEach(fn => fn());
     }, []);
 
     const handleToggleEtat = (etat) => setEtats((prev) => ({ ...prev, [etat]: !prev[etat] }));

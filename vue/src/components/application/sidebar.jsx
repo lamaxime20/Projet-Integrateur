@@ -14,8 +14,8 @@ function Sidebar({ongletActif}) {
     const logout = useAuth().logout;
 
     useEffect(() => {
-        const interval = charger_etat_microcontroleur_temps_reel(setMicrocontroleur);
-        return () => clearInterval(interval);
+        const unsubscribe = charger_etat_microcontroleur_temps_reel(setMicrocontroleur);
+        return () => unsubscribe();
     }, []);
 
     const basculerSidebarEpinglee = (event) => {

@@ -54,23 +54,17 @@ function RapportsServoMoteur() {
     const [chargementInstr, setChargementInstr] = useState(false);
     const [erreurInstr, setErreurInstr] = useState(null);
 
-    useEffect(() => {        // Charger les données du localStorage
-        const cachedHistorique = localStorage.getItem('historique_actionneur_servo-moteur');
-        if (cachedHistorique) setHistorique(JSON.parse(cachedHistorique));
+    useEffect(() => {
+        setMicrocontroleurAllume(microcontroleur_est_actif());
 
-        const cachedGrandeurs = localStorage.getItem('grandeurs_actionneur_servo-moteur');
-        if (cachedGrandeurs) setGrandeurs(JSON.parse(cachedGrandeurs));
-
-        const cachedInstructions = localStorage.getItem('instructions_actionneur_servo-moteur');
-        if (cachedInstructions) setInstructions(JSON.parse(cachedInstructions));
-        const intervals = [
+        const cleanups = [
             charger_etat_servo_moteur(setEtatPorte),
             charger_historique_actionneur_rapport("servo-moteur", setHistorique),
             charger_grandeurs_actionneur("servo-moteur", setGrandeurs),
             charger_instructions_actionneur("servo-moteur", setInstructions),
         ];
-        setMicrocontroleurAllume(microcontroleur_est_actif());
-        return () => intervals.forEach(clearInterval);
+
+        return () => cleanups.forEach(fn => fn());
     }, []);
 
     const handleToggleEtat = (etat) => setEtatsGraph((prev) => ({ ...prev, [etat]: !prev[etat] }));

@@ -1,9 +1,9 @@
 import API_BASE_URL from './config.js';
+import echo from './echo.js';
 
 const LOCAL_ACTIONNEUR_CHOISI = "actionneur_choisi";
 const UNE_HEURE_EN_MINUTES = 60;
 const DOUZE_HEURES_EN_MINUTES = 12 * UNE_HEURE_EN_MINUTES;
-const INTERVALLE_TEMPS_REEL_MS = 20000;
 
 export function enregistrer_actionneur_choisi(actionneur) {
     localStorage.setItem(LOCAL_ACTIONNEUR_CHOISI, JSON.stringify(actionneur));
@@ -18,18 +18,9 @@ export function supprimer_actionneur_choisi() {
 }
 
 export function obtenir_couleur_etat_actionneur(etat) {
-    if (etat === "running") {
-        return "vert";
-    }
-
-    if (etat === "stopped") {
-        return "orange";
-    }
-
-    if (etat === "defaillant") {
-        return "rouge";
-    }
-
+    if (etat === "running") return "vert";
+    if (etat === "stopped") return "orange";
+    if (etat === "defaillant") return "rouge";
     return "";
 }
 
@@ -38,26 +29,14 @@ export function obtenir_libelle_etat_actionneur(etat, vocabulaire) {
 }
 
 export function obtenir_classe_temperature(temperature, seuils) {
-    if (temperature > seuils["temperature_max"]) {
-        return "temperature-rouge";
-    }
-
-    if (temperature < seuils["temperature_min"]) {
-        return "temperature-orange";
-    }
-
+    if (temperature > seuils["temperature_max"]) return "temperature-rouge";
+    if (temperature < seuils["temperature_min"]) return "temperature-orange";
     return "temperature-vert";
 }
 
 export function obtenir_classe_humidite_sol(humiditeSol, seuils) {
-    if (humiditeSol < seuils["humidite_sol_min"]) {
-        return "humidite-orange";
-    }
-
-    if (humiditeSol > seuils["humidite_sol_max"]) {
-        return "humidite-rouge";
-    }
-
+    if (humiditeSol < seuils["humidite_sol_min"]) return "humidite-orange";
+    if (humiditeSol > seuils["humidite_sol_max"]) return "humidite-rouge";
     return "humidite-vert";
 }
 
@@ -68,14 +47,8 @@ export function obtenir_classe_niveau_eau(niveauEau) {
 }
 
 export function obtenir_classe_luminosite(luminosite, seuils) {
-    if (luminosite < seuils["luminosite_min"]) {
-        return "luminosite-orange";
-    }
-
-    if (luminosite > seuils["luminosite_max"]) {
-        return "luminosite-rouge";
-    }
-
+    if (luminosite < seuils["luminosite_min"]) return "luminosite-orange";
+    if (luminosite > seuils["luminosite_max"]) return "luminosite-rouge";
     return "luminosite-vert";
 }
 
@@ -124,99 +97,154 @@ async function getApi(path) {
     return await response.json();
 }
 
-function lancerChargementTempsReel(charger) {
-    charger();
-    return setInterval(charger, INTERVALLE_TEMPS_REEL_MS);
-}
-
 function normaliserEtat(etat) {
     if (etat === "actif") return "running";
     if (etat === "inactif") return "stopped";
     return etat ?? "stopped";
 }
 
-function chargerEtatActionneur(actionneur, setter, fallback) {
-    return lancerChargementTempsReel(async () => {
-        try {
-            const data = await getApi(`/actionneurs/${actionneur}/etat`);
+function obtenirCanalPrive() {
+    const nom = obtenirNomMicrocontroleur();
+    if (!nom) return null;
+    return echo.private(`capteurs.${nom}`);
+}
+
+// ============================================================
+//  CHARGEMENT DES ÉTATS ACTIONNEURS (WebSocket + API init)
+// ============================================================
+
+function abonnerEtatActionneur(nomActionneur, setter, fallback) {
+    // 1. INIT localStorage
+    const cache = localStorage.getItem(`etat_actionneur_${nomActionneur}`);
+    if (cache) setter(JSON.parse(cache));
+
+    // 2. INIT API
+    getApi(`/actionneurs/${nomActionneur}/etat`)
+        .then(data => {
             const etat = normaliserEtat(data.etat);
             setter(etat);
-            localStorage.setItem(`etat_actionneur_${actionneur}`, JSON.stringify(etat));
-        } catch {
-            setter(fallback);
-        }
-    });
+            localStorage.setItem(`etat_actionneur_${nomActionneur}`, JSON.stringify(etat));
+        })
+        .catch(() => setter(fallback));
+
+    // 3. WebSocket
+    const canal = obtenirCanalPrive();
+    if (!canal) return () => {};
+
+    const callback = (e) => {
+        if (e.actionneur !== nomActionneur) return;
+        setter(e.etat);
+        localStorage.setItem(`etat_actionneur_${nomActionneur}`, JSON.stringify(e.etat));
+    };
+
+    canal.listen('.NouvelEtatActionneur', callback);
+
+    return () => canal.stopListening('.NouvelEtatActionneur', callback);
 }
 
-function chargerValeurCapteur(capteur, cle, setter, fallback) {
-    return lancerChargementTempsReel(async () => {
-        try {
-            const data = await getApi(`/capteurs/${capteur}/actuelle`);
+function abonnerValeurCapteur(nomCapteur, cle, setter, fallback, cleLocale) {
+    // 1. INIT localStorage
+    const cache = localStorage.getItem(`capteur_${cleLocale}_actuelle`);
+    if (cache) setter(JSON.parse(cache));
+
+    // 2. INIT API
+    getApi(`/capteurs/${nomCapteur}/actuelle`)
+        .then(data => {
             setter(data[cle]);
-        } catch {
-            setter(fallback);
-        }
-    });
+            localStorage.setItem(`capteur_${cleLocale}_actuelle`, JSON.stringify(data[cle]));
+        })
+        .catch(() => setter(fallback));
+
+    // 3. WebSocket
+    const canal = obtenirCanalPrive();
+    if (!canal) return () => {};
+
+    const callback = (e) => {
+        if (e.capteur !== nomCapteur) return;
+        setter(e.valeur);
+        localStorage.setItem(`capteur_${cleLocale}_actuelle`, JSON.stringify(e.valeur));
+    };
+
+    canal.listen('.NouvelleDonneeCapteur', callback);
+
+    return () => canal.stopListening('.NouvelleDonneeCapteur', callback);
 }
 
-function chargerHistoriqueActionneur(actionneur, setter, fallback) {
-    return lancerChargementTempsReel(async () => {
-        try {
-            const data = await getApi(`/actionneurs/${actionneur}/historique?fenetre=12h`);
+function abonnerHistoriqueActionneur(nomActionneur, setter, fallback) {
+    // 1. INIT localStorage
+    const cache = localStorage.getItem(`historique_actionneur_${nomActionneur}`);
+    if (cache) setter(JSON.parse(cache));
+
+    // 2. INIT API
+    getApi(`/actionneurs/${nomActionneur}/historique?fenetre=12h`)
+        .then(data => {
             setter(data);
-        } catch {
-            setter(fallback());
-        }
-    });
-}
+            localStorage.setItem(`historique_actionneur_${nomActionneur}`, JSON.stringify(data));
+        })
+        .catch(() => setter(fallback()));
 
-// ============================================================
-//  CHARGEMENT DES ÉTATS ACTIONNEURS
-// ============================================================
+    // 3. WebSocket — les changements d'état rechargent l'historique
+    const canal = obtenirCanalPrive();
+    if (!canal) return () => {};
+
+    const callback = (e) => {
+        if (e.actionneur !== nomActionneur) return;
+        getApi(`/actionneurs/${nomActionneur}/historique?fenetre=12h`)
+            .then(data => {
+                setter(data);
+                localStorage.setItem(`historique_actionneur_${nomActionneur}`, JSON.stringify(data));
+            })
+            .catch(() => {});
+    };
+
+    canal.listen('.NouvelEtatActionneur', callback);
+
+    return () => canal.stopListening('.NouvelEtatActionneur', callback);
+}
 
 export function charger_etat_ventilateur(setVentilateurState) {
-    return chargerEtatActionneur("ventilateur", setVentilateurState, "running");
+    return abonnerEtatActionneur("ventilateur", setVentilateurState, "running");
 }
 
 export function charger_etat_pompe(setPompeState) {
-    return chargerEtatActionneur("pompe", setPompeState, "running");
+    return abonnerEtatActionneur("pompe", setPompeState, "running");
 }
 
 export function charger_etat_ampoule(setAmpouleState) {
-    return chargerEtatActionneur("ampoule", setAmpouleState, "running");
+    return abonnerEtatActionneur("ampoule", setAmpouleState, "running");
 }
 
 export function charger_etat_servo_moteur(setServoMoteurState) {
-    return chargerEtatActionneur("servo-moteur", setServoMoteurState, "stopped");
+    return abonnerEtatActionneur("servo-moteur", setServoMoteurState, "stopped");
 }
 
 // ============================================================
-//  CHARGEMENT DES VALEURS CAPTEURS
+//  CHARGEMENT DES VALEURS CAPTEURS (WebSocket + API init)
 // ============================================================
 
 export function charger_temperature_actuelle(setTemperatureActuelle) {
-    return chargerValeurCapteur("temperature", "temperature", setTemperatureActuelle, 20);
+    return abonnerValeurCapteur("temperature", "temperature", setTemperatureActuelle, 20, "temperature");
 }
 
 export function charger_humidite_sol_actuelle(setHumiditeSol) {
-    return chargerValeurCapteur("humidite-sol", "humidite_sol", setHumiditeSol, 42);
+    return abonnerValeurCapteur("humidite-sol", "humidite_sol", setHumiditeSol, 42, "humidite_sol");
 }
 
 // Le capteur de niveau d'eau est digital : "OK" (réservoir plein) ou "Bas" (réservoir vide).
 export function charger_niveau_eau_actuel(setNiveauEau) {
-    return chargerValeurCapteur("niveau-eau", "niveau_eau", setNiveauEau, "OK");
+    return abonnerValeurCapteur("niveau-eau", "niveau_eau", setNiveauEau, "OK", "niveau_eau");
 }
 
 export function charger_luminosite_actuelle(setLuminosite) {
-    return chargerValeurCapteur("luminosite", "luminosite", setLuminosite, 54);
+    return abonnerValeurCapteur("luminosite", "luminosite", setLuminosite, 54, "luminosite");
 }
 
 export function charger_co2_actuel(setCo2) {
-    return chargerValeurCapteur("co2", "co2", setCo2, 45);
+    return abonnerValeurCapteur("co2", "co2", setCo2, 45, "co2");
 }
 
 // ============================================================
-//  CHARGEMENT DES SEUILS (appels API réels)
+//  CHARGEMENT DES SEUILS (appels API réels — pas de temps réel)
 // ============================================================
 
 export async function charger_temperature_seuils(setTemperatureSeuils) {
@@ -239,7 +267,6 @@ export async function charger_temperature_seuils(setTemperatureSeuils) {
 }
 
 export async function charger_pompe_seuils(setPompeSeuils) {
-    // Le niveau d'eau est binaire (OK/Bas) — il n'a pas de seuil min/max.
     const nomMicro = obtenirNomMicrocontroleur();
     const params = construireParams(nomMicro);
 
@@ -297,7 +324,7 @@ export async function chargerCo2Seuil(setCo2Seuil) {
 }
 
 // ============================================================
-//  HISTORIQUES (intervalle 15 s)
+//  HISTORIQUES ACTIONNEURS
 // ============================================================
 
 function ajouterMinutes(date, minutes) {
@@ -367,19 +394,19 @@ function generer_historique_actionneur_simule(actionneur, dateActuelle = new Dat
 }
 
 export function charger_historique_ventilateur(setHistoriqueVentilateur) {
-    return chargerHistoriqueActionneur("ventilateur", setHistoriqueVentilateur, generer_historique_ventilateur_simule);
+    return abonnerHistoriqueActionneur("ventilateur", setHistoriqueVentilateur, generer_historique_ventilateur_simule);
 }
 
 export function charger_historique_pompe(setHistoriquePompe) {
-    return chargerHistoriqueActionneur("pompe", setHistoriquePompe, () => generer_historique_actionneur_simule("pompe"));
+    return abonnerHistoriqueActionneur("pompe", setHistoriquePompe, () => generer_historique_actionneur_simule("pompe"));
 }
 
 export function charger_historique_ampoule(setHistoriqueAmpoule) {
-    return chargerHistoriqueActionneur("ampoule", setHistoriqueAmpoule, () => generer_historique_actionneur_simule("ampoule"));
+    return abonnerHistoriqueActionneur("ampoule", setHistoriqueAmpoule, () => generer_historique_actionneur_simule("ampoule"));
 }
 
 export function charger_historique_servo_moteur(setHistoriqueServoMoteur) {
-    return chargerHistoriqueActionneur("servo-moteur", setHistoriqueServoMoteur, () => generer_historique_actionneur_simule("servoMoteur"));
+    return abonnerHistoriqueActionneur("servo-moteur", setHistoriqueServoMoteur, () => generer_historique_actionneur_simule("servoMoteur"));
 }
 
 export function construire_batonnets_historique_actionneur(historique, dateActuelle = new Date()) {

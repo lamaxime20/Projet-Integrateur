@@ -57,24 +57,16 @@ function RapportsVentilateur() {
     const [erreurInstr, setErreurInstr] = useState(null);
 
     useEffect(() => {
-        // Charger les données du localStorage
-        const cachedHistorique = localStorage.getItem('historique_actionneur_ventilateur');
-        if (cachedHistorique) setHistorique(JSON.parse(cachedHistorique));
+        setMicrocontroleurAllume(microcontroleur_est_actif());
 
-        const cachedGrandeurs = localStorage.getItem('grandeurs_actionneur_ventilateur');
-        if (cachedGrandeurs) setGrandeurs(JSON.parse(cachedGrandeurs));
-
-        const cachedInstructions = localStorage.getItem('instructions_actionneur_ventilateur');
-        if (cachedInstructions) setInstructions(JSON.parse(cachedInstructions));
-
-        const intervals = [
+        const cleanups = [
             charger_etat_ventilateur(setEtatVentilateur),
             charger_historique_actionneur_rapport("ventilateur", setHistorique),
             charger_grandeurs_actionneur("ventilateur", setGrandeurs),
             charger_instructions_actionneur("ventilateur", setInstructions),
         ];
-        setMicrocontroleurAllume(microcontroleur_est_actif());
-        return () => intervals.forEach(clearInterval);
+
+        return () => cleanups.forEach(fn => fn());
     }, []);
 
     const handleToggleEtat = (etat) => setEtatsGraph((prev) => ({ ...prev, [etat]: !prev[etat] }));

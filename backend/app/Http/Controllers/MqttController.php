@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NouvelleDonneeCapteur;
+use App\Events\NouvelEtatActionneur;
+use App\Events\NouvelEtatCapteur;
+use App\Events\NouvelEtatMicrocontroleur;
+use App\Events\NouvelleAlerte;
 use App\Mail\AlerteIoTMail;
 use App\Models\Alerte;
 use App\Models\Donnee;
@@ -74,6 +79,16 @@ class MqttController extends Controller
 
             $capteur->update(['last_seen' => $now]);
 
+            broadcast(new NouvelleDonneeCapteur(
+                microcontroleurNom: $micro->nom,
+                capteur: $cle,
+                cle: $grandeurNom === "Niveau d'eau" ? 'niveau_eau' : str_replace('-', '_', $cle),
+                valeur: $grandeurNom === "Niveau d'eau"
+                    ? (((float) $valeur) > 0 ? 'OK' : 'Bas')
+                    : (float) $valeur,
+                dateArrivee: $now->toIso8601String(),
+            ))->toOthers();
+
             $this->verifierEtAlerter($micro, $grandeur, (float) $valeur);
         }
     }
@@ -115,6 +130,18 @@ class MqttController extends Controller
                 'actionneur_id'   => $actionneur->id,
             ]);
 
+            $etatFrontend = match ($etat) {
+                'actif' => 'running',
+                'defaillant' => 'defaillant',
+                default => 'stopped',
+            };
+
+            broadcast(new NouvelEtatActionneur(
+                microcontroleurNom: $micro->nom,
+                actionneur: strtolower($nom),
+                etat: $etatFrontend,
+            ))->toOthers();
+
         } elseif ($type === 'capteur') {
             $grandeurNom = self::DATA_GRANDEURS[$nom] ?? null;
             if (!$grandeurNom) return;
@@ -138,6 +165,18 @@ class MqttController extends Controller
                 'date_debut_etat' => $now,
                 'capteur_id'      => $capteur->id,
             ]);
+
+            $etatFrontend = match ($etat) {
+                'actif' => 'running',
+                'defaillant' => 'defaillant',
+                default => 'stopped',
+            };
+
+            broadcast(new NouvelEtatCapteur(
+                microcontroleurNom: $micro->nom,
+                capteur: $nom,
+                etat: $etatFrontend,
+            ))->toOthers();
         }
     }
 
@@ -214,6 +253,12 @@ class MqttController extends Controller
             'date_debut_etat'    => $now,
             'microcontroleur_id' => $micro->id,
         ]);
+
+        broadcast(new NouvelEtatMicrocontroleur(
+            microcontroleurNom: $micro->nom,
+            allume: $allume,
+            etat: $allume ? 'running' : 'stopped',
+        ))->toOthers();
     }
 
     // =========================================================
@@ -306,13 +351,24 @@ class MqttController extends Controller
         $direction = $valeur < $seuil->valeur_min ? 'trop bas' : 'trop élevé';
         $message   = "{$grandeur->name} : {$valeur}{$unite} ({$direction}) — seuils : [{$seuil->valeur_min}, {$seuil->valeur_max}]";
 
-        Alerte::create([
+        $alerte = Alerte::create([
             'type'        => $grandeur->name,
             'message'     => $message,
             'vu'          => false,
             'date_arrivee' => now(),
             'user_id'     => $user->id,
         ]);
+
+        broadcast(new NouvelleAlerte(
+            userId: (string) $user->id,
+            alerte: [
+                'id'          => $alerte->id,
+                'type'        => $alerte->type,
+                'message'     => $alerte->message,
+                'vu'          => false,
+                'date_arrivee' => $alerte->date_arrivee?->toIso8601String(),
+            ],
+        ))->toOthers();
 
         try {
             app(MailService::class)->queue(

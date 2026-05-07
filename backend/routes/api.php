@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DeviceController;
 use App\Http\Controllers\AuthController;
@@ -12,6 +13,9 @@ use App\Http\Controllers\RapportController;
 use App\Http\Controllers\AlerteController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TestMailController;
+
+// Broadcast auth — canal privé WebSocket (cookie session)
+Broadcast::routes(['middleware' => ['cookie.user']]);
 
 // Validation intégration email Brevo — à retirer en production
 Route::get('/test-email', [TestMailController::class, 'send']);

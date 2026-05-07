@@ -45,14 +45,14 @@ function Actionneur() {
     };
 
     useEffect(() => {
-        const intervals = [
+        const cleanups = [
             charger_etat_ventilateur(setVentilateurState),
             charger_etat_pompe(setPompeState),
             charger_etat_ampoule(setAmpouleState),
             charger_etat_servo_moteur(setServoMoteurState),
         ];
 
-        return () => intervals.forEach(clearInterval);
+        return () => cleanups.forEach(fn => fn());
     }, []);
 
     const choisirActionneur = (actionneur) => {

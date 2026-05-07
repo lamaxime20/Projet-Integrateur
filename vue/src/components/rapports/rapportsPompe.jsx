@@ -55,24 +55,16 @@ function RapportsPompe() {
     const [erreurInstr, setErreurInstr] = useState(null);
 
     useEffect(() => {
-        // Charger les données du localStorage
-        const cachedHistorique = localStorage.getItem('historique_actionneur_pompe');
-        if (cachedHistorique) setHistorique(JSON.parse(cachedHistorique));
+        setMicrocontroleurAllume(microcontroleur_est_actif());
 
-        const cachedGrandeurs = localStorage.getItem('grandeurs_actionneur_pompe');
-        if (cachedGrandeurs) setGrandeurs(JSON.parse(cachedGrandeurs));
-
-        const cachedInstructions = localStorage.getItem('instructions_actionneur_pompe');
-        if (cachedInstructions) setInstructions(JSON.parse(cachedInstructions));
-
-        const intervals = [
+        const cleanups = [
             charger_etat_pompe(setEtatPompe),
             charger_historique_actionneur_rapport("pompe", setHistorique),
             charger_grandeurs_actionneur("pompe", setGrandeurs),
             charger_instructions_actionneur("pompe", setInstructions),
         ];
-        setMicrocontroleurAllume(microcontroleur_est_actif());
-        return () => intervals.forEach(clearInterval);
+
+        return () => cleanups.forEach(fn => fn());
     }, []);
 
     const handleToggleEtat = (etat) => setEtatsGraph((prev) => ({ ...prev, [etat]: !prev[etat] }));

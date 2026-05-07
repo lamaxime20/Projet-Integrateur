@@ -65,29 +65,9 @@ function Statistiques() {
     const [etatsActionneurs, setEtatsActionneurs] = useState({});
 
     useEffect(() => {
-        // Charger les données du localStorage
-        const cachedHistoriqueMicro = localStorage.getItem('historique_microcontroleur');
-        if (cachedHistoriqueMicro) setHistoriqueMicro(JSON.parse(cachedHistoriqueMicro));
-
-        const cachedMoyennes = localStorage.getItem('moyennes_capteurs_7j');
-        if (cachedMoyennes) setMoyennesCapteurs(JSON.parse(cachedMoyennes));
-
-        const cachedTemps = localStorage.getItem('temps_activation_actionneurs_7j');
-        if (cachedTemps) setTempsActionneurs(JSON.parse(cachedTemps));
-
         const capteurs = ["co2", "humidite-sol", "luminosite", "niveau-eau", "temperature"];
-        capteurs.forEach((c) => {
-            const cachedEtat = localStorage.getItem(`etat_capteur_${c}`);
-            if (cachedEtat) setEtatsCapteurs((prev) => ({ ...prev, [c]: JSON.parse(cachedEtat) }));
-        });
 
-        const actionneurs = ["ventilateur", "pompe", "ampoule", "servo-moteur"];
-        actionneurs.forEach((a) => {
-            const cachedEtat = localStorage.getItem(`etat_actionneur_${a}`);
-            if (cachedEtat) setEtatsActionneurs((prev) => ({ ...prev, [a]: JSON.parse(cachedEtat) }));
-        });
-
-        const intervals = [
+        const cleanups = [
             charger_historique_microcontroleur(setHistoriqueMicro),
             charger_moyennes_capteurs_7j(setMoyennesCapteurs),
             charger_temps_activation_actionneurs_7j(setTempsActionneurs),
@@ -95,13 +75,12 @@ function Statistiques() {
             charger_etat_pompe((e) => setEtatsActionneurs((prev) => ({ ...prev, pompe: e }))),
             charger_etat_ampoule((e) => setEtatsActionneurs((prev) => ({ ...prev, ampoule: e }))),
             charger_etat_servo_moteur((e) => setEtatsActionneurs((prev) => ({ ...prev, "servo-moteur": e }))),
+            ...capteurs.map((c) =>
+                charger_etat_capteur(c, (e) => setEtatsCapteurs((prev) => ({ ...prev, [c]: e })))
+            ),
         ];
 
-        capteurs.forEach((c) =>
-            intervals.push(charger_etat_capteur(c, (e) => setEtatsCapteurs((prev) => ({ ...prev, [c]: e }))))
-        );
-
-        return () => intervals.forEach(clearInterval);
+        return () => cleanups.forEach(fn => fn());
     }, []);
 
     const handleToggleEtatMicro = (etat) => {

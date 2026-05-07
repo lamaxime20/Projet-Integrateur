@@ -29,16 +29,17 @@ function PompeDetails({ retourner }) {
     const [modalAction, setModalAction] = useState(null);
 
     useEffect(() => {
-        const intervals = [
+        charger_pompe_seuils(setSeuils);
+        setMicrocontroleurAllume(microcontroleur_est_actif());
+
+        const cleanups = [
             charger_etat_pompe(setPompeState),
             charger_humidite_sol_actuelle(setHumiditeSol),
             charger_niveau_eau_actuel(setNiveauEau),
             charger_historique_pompe(setHistoriquePompe),
         ];
-        charger_pompe_seuils(setSeuils);
-        setMicrocontroleurAllume(microcontroleur_est_actif());
 
-        return () => intervals.forEach(clearInterval);
+        return () => cleanups.forEach(fn => fn());
     }, []);
 
     const retour = () => {

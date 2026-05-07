@@ -1,7 +1,6 @@
 import API_BASE_URL from './config.js';
+import echo from './echo.js';
 import { charger_microcontroleur_local } from './microcontroleur.js';
-
-const INTERVALLE_DASHBOARD_MS = 20000;
 
 function obtenirNomMicrocontroleur() {
     return charger_microcontroleur_local()?.nom ?? '';
@@ -30,28 +29,52 @@ async function chargerDashboard(options = {}) {
 }
 
 export function charger_dashboard_temps_reel(setDashboard, setErreur, setChargement, options = {}) {
-    let actif = true;
+    const nomMicro = obtenirNomMicrocontroleur();
 
-    const charger = async () => {
-        try {
-            const data = await chargerDashboard(options);
-            if (!actif) return;
+    // 1. INIT localStorage
+    const cache = localStorage.getItem('dashboard_data');
+    if (cache) {
+        try { setDashboard(JSON.parse(cache)); } catch { /* ignore */ }
+    }
 
+    // 2. INIT API
+    chargerDashboard(options)
+        .then(data => {
             setDashboard(data);
             setErreur(null);
-        } catch (error) {
-            if (actif) setErreur(error.message);
-        } finally {
-            if (actif) setChargement(false);
-        }
+            localStorage.setItem('dashboard_data', JSON.stringify(data));
+        })
+        .catch(error => setErreur(error.message))
+        .finally(() => setChargement(false));
+
+    if (!nomMicro) return () => {};
+
+    // 3. WebSocket — tout événement capteur/actionneur/micro recharge le dashboard
+    const canal = echo.private(`capteurs.${nomMicro}`);
+    let rechargeEnCours = false;
+
+    const recharger = () => {
+        if (rechargeEnCours) return;
+        rechargeEnCours = true;
+
+        chargerDashboard(options)
+            .then(data => {
+                setDashboard(data);
+                setErreur(null);
+                localStorage.setItem('dashboard_data', JSON.stringify(data));
+            })
+            .catch(() => {})
+            .finally(() => { rechargeEnCours = false; });
     };
 
-    charger();
-    const intervalId = setInterval(charger, INTERVALLE_DASHBOARD_MS);
+    canal.listen('.NouvelleDonneeCapteur', recharger);
+    canal.listen('.NouvelEtatActionneur', recharger);
+    canal.listen('.NouvelEtatMicrocontroleur', recharger);
 
     return () => {
-        actif = false;
-        clearInterval(intervalId);
+        canal.stopListening('.NouvelleDonneeCapteur', recharger);
+        canal.stopListening('.NouvelEtatActionneur', recharger);
+        canal.stopListening('.NouvelEtatMicrocontroleur', recharger);
     };
 }
 

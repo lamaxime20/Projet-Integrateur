@@ -54,13 +54,12 @@ function Notifications() {
     const longPressDeclenche = useRef(false);
 
     useEffect(() => {
-        const interval = charger_notifications_temps_reel(filtre, setNotifications, setCompteurs, setErreur);
-        return () => clearInterval(interval);
+        const unsubscribe = charger_notifications_temps_reel(filtre, setNotifications, setCompteurs, setErreur);
+        return () => unsubscribe();
     }, [filtre]);
 
     const rechargerApresAction = () => {
-        const interval = charger_notifications_temps_reel(filtre, setNotifications, setCompteurs, setErreur);
-        clearInterval(interval);
+        charger_notifications_temps_reel(filtre, setNotifications, setCompteurs, setErreur);
     };
 
     const basculerSelection = (id) => {

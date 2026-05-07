@@ -1,6 +1,6 @@
 import API_BASE_URL from './config.js';
-
-const INTERVALLE_NOTIFICATIONS_MS = 20000;
+import echo from './echo.js';
+import { getSessionSnapshot } from './user.js';
 
 async function requeteNotifications(path, options = {}) {
     const response = await fetch(`${API_BASE_URL}${path}`, {
@@ -24,9 +24,7 @@ export function charger_notifications_temps_reel(filtre, setNotifications, setCo
     const charger = async () => {
         try {
             const params = filtre === "toutes" ? "" : `?filtre=${encodeURIComponent(filtre)}`;
-            const data = await requeteNotifications(`/notifications${params}`, {
-                method: 'GET',
-            });
+            const data = await requeteNotifications(`/notifications${params}`, { method: 'GET' });
             setNotifications(data.notifications ?? []);
             setCompteurs(data.compteurs ?? { toutes: 0, lues: 0, non_lues: 0 });
             setErreur(null);
@@ -35,8 +33,20 @@ export function charger_notifications_temps_reel(filtre, setNotifications, setCo
         }
     };
 
+    // 1. INIT API
     charger();
-    return setInterval(charger, INTERVALLE_NOTIFICATIONS_MS);
+
+    // 2. WebSocket — nouvelle alerte → recharge la liste
+    const userId = getSessionSnapshot()?.user?.id;
+    if (!userId) return () => {};
+
+    const canal = echo.private(`alertes.${userId}`);
+
+    const callback = () => charger();
+
+    canal.listen('.NouvelleAlerte', callback);
+
+    return () => canal.stopListening('.NouvelleAlerte', callback);
 }
 
 export async function marquer_notification_lue(id) {

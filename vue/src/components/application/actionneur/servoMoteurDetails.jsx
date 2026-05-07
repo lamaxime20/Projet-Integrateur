@@ -23,15 +23,16 @@ function ServoMoteurDetails({ retourner }) {
     const [modalAction, setModalAction] = useState(null);
 
     useEffect(() => {
-        const intervals = [
+        chargerCo2Seuil(setCo2Seuils);
+        setMicrocontroleurAllume(microcontroleur_est_actif());
+
+        const cleanups = [
             charger_etat_servo_moteur(setServoMoteurState),
             charger_co2_actuel(setCo2),
             charger_historique_servo_moteur(setHistoriqueServoMoteur),
         ];
-        chargerCo2Seuil(setCo2Seuils);
-        setMicrocontroleurAllume(microcontroleur_est_actif());
 
-        return () => intervals.forEach(clearInterval);
+        return () => cleanups.forEach(fn => fn());
     }, []);
 
     const retour = () => {

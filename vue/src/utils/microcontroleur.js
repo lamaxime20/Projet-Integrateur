@@ -1,8 +1,8 @@
 import API_BASE_URL from './config.js';
+import echo from './echo.js';
 
 const LOCAL_INFOS_MICROCONTROLEUR_ENREGISTREMENT = "infos_microcontroleur_enregistrement";
 const LOCAL_ERREUR_ENREGISTREMENT = "erreur_enregistrement";
-const INTERVALLE_TEMPS_REEL_MS = 20000;
 
 export function enregistrer_microcontroleur_local(microcontroleur) {
     localStorage.setItem("microcontroleur_actuel", JSON.stringify(microcontroleur));
@@ -57,9 +57,7 @@ export async function charger_liste_microcontroleurs_user() {
         credentials: 'include',
     });
 
-    if (!response.ok) {
-        return [];
-    }
+    if (!response.ok) return [];
 
     return await response.json();
 }
@@ -85,25 +83,34 @@ export function changer_microcontroleur_user() {
 }
 
 export function charger_etat_microcontroleur_temps_reel(setMicrocontroleur) {
-    const charger = async () => {
-        const microLocal = charger_microcontroleur_local();
-        if (!microLocal?.nom) return;
+    const microLocal = charger_microcontroleur_local();
+    if (!microLocal?.nom) return () => {};
 
-        try {
-            const response = await fetch(`${API_BASE_URL}/microcontroleur/etat?microcontroleur=${encodeURIComponent(microLocal.nom)}`, {
-                credentials: 'include',
-            });
+    // 1. INIT localStorage
+    setMicrocontroleur(microLocal);
 
-            if (!response.ok) throw new Error("Erreur API");
-            const data = await response.json();
+    // 2. INIT API
+    fetch(`${API_BASE_URL}/microcontroleur/etat?microcontroleur=${encodeURIComponent(microLocal.nom)}`, {
+        credentials: 'include',
+    })
+        .then(r => r.ok ? r.json() : Promise.reject())
+        .then(data => {
             const microMisAJour = { ...microLocal, allume: Boolean(data.allume) };
             enregistrer_microcontroleur_local(microMisAJour);
             setMicrocontroleur(microMisAJour);
-        } catch {
-            setMicrocontroleur(microLocal);
-        }
+        })
+        .catch(() => {});
+
+    // 3. WebSocket
+    const canal = echo.private(`capteurs.${microLocal.nom}`);
+
+    const callback = (e) => {
+        const microMisAJour = { ...charger_microcontroleur_local(), allume: Boolean(e.allume) };
+        enregistrer_microcontroleur_local(microMisAJour);
+        setMicrocontroleur(microMisAJour);
     };
 
-    charger();
-    return setInterval(charger, INTERVALLE_TEMPS_REEL_MS);
+    canal.listen('.NouvelEtatMicrocontroleur', callback);
+
+    return () => canal.stopListening('.NouvelEtatMicrocontroleur', callback);
 }

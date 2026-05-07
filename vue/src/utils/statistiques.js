@@ -1,9 +1,9 @@
 import API_BASE_URL from './config.js';
+import echo from './echo.js';
 import { debutJourUTC, finJourUTC } from './date.js';
 
 const UNE_HEURE_EN_MINUTES = 60;
 const DOUZE_HEURES_EN_MINUTES = 12 * UNE_HEURE_EN_MINUTES;
-const INTERVALLE_TEMPS_REEL_MS = 20000;
 
 function ajouterMinutes(date, minutes) {
     return new Date(date.getTime() + minutes * 60 * 1000);
@@ -38,9 +38,10 @@ async function getApi(path) {
     return await response.json();
 }
 
-function lancerChargementTempsReel(charger) {
-    charger();
-    return setInterval(charger, INTERVALLE_TEMPS_REEL_MS);
+function obtenirCanalPrive() {
+    const nom = obtenirNomMicrocontroleur();
+    if (!nom) return null;
+    return echo.private(`capteurs.${nom}`);
 }
 
 // ============================================================
@@ -48,7 +49,11 @@ function lancerChargementTempsReel(charger) {
 // ============================================================
 
 export function charger_historique_microcontroleur(setHistorique) {
-    return lancerChargementTempsReel(async () => {
+    // 1. INIT localStorage
+    const cache = localStorage.getItem('historique_microcontroleur');
+    if (cache) { try { setHistorique(JSON.parse(cache)); } catch { /* ignore */ } }
+
+    const charger = async () => {
         try {
             const data = await getApi('/microcontroleur/historique?fenetre=12h');
             setHistorique(data);
@@ -71,7 +76,19 @@ export function charger_historique_microcontroleur(setHistorique) {
             });
             setHistorique(data);
         }
-    });
+    };
+
+    // 2. INIT API
+    charger();
+
+    // 3. WebSocket — changement d'état du micro recharge l'historique
+    const canal = obtenirCanalPrive();
+    if (!canal) return () => {};
+
+    const callback = () => charger();
+    canal.listen('.NouvelEtatMicrocontroleur', callback);
+
+    return () => canal.stopListening('.NouvelEtatMicrocontroleur', callback);
 }
 
 // ============================================================
@@ -79,21 +96,34 @@ export function charger_historique_microcontroleur(setHistorique) {
 // ============================================================
 
 export function charger_moyennes_capteurs_7j(setMoyennes) {
-    return lancerChargementTempsReel(async () => {
+    const cache = localStorage.getItem('moyennes_capteurs_7j');
+    if (cache) { try { setMoyennes(JSON.parse(cache)); } catch { /* ignore */ } }
+
+    const charger = async () => {
         try {
             const data = await getApi('/capteurs/moyennes?periode=7j');
             setMoyennes(data);
             localStorage.setItem('moyennes_capteurs_7j', JSON.stringify(data));
         } catch {
-            const data = {
+            setMoyennes({
                 temperature: { valeur: 24.3, unite: "°C" },
                 humiditeSol: { valeur: 48.7, unite: "%" },
                 luminosite: { valeur: 62.1, unite: "%" },
                 co2: { valeur: 38.4, unite: "ppm" },
-            };
-            setMoyennes(data);
+            });
         }
-    });
+    };
+
+    charger();
+
+    // Moyennes agrégées : se rafraîchit à chaque nouvelle mesure
+    const canal = obtenirCanalPrive();
+    if (!canal) return () => {};
+
+    const callback = () => charger();
+    canal.listen('.NouvelleDonneeCapteur', callback);
+
+    return () => canal.stopListening('.NouvelleDonneeCapteur', callback);
 }
 
 // ============================================================
@@ -109,38 +139,57 @@ const ETATS_CAPTEURS_SIMULES = {
 };
 
 export function charger_etat_capteur(capteur, setEtat) {
-    return lancerChargementTempsReel(async () => {
-        try {
-            const data = await getApi(`/capteurs/${capteur}/etat`);
+    const cache = localStorage.getItem(`etat_capteur_${capteur}`);
+    if (cache) { try { setEtat(JSON.parse(cache)); } catch { /* ignore */ } }
+
+    getApi(`/capteurs/${capteur}/etat`)
+        .then(data => {
             setEtat(data.etat);
             localStorage.setItem(`etat_capteur_${capteur}`, JSON.stringify(data.etat));
-        } catch {
-            const data = ETATS_CAPTEURS_SIMULES[capteur] ?? "stopped";
-            setEtat(data);
-        }
-    });
+        })
+        .catch(() => setEtat(ETATS_CAPTEURS_SIMULES[capteur] ?? "stopped"));
+
+    const canal = obtenirCanalPrive();
+    if (!canal) return () => {};
+
+    const callback = (e) => {
+        if (e.capteur !== capteur) return;
+        setEtat(e.etat);
+        localStorage.setItem(`etat_capteur_${capteur}`, JSON.stringify(e.etat));
+    };
+
+    canal.listen('.NouvelEtatCapteur', callback);
+
+    return () => canal.stopListening('.NouvelEtatCapteur', callback);
 }
 
 // ============================================================
-//  ACTIONNEURS — TEMPS D'ACTIVATION TOTAL 7 JOURS (en minutes)
+//  ACTIONNEURS — TEMPS D'ACTIVATION TOTAL 7 JOURS
 // ============================================================
 
 export function charger_temps_activation_actionneurs_7j(setTemps) {
-    return lancerChargementTempsReel(async () => {
+    const cache = localStorage.getItem('temps_activation_actionneurs_7j');
+    if (cache) { try { setTemps(JSON.parse(cache)); } catch { /* ignore */ } }
+
+    const charger = async () => {
         try {
             const data = await getApi('/actionneurs/temps-activation?periode=7j');
             setTemps(data);
             localStorage.setItem('temps_activation_actionneurs_7j', JSON.stringify(data));
         } catch {
-            const data = {
-                ventilateur: 1470,
-                pompe: 840,
-                ampoule: 2940,
-                servoMoteur: 420,
-            };
-            setTemps(data);
+            setTemps({ ventilateur: 1470, pompe: 840, ampoule: 2940, servoMoteur: 420 });
         }
-    });
+    };
+
+    charger();
+
+    const canal = obtenirCanalPrive();
+    if (!canal) return () => {};
+
+    const callback = () => charger();
+    canal.listen('.NouvelEtatActionneur', callback);
+
+    return () => canal.stopListening('.NouvelEtatActionneur', callback);
 }
 
 // ============================================================
@@ -183,7 +232,10 @@ const SCENARIOS_CAPTEURS = {
 };
 
 export function charger_historique_capteur(capteur, setHistorique) {
-    return lancerChargementTempsReel(async () => {
+    const cache = localStorage.getItem(`historique_capteur_${capteur}`);
+    if (cache) { try { setHistorique(JSON.parse(cache)); } catch { /* ignore */ } }
+
+    const charger = async () => {
         try {
             const data = await getApi(`/capteurs/${capteur}/historique?fenetre=12h`);
             setHistorique(data);
@@ -199,7 +251,21 @@ export function charger_historique_capteur(capteur, setHistorique) {
             });
             setHistorique(data);
         }
-    });
+    };
+
+    charger();
+
+    const canal = obtenirCanalPrive();
+    if (!canal) return () => {};
+
+    const callback = (e) => {
+        if (e.capteur !== capteur) return;
+        charger();
+    };
+
+    canal.listen('.NouvelEtatCapteur', callback);
+
+    return () => canal.stopListening('.NouvelEtatCapteur', callback);
 }
 
 // ============================================================
@@ -215,22 +281,35 @@ const STATS_CAPTEURS_SIMULES = {
 };
 
 export function charger_stats_capteur(capteur, setStats) {
-    return lancerChargementTempsReel(async () => {
+    const cache = localStorage.getItem(`stats_capteur_${capteur}`);
+    if (cache) { try { setStats(JSON.parse(cache)); } catch { /* ignore */ } }
+
+    const charger = async () => {
         try {
             const data = await getApi(`/capteurs/${capteur}/stats?periode=7j`);
             setStats(data);
             localStorage.setItem(`stats_capteur_${capteur}`, JSON.stringify(data));
         } catch {
-            const data = STATS_CAPTEURS_SIMULES[capteur] ?? { max: 0, min: 0, moy: 0, unite: "" };
-            setStats(data);
+            setStats(STATS_CAPTEURS_SIMULES[capteur] ?? { max: 0, min: 0, moy: 0, unite: "" });
         }
-    });
+    };
+
+    charger();
+
+    const canal = obtenirCanalPrive();
+    if (!canal) return () => {};
+
+    const callback = (e) => {
+        if (e.capteur !== capteur) return;
+        charger();
+    };
+
+    canal.listen('.NouvelleDonneeCapteur', callback);
+
+    return () => canal.stopListening('.NouvelleDonneeCapteur', callback);
 }
 
 export async function charger_mesures_capteur(capteur, dateDebut, dateFin) {
-    // dateDebut / dateFin sont des "YYYY-MM-DD" locaux (valeurs d'un <input type="date">).
-    // On les convertit en ISO UTC avant d'interroger l'API pour que le backend
-    // compare les plages dans le bon fuseau, quelle que soit la localisation du serveur.
     const debutUTC = debutJourUTC(dateDebut) ?? dateDebut;
     const finUTC   = finJourUTC(dateFin)   ?? dateFin;
 
@@ -274,7 +353,7 @@ export async function charger_mesures_capteur(capteur, dateDebut, dateFin) {
 }
 
 // ============================================================
-//  RAPPORT — HISTORIQUE ACTIONNEUR (pages rapports actionneurs)
+//  RAPPORT — HISTORIQUE ACTIONNEUR
 // ============================================================
 
 const SCENARIOS_ACTIONNEURS = {
@@ -316,7 +395,10 @@ const SCENARIOS_ACTIONNEURS = {
 };
 
 export function charger_historique_actionneur_rapport(actionneur, setHistorique) {
-    return lancerChargementTempsReel(async () => {
+    const cache = localStorage.getItem(`historique_actionneur_${actionneur}`);
+    if (cache) { try { setHistorique(JSON.parse(cache)); } catch { /* ignore */ } }
+
+    const charger = async () => {
         try {
             const data = await getApi(`/actionneurs/${actionneur}/historique?fenetre=12h`);
             setHistorique(data);
@@ -332,7 +414,21 @@ export function charger_historique_actionneur_rapport(actionneur, setHistorique)
             });
             setHistorique(data);
         }
-    });
+    };
+
+    charger();
+
+    const canal = obtenirCanalPrive();
+    if (!canal) return () => {};
+
+    const callback = (e) => {
+        if (e.actionneur !== actionneur) return;
+        charger();
+    };
+
+    canal.listen('.NouvelEtatActionneur', callback);
+
+    return () => canal.stopListening('.NouvelEtatActionneur', callback);
 }
 
 // ============================================================
@@ -340,7 +436,10 @@ export function charger_historique_actionneur_rapport(actionneur, setHistorique)
 // ============================================================
 
 export function charger_instructions_actionneur(actionneur, setInstructions) {
-    return lancerChargementTempsReel(async () => {
+    const cache = localStorage.getItem(`instructions_actionneur_${actionneur}`);
+    if (cache) { try { setInstructions(JSON.parse(cache)); } catch { /* ignore */ } }
+
+    const charger = async () => {
         try {
             const data = await getApi(`/actionneurs/${actionneur}/instructions`);
             setInstructions(data);
@@ -360,7 +459,12 @@ export function charger_instructions_actionneur(actionneur, setInstructions) {
             }));
             setInstructions(data);
         }
-    });
+    };
+
+    charger();
+
+    // Pas d'abonnement WebSocket pour les instructions — rechargé manuellement après action
+    return () => {};
 }
 
 // ============================================================
@@ -368,7 +472,10 @@ export function charger_instructions_actionneur(actionneur, setInstructions) {
 // ============================================================
 
 export function charger_grandeurs_actionneur(actionneur, setGrandeurs) {
-    return lancerChargementTempsReel(async () => {
+    const cache = localStorage.getItem(`grandeurs_actionneur_${actionneur}`);
+    if (cache) { try { setGrandeurs(JSON.parse(cache)); } catch { /* ignore */ } }
+
+    const charger = async () => {
         try {
             const data = await getApi(`/actionneurs/${actionneur}/grandeurs`);
             setGrandeurs(data);
@@ -380,8 +487,18 @@ export function charger_grandeurs_actionneur(actionneur, setGrandeurs) {
                 ampoule: { luminosite: 62 },
                 "servo-moteur": { co2: 45 },
             };
-            const data = simulations[actionneur] ?? {};
-            setGrandeurs(data);
+            setGrandeurs(simulations[actionneur] ?? {});
         }
-    });
+    };
+
+    charger();
+
+    // Grandeurs = valeurs actuelles des capteurs associés → se rafraîchit à chaque mesure
+    const canal = obtenirCanalPrive();
+    if (!canal) return () => {};
+
+    const callback = () => charger();
+    canal.listen('.NouvelleDonneeCapteur', callback);
+
+    return () => canal.stopListening('.NouvelleDonneeCapteur', callback);
 }

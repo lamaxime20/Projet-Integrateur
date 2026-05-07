@@ -26,15 +26,16 @@ function AmpouleDetails({ retourner }) {
     const [modalAction, setModalAction] = useState(null);
 
     useEffect(() => {
-        const intervals = [
+        charger_luminosite_seuils(setSeuils);
+        setMicrocontroleurAllume(microcontroleur_est_actif());
+
+        const cleanups = [
             charger_etat_ampoule(setAmpouleState),
             charger_luminosite_actuelle(setLuminosite),
             charger_historique_ampoule(setHistoriqueAmpoule),
         ];
-        charger_luminosite_seuils(setSeuils);
-        setMicrocontroleurAllume(microcontroleur_est_actif());
 
-        return () => intervals.forEach(clearInterval);
+        return () => cleanups.forEach(fn => fn());
     }, []);
 
     const retour = () => {
