@@ -1,233 +1,243 @@
 .sidebar-root {
-    --sidebar-closed: 4.25rem;
-    --sidebar-open: min(17.25rem, calc(100vw - 0.75rem));
-    --sidebar-item: 2.6rem;
-    position: fixed;
-    inset: 0 auto 0 0;
-    z-index: 20;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: var(--sidebar-closed);
-    height: 100dvh;
-    margin: 0;
-    padding: var(--space-xs);
-    min-height: 100dvh;
-    overflow: hidden;
-    background:
-        linear-gradient(180deg, rgba(249, 250, 251, 0.98) 0%, rgba(249, 250, 251, 0.95) 100%),
-        linear-gradient(180deg, rgba(46, 125, 50, 0.13), rgba(46, 125, 50, 0.06) 68%, rgba(2, 136, 209, 0.04));
-    color: var(--text-color);
-    box-shadow: 10px 0 28px rgba(8, 24, 11, 0.07);
-    transition: width 220ms ease, box-shadow 220ms ease, background-color 220ms ease;
+  --sidebar-closed: 4.25rem;
+  --sidebar-open: min(17.25rem, calc(100vw - 0.75rem));
+  --sidebar-item: 2.6rem;
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: var(--sidebar-closed);
+  height: 100dvh;
+  margin: 0;
+  padding: var(--space-xs);
+  min-height: 100dvh;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(20px);
+  color: var(--text-color);
+  box-shadow: 1px 0 0 rgba(20, 32, 19, 0.06), 12px 0 32px rgba(8, 24, 11, 0.04);
+  transition: width 220ms ease;
 }
 
 .sidebar-root:hover,
 .sidebar-root:focus-within,
 .sidebar-root.is-pinned {
-    width: var(--sidebar-open);
-    box-shadow: 16px 0 38px rgba(8, 24, 11, 0.11);
+  width: var(--sidebar-open);
 }
 
 .sidebar-ongletClassique,
 .sidebar-otherPages,
 .sidebar-header,
 .sidebar-menu {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .sidebar-ongletClassique {
-    gap: clamp(0.75rem, 2vh, 1.25rem);
-    min-width: 0;
-    min-height: 0;
+  gap: clamp(0.75rem, 2vh, 1.25rem);
+  min-width: 0;
+  min-height: 0;
 }
 
 .sidebar-otherPages {
-    gap: var(--space-2xs);
-    flex-shrink: 0;
-    margin-top: clamp(1rem, 4vh, 2.25rem);
-    padding-bottom: var(--space-2xs);
+  gap: var(--space-2xs);
+  flex-shrink: 0;
+  margin-top: clamp(1rem, 4vh, 2.25rem);
+  padding-bottom: var(--space-2xs);
+  border-top: 1px solid var(--divider);
+  padding-top: var(--space-sm);
 }
 
 .sidebar-toggle,
 .sidebar-menu a,
 .sidebar-otherPages a,
 .sidebar-otherPages button {
-    display: flex;
-    align-items: center;
-    gap: var(--space-sm);
-    width: 100%;
-    min-width: 0;
-    min-height: var(--sidebar-item);
-    border: none;
-    border-radius: var(--radius-md);
-    color: rgba(20, 32, 19, 0.76);
-    background-color: transparent;
-    font: inherit;
-    font-weight: 700;
-    text-decoration: none;
-    cursor: pointer;
-    transition: background-color 160ms ease, color 160ms ease, transform 160ms ease;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  width: 100%;
+  min-width: 0;
+  min-height: var(--sidebar-item);
+  border: none;
+  border-radius: var(--radius-md);
+  color: rgba(20, 32, 19, 0.68);
+  background: transparent;
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 160ms ease, color 160ms ease;
 }
 
 .sidebar-toggle {
-    justify-content: center;
-    align-self: flex-start;
-    width: var(--sidebar-item);
-    color: var(--secondary-color-dark);
+  justify-content: center;
+  align-self: flex-start;
+  width: var(--sidebar-item);
+  color: var(--secondary-color);
 }
 
 .sidebar-root:hover .sidebar-toggle,
 .sidebar-root:focus-within .sidebar-toggle,
 .sidebar-root.is-pinned .sidebar-toggle {
-    margin-left: auto;
+  margin-left: auto;
 }
 
 .sidebar-header {
-    gap: var(--space-xs);
-    min-width: 13rem;
-    opacity: 0;
-    transform: translateX(-0.35rem);
-    pointer-events: none;
-    transition: opacity 180ms ease, transform 180ms ease;
+  gap: var(--space-xs);
+  min-width: 13rem;
+  opacity: 0;
+  transform: translateX(-0.35rem);
+  pointer-events: none;
+  transition: opacity 180ms ease, transform 180ms ease;
 }
 
 .sidebar-root:hover .sidebar-header,
 .sidebar-root:focus-within .sidebar-header,
 .sidebar-root.is-pinned .sidebar-header {
-    opacity: 1;
-    transform: translateX(0);
-    pointer-events: auto;
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
 }
 
 .sidebar-header h1 {
-    margin: 0;
-    font-family: var(--typography-title);
-    font-size: clamp(1rem, 2.8vw, 1.15rem);
-    line-height: 1.15;
-    color: var(--secondary-color-dark);
-    text-wrap: balance;
+  margin: 0;
+  font-family: var(--typography-title);
+  font-size: clamp(1rem, 2.8vw, 1.1rem);
+  line-height: 1.15;
+  color: var(--secondary-color-dark);
+  text-wrap: balance;
 }
 
 .sidebar-connecte {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-xs);
-    width: fit-content;
-    color: rgba(20, 32, 19, 0.72);
-    font-size: 0.84rem;
-    font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  width: fit-content;
+  color: rgba(20, 32, 19, 0.62);
+  font-size: 0.82rem;
+  font-weight: 600;
 }
 
 .sidebar-connecte .choix-microcontroleur-point {
-    width: 0.55rem;
-    height: 0.55rem;
-    flex: 0 0 auto;
-    border-radius: 999px;
+  width: 0.5rem;
+  height: 0.5rem;
+  flex: 0 0 auto;
+  border-radius: 999px;
 }
 
 .sidebar-connecte .choix-microcontroleur-point.vert {
-    background-color: var(--secondary-color);
+  background: var(--secondary-color);
+  box-shadow: 0 0 0 0.2rem rgba(46, 125, 50, 0.14);
 }
 
 .sidebar-connecte .choix-microcontroleur-point.rouge {
-    background-color: var(--alertes-critique);
+  background: var(--alertes-critique);
 }
 
 .sidebar-change_microcontroleur {
-    width: fit-content;
-    min-height: 2.2rem;
-    padding: 0 var(--space-sm);
-    border: none;
-    border-radius: 999px;
-    background-color: rgba(2, 136, 209, 0.1);
-    color: var(--accent-color);
-    font: inherit;
-    font-size: 0.84rem;
-    font-weight: 700;
-    cursor: pointer;
+  width: fit-content;
+  min-height: 2rem;
+  padding: 0 var(--space-sm);
+  border: none;
+  border-radius: 999px;
+  background: rgba(2, 136, 209, 0.08);
+  color: var(--accent-color);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 160ms ease;
+}
+
+.sidebar-change_microcontroleur:hover,
+.sidebar-change_microcontroleur:focus-visible {
+  background: rgba(2, 136, 209, 0.14);
+  outline: none;
 }
 
 .sidebar-menu {
-    gap: clamp(0.35rem, 1.35vh, 0.62rem);
-    min-width: 0;
-    margin: 0;
-    padding: 0;
-    list-style: none;
+  gap: clamp(0.25rem, 1vh, 0.45rem);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .sidebar-menu li {
-    position: relative;
+  position: relative;
 }
 
 .sidebar-menu li::before {
-    content: "";
-    position: absolute;
-    left: -0.25rem;
-    top: 50%;
-    width: 0.2rem;
-    height: 1.7rem;
-    border-radius: 999px;
-    background-color: transparent;
-    transform: translateY(-50%);
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 0.18rem;
+  height: 1.5rem;
+  border-radius: 999px;
+  background: transparent;
+  transform: translateY(-50%);
+  transition: background 160ms ease;
 }
 
 .sidebar-menu li.is-active::before {
-    background-color: var(--accent-color);
+  background: var(--secondary-color);
 }
 
 .sidebar-menu a,
 .sidebar-otherPages a,
 .sidebar-otherPages button {
-    justify-content: flex-start;
-    padding: 0 var(--space-sm);
-    white-space: nowrap;
+  justify-content: flex-start;
+  padding: 0 var(--space-sm);
+  white-space: nowrap;
 }
 
 .sidebar-root:not(:hover):not(:focus-within):not(.is-pinned) .sidebar-menu a,
 .sidebar-root:not(:hover):not(:focus-within):not(.is-pinned) .sidebar-otherPages a,
 .sidebar-root:not(:hover):not(:focus-within):not(.is-pinned) .sidebar-otherPages button {
-    justify-content: center;
-    padding: 0;
+  justify-content: center;
+  padding: 0;
 }
 
 .sidebar-icon,
 .sidebar-menu .material-symbols-outlined,
 .sidebar-otherPages .material-symbols-outlined,
 .sidebar-toggle .material-symbols-outlined {
-    width: 1.6rem;
-    min-width: 1.6rem;
-    overflow: hidden;
-    font-size: 1.45rem;
-    line-height: 1;
-    text-align: center;
-    font-variation-settings: "FILL" 0, "wght" 500, "GRAD" 0, "opsz" 24;
+  width: 1.6rem;
+  min-width: 1.6rem;
+  overflow: hidden;
+  font-size: 1.4rem;
+  line-height: 1;
+  text-align: center;
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
 }
 
 .sidebar-label {
-    overflow: hidden;
-    opacity: 0;
-    max-width: 0;
-    transform: translateX(-0.25rem);
-    transition: opacity 170ms ease, max-width 220ms ease, transform 170ms ease;
+  overflow: hidden;
+  opacity: 0;
+  max-width: 0;
+  transform: translateX(-0.25rem);
+  transition: opacity 170ms ease, max-width 220ms ease, transform 170ms ease;
 }
 
 .sidebar-root:hover .sidebar-label,
 .sidebar-root:focus-within .sidebar-label,
 .sidebar-root.is-pinned .sidebar-label {
-    opacity: 1;
-    max-width: 12rem;
-    transform: translateX(0);
+  opacity: 1;
+  max-width: 12rem;
+  transform: translateX(0);
 }
 
 .sidebar-menu li.is-active a {
-    color: var(--secondary-color-dark);
+  color: var(--secondary-color-dark);
+  background: rgba(46, 125, 50, 0.06);
 }
 
 .sidebar-menu li.is-active .material-symbols-outlined {
-    color: var(--secondary-color);
-    font-variation-settings: "FILL" 1, "wght" 600, "GRAD" 0, "opsz" 24;
+  color: var(--secondary-color);
+  font-variation-settings: "FILL" 1, "wght" 600, "GRAD" 0, "opsz" 24;
 }
 
 .sidebar-toggle:hover,
@@ -237,40 +247,38 @@
 .sidebar-otherPages a:hover,
 .sidebar-otherPages a:focus-visible,
 .sidebar-otherPages button:hover,
-.sidebar-otherPages button:focus-visible,
-.sidebar-change_microcontroleur:hover,
-.sidebar-change_microcontroleur:focus-visible {
-    background-color: rgba(46, 125, 50, 0.1);
-    color: var(--secondary-color-dark);
-    outline: none;
+.sidebar-otherPages button:focus-visible {
+  background: rgba(46, 125, 50, 0.07);
+  color: var(--secondary-color-dark);
+  outline: none;
 }
 
 .sidebar-otherPages-help .material-symbols-outlined,
 .sidebar-otherPages-settings .material-symbols-outlined {
-    color: var(--accent-color);
+  color: var(--accent-color);
 }
 
 .sidebar-otherPages-logout {
-    color: rgba(211, 47, 47, 0.86);
+  color: rgba(211, 47, 47, 0.8);
 }
 
 .sidebar-otherPages-logout:hover,
 .sidebar-otherPages-logout:focus-visible {
-    background-color: rgba(211, 47, 47, 0.1);
-    color: var(--alertes-critique);
+  background: rgba(211, 47, 47, 0.06) !important;
+  color: var(--alertes-critique) !important;
 }
 
 .sidebar-otherPages button:disabled,
 .sidebar-change_microcontroleur:disabled {
-    cursor: progress;
-    opacity: 0.68;
+  cursor: progress;
+  opacity: 0.6;
 }
 
 @media (min-width: 48rem) {
-    .sidebar-root {
-        --sidebar-closed: 4.75rem;
-        --sidebar-open: 18.5rem;
-        --sidebar-item: 2.75rem;
-        padding: var(--space-sm);
-    }
+  .sidebar-root {
+    --sidebar-closed: 4.75rem;
+    --sidebar-open: 18.5rem;
+    --sidebar-item: 2.75rem;
+    padding: var(--space-sm);
+  }
 }

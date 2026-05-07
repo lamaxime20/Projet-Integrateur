@@ -1,83 +1,102 @@
 .faqCard-root {
-    display: flex;
-    flex-direction: column;
-    min-height: 100%;
-    padding: var(--space-md);
-    border-radius: var(--radius-lg);
-    background-color: var(--primary-color);
-    box-shadow: 0 16px 36px rgba(2, 136, 209, 0.08);
-    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-lg) 0;
+  border-bottom: 1px solid var(--divider);
+  transition: border-color 200ms ease;
 }
 
-.faqCard-root:hover,
-.faqCard-root:focus-within,
-.faqCard-open {
-    transform: translateY(-2px);
-    background-color: #ffffff;
-    box-shadow: 0 20px 42px rgba(2, 136, 209, 0.14);
+.faqCard-root:last-child {
+  border-bottom: none;
 }
 
 .faqCard-trigger {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-sm);
-    width: 100%;
-    padding: 0;
-    border: none;
-    background: transparent;
-    color: var(--text-color);
-    text-align: left;
-    cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--text-color);
+  text-align: left;
+  cursor: pointer;
 }
 
 .faqCard-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.75rem;
-    height: 2.75rem;
-    border-radius: 999px;
-    background-color: var(--accent-color-soft);
-    color: var(--accent-color);
-    font-size: 1.4rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 999px;
+  background: rgba(46, 125, 50, 0.08);
+  color: var(--secondary-color);
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  font-variation-settings: 'FILL' 1;
+  transition: background 200ms ease, color 200ms ease;
+}
+
+.faqCard-root:hover .faqCard-icon,
+.faqCard-open .faqCard-icon {
+  background: var(--secondary-color);
+  color: var(--primary-color);
 }
 
 .faqCard-question {
-    margin: 0;
-    font-family: var(--typography-title);
-    font-size: 1.05rem;
-    line-height: 1.35;
+  flex: 1;
+  margin: 0;
+  font-family: var(--typography-title);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--text-color);
 }
 
 .faqCard-arrow {
-    color: var(--accent-color);
-    transition: transform 0.2s ease;
+  color: rgba(20, 32, 19, 0.38);
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  transition: transform 240ms ease, color 200ms ease;
+}
+
+.faqCard-root:hover .faqCard-arrow,
+.faqCard-open .faqCard-arrow {
+  color: var(--secondary-color);
 }
 
 .faqCard-root:hover .faqCard-arrow,
 .faqCard-root:focus-within .faqCard-arrow,
 .faqCard-open .faqCard-arrow {
-    transform: rotate(180deg);
+  transform: rotate(180deg);
 }
 
 .faqCard-answer {
-    display: grid;
-    grid-template-rows: 0fr;
-    transition: grid-template-rows 0.24s ease, margin-top 0.24s ease;
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 240ms ease, margin-top 240ms ease;
 }
 
 .faqCard-root:hover .faqCard-answer,
 .faqCard-root:focus-within .faqCard-answer,
 .faqCard-open .faqCard-answer {
-    grid-template-rows: 1fr;
-    margin-top: var(--space-sm);
+  grid-template-rows: 1fr;
+  margin-top: var(--space-md);
 }
 
 .faqCard-answer p {
-    min-height: 0;
-    overflow: hidden;
-    margin: 0;
-    color: rgba(20, 32, 19, 0.84);
-    line-height: 1.65;
+  min-height: 0;
+  overflow: hidden;
+  margin: 0;
+  padding-left: calc(2.4rem + var(--space-md));
+  color: rgba(20, 32, 19, 0.74);
+  line-height: 1.7;
+  font-size: 0.96rem;
+}
+
+@media (min-width: 768px) {
+  .principale-faq-grid .faqCard-root:nth-child(n+2) {
+    border-top: none;
+  }
 }

@@ -23,10 +23,8 @@
 }
 
 .signup-code-field input:focus {
-    outline: 2px solid rgba(2, 136, 209, 0.18);
-    box-shadow:
-        0 0 0 4px rgba(2, 136, 209, 0.1),
-        0 14px 24px rgba(2, 136, 209, 0.12);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(2, 136, 209, 0.18);
 }
 
 .signup-visually-hidden {

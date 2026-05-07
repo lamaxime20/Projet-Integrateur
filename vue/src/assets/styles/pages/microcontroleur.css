@@ -1,179 +1,177 @@
 .microcontroleur-root {
-    min-height: 100vh;
-    min-height: 100dvh;
-    padding: var(--space-lg);
-    background:
-        radial-gradient(circle at top left, rgba(46, 125, 50, 0.08), transparent 24%),
-        radial-gradient(circle at bottom right, rgba(2, 136, 209, 0.06), transparent 28%),
-        linear-gradient(180deg, #f8fbf8 0%, #eef5ef 100%);
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: var(--space-lg);
+  background: linear-gradient(165deg, #f4f8f4 0%, #edf5ef 60%, #e8f1ff 100%);
 }
 
 .microcontroleur-shell {
-    width: min(100%, var(--container-md));
-    min-height: calc(100dvh - (var(--space-lg) * 2));
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: var(--space-xl);
+  width: min(100%, var(--container-md));
+  min-height: calc(100dvh - (var(--space-lg) * 2));
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-2xl);
 }
 
 .microcontroleur-intro {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
 }
 
 .microcontroleur-kicker {
-    margin: 0;
-    color: var(--secondary-color);
-    font-size: 0.85rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
+  margin: 0;
+  color: var(--secondary-color);
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
 .microcontroleur-intro h1 {
-    margin: 0;
-    font-family: var(--typography-title);
-    font-size: clamp(2rem, 6vw, 3.3rem);
-    line-height: 1.04;
-    text-wrap: balance;
+  margin: 0;
+  font-family: var(--typography-title);
+  font-size: clamp(2rem, 6vw, 3.4rem);
+  line-height: 1.04;
+  text-wrap: balance;
+  letter-spacing: -0.02em;
 }
 
 .microcontroleur-lead,
 .microcontroleur-helper p {
-    margin: 0;
-    max-width: 42rem;
-    color: rgba(20, 32, 19, 0.74);
-    line-height: 1.65;
+  margin: 0;
+  max-width: 42rem;
+  color: rgba(20, 32, 19, 0.68);
+  line-height: 1.7;
 }
 
 .microcontroleur-helper {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-xs);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
 }
 
 .microcontroleur-helper a {
-    width: fit-content;
-    color: var(--accent-color);
-    font-weight: 700;
-    text-decoration: none;
+  width: fit-content;
+  color: var(--accent-color);
+  font-weight: 700;
+  text-decoration: none;
 }
 
 .microcontroleur-helper a:hover,
 .microcontroleur-helper a:focus-visible {
-    color: var(--secondary-color);
+  color: var(--secondary-color);
 }
 
 .microcontroleur-form {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+  padding: clamp(1.5rem, 4vw, 2.25rem);
+  background: rgba(255, 255, 255, 0.84);
+  backdrop-filter: blur(20px);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-float);
 }
 
 .microcontroleur-inputs {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
 }
 
 .microcontroleur-input {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-xs);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
 }
 
 .microcontroleur-input span {
-    color: rgba(20, 32, 19, 0.8);
-    font-size: 0.92rem;
-    font-weight: 700;
+  color: rgba(20, 32, 19, 0.78);
+  font-size: 0.88rem;
+  font-weight: 700;
 }
 
 .microcontroleur-input input {
-    width: 100%;
-    min-height: 3.4rem;
-    padding: 0 1rem;
-    border: none;
-    border-radius: 1rem;
-    background: rgba(255, 255, 255, 0.82);
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.9),
-        0 12px 24px rgba(20, 32, 19, 0.06);
-    color: var(--text-color);
-    font: inherit;
-    transition: box-shadow 160ms ease, transform 160ms ease;
+  width: 100%;
+  min-height: 3.25rem;
+  padding: 0 1rem;
+  border: none;
+  border-radius: var(--radius-md);
+  background: rgba(20, 32, 19, 0.04);
+  color: var(--text-color);
+  font: inherit;
+  transition: background 160ms ease, box-shadow 160ms ease;
 }
 
 .microcontroleur-input input::placeholder {
-    color: rgba(20, 32, 19, 0.42);
+  color: rgba(20, 32, 19, 0.36);
 }
 
 .microcontroleur-input input:focus {
-    outline: 2px solid rgba(2, 136, 209, 0.18);
-    box-shadow:
-        0 0 0 4px rgba(2, 136, 209, 0.08),
-        0 16px 28px rgba(2, 136, 209, 0.12);
-    transform: translateY(-1px);
+  outline: none;
+  background: rgba(2, 136, 209, 0.06);
+  box-shadow: 0 0 0 3px rgba(2, 136, 209, 0.14);
 }
 
 .microcontroleur-submit {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
 }
 
 .microcontroleur-btn-submit {
-    min-height: 3.35rem;
-    width: 100%;
-    border: none;
-    border-radius: 999px;
-    background: linear-gradient(145deg, #2e7d32 0%, #1f5a23 100%);
-    color: var(--text-color-inverse);
-    font: inherit;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: 0 16px 28px rgba(46, 125, 50, 0.18);
-    transition: transform 160ms ease, box-shadow 160ms ease, opacity 160ms ease;
+  min-height: 3.25rem;
+  width: 100%;
+  border: none;
+  border-radius: var(--radius-md);
+  background: linear-gradient(145deg, var(--secondary-color) 0%, var(--secondary-color-dark) 100%);
+  color: var(--text-color-inverse);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--shadow-btn);
+  transition: transform 160ms ease, box-shadow 160ms ease;
 }
 
 .microcontroleur-btn-submit:hover:not(:disabled),
 .microcontroleur-btn-submit:focus-visible:not(:disabled) {
-    transform: translateY(-1px);
-    box-shadow: 0 18px 30px rgba(46, 125, 50, 0.22);
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px rgba(46, 125, 50, 0.28);
+  outline: none;
 }
 
 .microcontroleur-btn-submit:disabled {
-    opacity: 0.72;
-    cursor: progress;
+  opacity: 0.68;
+  cursor: progress;
 }
 
 .microcontroleur-erreur {
-    min-height: 1.1rem;
-    margin: 0;
-    color: var(--alertes-critique);
-    font-size: 0.82rem;
-    line-height: 1.4;
+  min-height: 1.1rem;
+  margin: 0;
+  color: var(--alertes-critique);
+  font-size: 0.82rem;
+  line-height: 1.4;
 }
 
 @media (min-width: 48rem) {
-    .microcontroleur-root {
-        padding: var(--space-2xl);
-    }
+  .microcontroleur-root {
+    padding: var(--space-2xl);
+  }
 
-    .microcontroleur-shell {
-        min-height: calc(100dvh - (var(--space-2xl) * 2));
-        gap: var(--space-2xl);
-    }
+  .microcontroleur-shell {
+    min-height: calc(100dvh - (var(--space-2xl) * 2));
+  }
 
-    .microcontroleur-inputs {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        display: grid;
-    }
+  .microcontroleur-inputs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 
-    .microcontroleur-btn-submit {
-        width: auto;
-        min-width: 14rem;
-    }
+  .microcontroleur-btn-submit {
+    width: auto;
+    min-width: 14rem;
+  }
 }

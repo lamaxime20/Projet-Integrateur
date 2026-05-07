@@ -1,73 +1,80 @@
 .actionneur-root {
-    display: flex;
-    flex-direction: column;
-    gap: clamp(1.5rem, 4vw, 2.75rem);
-    width: min(100%, var(--container-lg));
-    min-height: 100%;
-    margin: 0 auto;
-    color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.5rem, 4vw, 2.5rem);
+  width: min(100%, var(--container-lg));
+  min-height: 100%;
+  margin: 0 auto;
+  color: var(--text-color);
 }
 
+/* ── En-tête ── */
+
 .actionneur-header {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-sm);
-    max-width: 46rem;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  max-width: 46rem;
+  padding-bottom: var(--space-xl);
+  border-bottom: 1px solid var(--divider);
 }
 
 .actionneur-titre {
-    margin: 0;
-    color: var(--secondary-color-dark);
-    font-family: var(--typography-title);
-    font-size: clamp(1.9rem, 7vw, 3.35rem);
-    line-height: 1.04;
+  margin: 0;
+  color: var(--secondary-color-dark);
+  font-family: var(--typography-title);
+  font-size: clamp(1.9rem, 7vw, 3.35rem);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
 }
 
 .actionneur-titre::after {
-    content: "";
-    display: block;
-    width: min(8rem, 32vw);
-    height: 0.28rem;
-    margin-top: var(--space-sm);
-    border-radius: 999px;
-    background: linear-gradient(90deg, var(--secondary-color) 0 72%, var(--accent-color) 72% 100%);
+  content: "";
+  display: block;
+  width: min(5rem, 28vw);
+  height: 0.2rem;
+  margin-top: var(--space-sm);
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--secondary-color) 0 68%, var(--accent-color) 68% 100%);
 }
 
 .actionneur-header p {
-    margin: 0;
-    color: rgba(20, 32, 19, 0.72);
-    font-size: clamp(0.95rem, 2.5vw, 1.05rem);
-    line-height: 1.65;
+  margin: 0;
+  color: rgba(20, 32, 19, 0.64);
+  font-size: clamp(0.9rem, 2.5vw, 1rem);
+  line-height: 1.7;
 }
 
+/* ── Grille ── */
+
 .actionneur-content {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-md);
-    width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  width: 100%;
+  border-top: 1px solid var(--divider);
 }
+
+/* ── Items ── */
 
 .actionneur-ventilateur,
 .actionneur-pompe,
 .actionneur-ampoule,
 .actionneur-servo-moteur {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: var(--space-md);
-    min-height: 10.5rem;
-    padding: var(--space-lg);
-    border: none;
-    border-radius: var(--radius-md);
-    background:
-        linear-gradient(145deg, rgba(255, 255, 255, 0.88), rgba(249, 250, 251, 0.66)),
-        linear-gradient(145deg, rgba(46, 125, 50, 0.11), rgba(2, 136, 209, 0.045));
-    color: var(--text-color);
-    box-shadow: 0 18px 34px rgba(8, 24, 11, 0.08);
-    cursor: pointer;
-    text-align: left;
-    transition: transform 170ms ease, box-shadow 170ms ease, background-color 170ms ease;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  min-height: 5.5rem;
+  padding: var(--space-lg) 0;
+  border: none;
+  border-bottom: 1px solid var(--divider);
+  background: transparent;
+  color: var(--text-color);
+  cursor: pointer;
+  text-align: left;
+  transition: background 160ms ease, padding-left 160ms ease;
 }
 
 .actionneur-ventilateur:hover,
@@ -78,105 +85,133 @@
 .actionneur-ampoule:focus-visible,
 .actionneur-servo-moteur:hover,
 .actionneur-servo-moteur:focus-visible {
-    transform: translateY(-0.18rem);
-    box-shadow: 0 20px 38px rgba(8, 24, 11, 0.11);
-    outline: none;
+  background: rgba(46, 125, 50, 0.03);
+  padding-left: var(--space-sm);
+  outline: none;
 }
 
 .actionneur-ventilateur > .material-symbols-outlined,
 .actionneur-pompe > .material-symbols-outlined,
 .actionneur-ampoule > .material-symbols-outlined,
 .actionneur-servo-moteur > .material-symbols-outlined {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.9rem;
-    height: 2.9rem;
-    border-radius: 999px;
-    background-color: rgba(46, 125, 50, 0.1);
-    color: var(--secondary-color-dark);
-    font-size: 1.8rem;
-    font-variation-settings: "FILL" 0, "wght" 500, "GRAD" 0, "opsz" 24;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 999px;
+  background: rgba(46, 125, 50, 0.08);
+  color: var(--secondary-color-dark);
+  font-size: 1.65rem;
+  flex-shrink: 0;
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+  transition: background 160ms ease, color 160ms ease;
+}
+
+.actionneur-ventilateur:hover > .material-symbols-outlined,
+.actionneur-pompe:hover > .material-symbols-outlined,
+.actionneur-ampoule:hover > .material-symbols-outlined,
+.actionneur-servo-moteur:hover > .material-symbols-outlined {
+  background: var(--secondary-color);
+  color: var(--primary-color);
 }
 
 .actionneur-ventilateur h2,
 .actionneur-pompe h2,
 .actionneur-ampoule h2,
 .actionneur-servo-moteur h2 {
-    margin: 0;
-    color: var(--secondary-color-dark);
-    font-family: var(--typography-title);
-    font-size: clamp(1.1rem, 4vw, 1.45rem);
-    line-height: 1.1;
+  margin: 0;
+  color: var(--text-color);
+  font-family: var(--typography-title);
+  font-size: clamp(1rem, 3.5vw, 1.25rem);
+  line-height: 1.15;
+  flex: 1;
 }
+
+/* ── État ── */
 
 .actionneur-ventilateur-state,
 .actionneur-pompe-state,
 .actionneur-ampoule-state,
 .actionneur-servo-moteur-state {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-xs);
-    min-height: 1.65rem;
-    color: rgba(20, 32, 19, 0.7);
-    font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  min-height: 1.6rem;
+  color: rgba(20, 32, 19, 0.62);
+  font-weight: 700;
+  font-size: 0.9rem;
 }
 
 .actionneur-ventilateur-state p,
 .actionneur-pompe-state p,
 .actionneur-ampoule-state p,
 .actionneur-servo-moteur-state p {
-    margin: 0;
-    font-size: 0.92rem;
+  margin: 0;
+  font-size: 0.88rem;
 }
 
 .actionneur-point-lumineux {
-    width: 0.72rem;
-    height: 0.72rem;
-    flex: 0 0 auto;
-    border-radius: 999px;
-    background-color: rgba(20, 32, 19, 0.2);
+  width: 0.62rem;
+  height: 0.62rem;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: rgba(20, 32, 19, 0.18);
 }
 
 .actionneur-point-lumineux.vert {
-    background-color: var(--secondary-color);
-    box-shadow: 0 0 0 0.28rem rgba(46, 125, 50, 0.12);
+  background: var(--secondary-color);
+  box-shadow: 0 0 0 0.25rem rgba(46, 125, 50, 0.12);
 }
 
 .actionneur-point-lumineux.orange {
-    background-color: var(--alertes-moyen);
-    box-shadow: 0 0 0 0.28rem rgba(251, 192, 45, 0.14);
+  background: var(--alertes-moyen);
+  box-shadow: 0 0 0 0.25rem rgba(251, 192, 45, 0.14);
 }
 
 .actionneur-point-lumineux.rouge {
-    background-color: var(--alertes-critique);
-    box-shadow: 0 0 0 0.28rem rgba(211, 47, 47, 0.12);
+  background: var(--alertes-critique);
+  box-shadow: 0 0 0 0.25rem rgba(211, 47, 47, 0.12);
 }
+
+/* ── Retour ── */
 
 .actionneur-retour {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: fit-content;
-    min-height: 2.65rem;
-    padding: 0 var(--space-md);
-    border: none;
-    border-radius: 999px;
-    background-color: rgba(46, 125, 50, 0.1);
-    color: var(--secondary-color-dark);
-    font: inherit;
-    font-weight: 700;
-    cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  width: fit-content;
+  min-height: 2.6rem;
+  padding: 0 var(--space-md);
+  border: none;
+  border-radius: 999px;
+  background: rgba(46, 125, 50, 0.08);
+  color: var(--secondary-color-dark);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 160ms ease, transform 160ms ease;
 }
 
+.actionneur-retour:hover,
+.actionneur-retour:focus-visible {
+  background: rgba(46, 125, 50, 0.14);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+/* ── Responsive ── */
+
 @media (min-width: 42rem) {
-    .actionneur-content {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
+  .actionneur-content {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 var(--space-xl);
+  }
 }
 
 @media (min-width: 72rem) {
-    .actionneur-content {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
+  .actionneur-content {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
 }

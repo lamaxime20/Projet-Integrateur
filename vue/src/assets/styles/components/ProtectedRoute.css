@@ -1,17 +1,20 @@
 .auth-loading-screen {
-    min-height: 100vh;
-    display: grid;
-    place-items: center;
-    padding: var(--space-xl);
-    background: linear-gradient(180deg, #f7fbf4 0%, #edf7ee 100%);
-    color: var(--text-color);
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: var(--space-xl);
+  background: linear-gradient(165deg, #f4f8f4 0%, #edf5ef 60%, #e8f1ff 100%);
+  color: var(--text-color);
 }
 
 .auth-loading-screen p {
-    margin: 0;
-    padding: var(--space-lg) var(--space-xl);
-    border-radius: var(--radius-md);
-    background-color: var(--primary-color-strong-transparent);
-    box-shadow: var(--shadow-soft);
-    text-align: center;
+  margin: 0;
+  padding: var(--space-lg) var(--space-xl);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.84);
+  backdrop-filter: blur(20px);
+  box-shadow: var(--shadow-float);
+  text-align: center;
+  font-weight: 600;
+  color: rgba(20, 32, 19, 0.72);
 }
