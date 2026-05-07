@@ -1,4 +1,5 @@
 import Sidebar from "./sidebar";
+import Dashboard from "./dashboard";
 import Actionneur from "./actionneur";
 import Statistiques from "./statistiques";
 import Seuils from "./seuils";
@@ -13,7 +14,7 @@ function Application_pricipale({onglet = DASHBOARD}) {
                 ongletActif={onglet}
             />
             <div className="application_principale-content">
-                {onglet === DASHBOARD && <h1>Dashboard</h1>}
+                {onglet === DASHBOARD && <Dashboard />}
                 {onglet === ACTIONNEUR && <Actionneur />}
                 {onglet === SEUIL && <Seuils />}
                 {onglet === STATISTIQUE && <Statistiques />}

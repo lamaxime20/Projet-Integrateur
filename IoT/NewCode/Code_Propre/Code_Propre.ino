@@ -16,8 +16,8 @@
 // ============================================================
 // CONFIGURATION
 // ============================================================
-const char* ssid        = "########";
-const char* password    = "#@zEBnohINber767505@#";
+const char* ssid        = "MTN HomeBox_964553";
+const char* password    = "25087CBF";
 const char* apiUrl      = "https://amused-presence-production-a3ec.up.railway.app/api/device/token";
 const char* mqtt_server = "b1d946f5edb84d23ade6058bd316610b.s1.eu.hivemq.cloud";
 const int   mqtt_port   = 8883;
@@ -65,7 +65,7 @@ struct Seuils {
   float hum_min  = 30.0f;   // % — hum < min  → pompe ON
   float hum_max  = 70.0f;   // % — hum > max  → pompe OFF
   float temp_min = 18.0f;   // °C — temp < min → ventilateur OFF
-  float temp_max = 35.0f;   // °C — temp > max → ventilateur ON
+  float temp_max = 28.0f;   // °C — temp > max → ventilateur ON
   float co2_min  = 30.0f;   // % — co2 < min  → porte fermée
   float co2_max  = 70.0f;   // % — co2 > max  → porte ouverte
 };

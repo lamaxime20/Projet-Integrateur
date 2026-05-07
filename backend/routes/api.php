@@ -10,6 +10,7 @@ use App\Http\Controllers\SeuilController;
 use App\Http\Controllers\RealtimeDataController;
 use App\Http\Controllers\RapportController;
 use App\Http\Controllers\AlerteController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TestMailController;
 
 // Validation intégration email Brevo — à retirer en production
@@ -39,6 +40,8 @@ Route::post('/microcontroleurs/create', [MicrocontroleurController::class, 'enre
 
 // Microcontroleur routes (cookie auth required)
 Route::middleware('user.token')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index']);
+
     Route::post('/microcontroleurs', [MicrocontroleurController::class, 'enregistrer']);
     Route::get('/microcontroleurs', [MicrocontroleurController::class, 'liste']);
     Route::get('/microcontroleurs/{nom}', [MicrocontroleurController::class, 'charger']);

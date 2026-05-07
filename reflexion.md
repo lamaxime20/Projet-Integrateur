@@ -470,17 +470,16 @@ Cette section permet de passer de la lecture à l'action.
 
 État des Actionneurs : Des cartes affichant le statut actuel (Allumé/Éteint) de la pompe, du ventilateur et de l'éclairage.
 Commandes Manuelles : Des boutons permettant d'envoyer des instructions immédiates (ex: "Allumer pompe pendant 60s") via MQTT.
-Gestion des Seuils : Un formulaire pour définir les limites critiques (ex: si Humidité < 30% -> Pompe ON) qui seront synchronisées avec l'ESP32.
 3. Analyses et Rapports (Statistiques)
 Pour aider l'agriculteur à prendre des décisions basées sur les données.
 
-Graphe de Courbe Interactif : Visualisation de l'évolution des mesures (température, humidité) sur les dernières 24h ou la semaine.
+Graphe de Courbe Interactif : Visualisation de l'évolution des mesures (température, humidité_sol, lumiere, taux co2) sur les dernières 24h ou la semaine.
 Graphe d'Activité du Microcontrôleur : Un graphique dédié indiquant les périodes d'activité/inactivité du système.
 Générateur de Rapports : Un module pour exporter les données en PDF (avec graphes) ou CSV (historique brut des états) pour une analyse externe.
 4. Alertes et Historique
 Pour la traçabilité et la réactivité.
 
-Centre de Notifications : Un flux d'alertes en temps réel (ex: "Alerte : Température trop élevée !") via WebSockets.
+Centre de Notifications : Un flux d'alertes en temps réel (ex: "Alerte : Température trop élevée !").
 Journal des Événements : Un tableau filtrable listant toutes les actions passées (ex: "Pompe activée automatiquement à 14:02").
 5. Expérience Utilisateur (UI/UX)
 Design Responsive : Une interface qui s'adapte parfaitement au mobile (pour l'agriculteur sur le terrain) et au desktop (pour l'analyse au bureau).
