@@ -1,15 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { 
     charger_seuils_actuels, 
-    enregistrer_nouveau_seuil
+    enregistrer_nouveau_seuil,
+    seuil_est_valide
 } from '../../utils/seuils';
 import { charger_microcontroleur_local } from '../../utils/microcontroleur';
-import '../../assets/styles/components/application/seuils.css'
-
-const DEFAULT_MICROCONTROLEUR_ID = charger_microcontroleur_local();
+import '../../assets/styles/components/application/Seuils.css'
 
 const Seuils = ({ microcontroleurId }) => {
-    const controllerId = microcontroleurId || DEFAULT_MICROCONTROLEUR_ID;
+    const controllerId = useMemo(() => {
+        if (typeof microcontroleurId === 'string') return microcontroleurId;
+        if (microcontroleurId?.nom) return microcontroleurId.nom;
+
+        return charger_microcontroleur_local()?.nom ?? '';
+    }, [microcontroleurId]);
+
     const [capteurs, setCapteurs] = useState([]);
     const [selectedCapteur, setSelectedCapteur] = useState(null);
     const [formValues, setFormValues] = useState({ min: 0, max: 0 });
@@ -23,14 +28,21 @@ const Seuils = ({ microcontroleurId }) => {
 
     const initialiserDonnees = async () => {
         setLoading(true);
+        setMessage({ type: '', text: '' });
+
         try {
             const dataSeuils = await charger_seuils_actuels(controllerId);
             setCapteurs(dataSeuils);
             if (dataSeuils.length > 0) {
-                selectCapteur(dataSeuils[0]);
+                const seuilActif = dataSeuils.find(seuil => seuil.id === selectedCapteur?.id) || dataSeuils[0];
+                selectCapteur(seuilActif);
+            } else {
+                setSelectedCapteur(null);
             }
         } catch (error) {
-            setMessage({ type: 'error', text: 'Erreur lors du chargement des données.' });
+            setCapteurs([]);
+            setSelectedCapteur(null);
+            setMessage({ type: 'error', text: error.message || 'Erreur lors du chargement des données.' });
         } finally {
             setLoading(false);
         }
@@ -56,6 +68,10 @@ const Seuils = ({ microcontroleurId }) => {
         setIsSaving(true);
 
         try {
+            if (!seuil_est_valide(formValues.min, formValues.max)) {
+                throw new Error('La valeur minimale doit être inférieure à la valeur maximale.');
+            }
+
             const result = await enregistrer_nouveau_seuil({
                 seuil_id: selectedCapteur.id,
                 valeur_min: parseFloat(formValues.min),
@@ -79,44 +95,76 @@ const Seuils = ({ microcontroleurId }) => {
         }
     };
 
-    if (loading) return <div className="loading-state">Chargement des paramètres...</div>;
+    const afficherSquelette = loading && capteurs.length === 0;
 
     return (
         <div className="seuils-container">
             <header className="seuils-header">
-                <h1>Configuration des Seuils d'Activation</h1>
-                <p>Définissez les limites de fonctionnement pour vos capteurs et actionneurs.</p>
+                <div>
+                    <p className="seuils-eyebrow">Automatisation agricole</p>
+                    <h1>Seuils d’activation</h1>
+                    <p>Réglez les limites qui pilotent les actionneurs et synchronisez-les avec le microcontrôleur.</p>
+                </div>
+                <button
+                    type="button"
+                    className="seuils-refresh"
+                    onClick={initialiserDonnees}
+                    disabled={loading || isSaving}
+                    aria-label="Rafraîchir les seuils"
+                >
+                    <i className={`fa-solid fa-rotate${loading ? ' fa-spin' : ''}`} aria-hidden="true"></i>
+                </button>
             </header>
 
             <div className="seuils-grid">
-                {/* Section Sélection et Formulaire */}
-                <section className="config-section card">
-                    <div className="capteurs-selector">
-                        {capteurs.map(c => (
-                            <button 
-                                key={c.id}
-                                className={`capteur-btn ${selectedCapteur?.id === c.id ? 'active' : ''}`}
-                                onClick={() => selectCapteur(c)}
-                                disabled={isSaving}
-                            >
-                                <span className="material-symbols-outlined" aria-hidden="true">
-                                    {c.code === 'temperature' ? 'device_thermostat' 
-                                        : c.code === 'humidite_sol' ? 'water_drop' 
-                                        : c.code === 'co2' ? 'air' 
-                                        : 'light_mode'}
-                                </span>
-                                <span>{c.nom}</span>
-                            </button>
-                        ))}
+                <section className="seuils-panel seuils-selection">
+                    <div className="seuils-panel-heading">
+                        <h2>Capteurs</h2>
+                        <span>{capteurs.length} seuils</span>
                     </div>
 
-                    {selectedCapteur && (
+                    {afficherSquelette ? (
+                        <div className="seuils-skeleton-list" aria-label="Chargement des seuils">
+                            {[1, 2, 3, 4].map(item => (
+                                <div className="seuils-skeleton-item" key={item}></div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="capteurs-selector">
+                            {capteurs.map(c => (
+                                <button
+                                    type="button"
+                                    key={c.id}
+                                    className={`capteur-btn ${selectedCapteur?.id === c.id ? 'active' : ''}`}
+                                    onClick={() => selectCapteur(c)}
+                                    disabled={isSaving}
+                                >
+                                    <i className={c.icone} aria-hidden="true"></i>
+                                    <span>{c.nom}</span>
+                                    <small>{c.valeur_min} - {c.valeur_max} {c.unite}</small>
+                                </button>
+                            ))}
+                        </div>
+                    )}
+                </section>
+
+                <section className="seuils-panel seuils-edition">
+                    {selectedCapteur ? (
                         <form className="seuils-form" onSubmit={handleSave}>
-                            <h3>Réglages pour : {selectedCapteur.nom}</h3>
+                            <div className="seuils-form-title">
+                                <span className="seuils-icon-wrap">
+                                    <i className={selectedCapteur.icone} aria-hidden="true"></i>
+                                </span>
+                                <div>
+                                    <h2>{selectedCapteur.nom}</h2>
+                                    <p>Valeurs utilisées par les automatismes du système.</p>
+                                </div>
+                            </div>
                             
                             <div className="input-group">
-                                <label>Seuil Minimal ({selectedCapteur.unite})</label>
+                                <label htmlFor="seuil-min">Seuil minimal ({selectedCapteur.unite})</label>
                                 <input 
+                                    id="seuil-min"
                                     type="number" 
                                     step="0.1"
                                     value={formValues.min} 
@@ -127,8 +175,9 @@ const Seuils = ({ microcontroleurId }) => {
                             </div>
 
                             <div className="input-group">
-                                <label>Seuil Maximal ({selectedCapteur.unite})</label>
+                                <label htmlFor="seuil-max">Seuil maximal ({selectedCapteur.unite})</label>
                                 <input 
+                                    id="seuil-max"
                                     type="number" 
                                     step="0.1"
                                     value={formValues.max} 
@@ -140,18 +189,22 @@ const Seuils = ({ microcontroleurId }) => {
 
                             {message.text && (
                                 <div className={`alert-message ${message.type}`}>
-                                    <span className="material-symbols-outlined" aria-hidden="true">
-                                        {message.type === 'success' ? 'check_circle' : 'warning'}
-                                    </span>
-                                    {message.text}
+                                    <i className={`fa-solid ${message.type === 'success' ? 'fa-circle-check' : 'fa-triangle-exclamation'}`} aria-hidden="true"></i>
+                                    <span>{message.text}</span>
                                 </div>
                             )}
 
                             <button type="submit" className="save-btn" disabled={isSaving}>
-                                <span className="material-symbols-outlined" aria-hidden="true">save</span>
+                                <i className={`fa-solid ${isSaving ? 'fa-circle-notch fa-spin' : 'fa-floppy-disk'}`} aria-hidden="true"></i>
                                 {isSaving ? "Enregistrement..." : "Enregistrer les modifications"}
                             </button>
                         </form>
+                    ) : (
+                        <div className="seuils-empty">
+                            <i className="fa-solid fa-sliders" aria-hidden="true"></i>
+                            <h2>Aucun seuil disponible</h2>
+                            {message.text && <p>{message.text}</p>}
+                        </div>
                     )}
                 </section>
             </div>

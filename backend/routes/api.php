@@ -48,6 +48,8 @@ Route::middleware('user.token')->group(function () {
     Route::get('/seuils/pompe', [SeuilController::class, 'pompe']);
     Route::get('/seuils/luminosite', [SeuilController::class, 'luminosite']);
     Route::get('/seuils/co2', [SeuilController::class, 'co2']);
+    Route::get('/seuils', [SeuilController::class, 'liste']);
+    Route::post('/seuils', [SeuilController::class, 'enregistrer']);
 
     Route::get('/notifications', [AlerteController::class, 'liste']);
     Route::patch('/notifications/toutes/lues', [AlerteController::class, 'marquerToutesCommeLues']);
