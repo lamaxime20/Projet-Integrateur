@@ -82,11 +82,12 @@ function ServoMoteurDetails({ retourner }) {
                     <span className="material-symbols-outlined" aria-hidden="true">arrow_back</span>
                     Retour
                 </button>
-                <h1 className="servoMoteurDetails-titre">Porte</h1>
+                <p className="servoMoteurDetails-eyebrow">Air et CO2</p>
+                <h1 className="servoMoteurDetails-titre">Porte de ventilation</h1>
             </header>
             <div className="servoMoteurDetails-content">
                 <section className="servoMoteurDetails-state-graph">
-                    <a href="#">Voir plus</a>
+                    <a href="#">Historique complet</a>
                     <div className="servoMoteurDetails-graph">
                         <GrapheBatonnet
                             historique={historiqueServoMoteur}
@@ -116,7 +117,7 @@ function ServoMoteurDetails({ retourner }) {
                     <div className="servoMoteurDetails-instruction">
                         {servoMoteurState === "running" &&
                             <>
-                                <p>La porte est ouverte</p>
+                                <p>La porte ventile la serre</p>
                                 <button
                                     type="button"
                                     onClick={() => handleOpenModal("arreter")}
@@ -130,7 +131,7 @@ function ServoMoteurDetails({ retourner }) {
 
                         {servoMoteurState === "stopped" &&
                             <>
-                                <p>La porte est fermée</p>
+                                <p>La porte garde l’air stable</p>
                                 <button
                                     type="button"
                                     onClick={() => handleOpenModal("allumer")}

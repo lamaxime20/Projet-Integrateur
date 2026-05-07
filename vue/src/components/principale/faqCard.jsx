@@ -18,13 +18,13 @@ function FaqCard({ icon, question, answer }) {
                 aria-controls={answerId}
                 onClick={() => setIsOpen((previous) => !previous)}
             >
-                <span className="material-symbols-outlined faqCard-icon" aria-hidden="true">
-                    {icon}
+                <span className="faqCard-icon-wrap">
+                    <span className="material-symbols-outlined faqCard-icon" aria-hidden="true">
+                        {icon}
+                    </span>
                 </span>
                 <span className="faqCard-question">{question}</span>
-                <span className="material-symbols-outlined faqCard-arrow" aria-hidden="true">
-                    keyboard_arrow_down
-                </span>
+                <span className="material-symbols-outlined faqCard-arrow" aria-hidden="true">add</span>
             </button>
             <div id={answerId} className="faqCard-answer">
                 <p>{answer}</p>

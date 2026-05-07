@@ -9,7 +9,7 @@ function ProtectedRoute() {
     if (isLoading) {
         return (
             <main className="auth-loading-screen">
-                <p>Vérification de la session en cours...</p>
+                <p>Ouverture sécurisée de la serre...</p>
             </main>
         );
     }

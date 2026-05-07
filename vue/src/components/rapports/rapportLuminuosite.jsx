@@ -52,8 +52,8 @@ function RapportLuminuosite() {
                         <span className="material-symbols-outlined" aria-hidden="true">arrow_back</span>
                         Retour
                     </button>
-                    <h1 className="rapport-titre">Rapport Luminosité</h1>
-                    <p className="rapport-sous-titre">Luminosité — capteur LDR (GPIO 39)</p>
+                    <h1 className="rapport-titre">Lumière de culture</h1>
+                    <p className="rapport-sous-titre">Historique de luminosité pour comprendre l’exposition de la serre.</p>
                 </header>
 
                 <section className="rapport-section">

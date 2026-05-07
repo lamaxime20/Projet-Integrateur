@@ -13,7 +13,7 @@ function Application({onglet = DASHBOARD}) {
     const [microcontroleur, setMicrocontroleur] = useState(charger_microcontroleur_local());
 
     return (
-        <main className="application-root">
+        <main className="application-root" data-experience="serre-intelligente">
             {microcontroleur ? (
                 <Application_pricipale onglet={onglet} />
             ):(

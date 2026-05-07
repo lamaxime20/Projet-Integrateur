@@ -138,15 +138,16 @@ function Statistiques() {
     return (
         <div className="statistiques-root">
             <header className="statistiques-header">
-                <h1 className="statistiques-titre">Statistiques</h1>
-                <p>Analyse les données de ton installation sur la période souhaitée et génère des rapports.</p>
+                <p className="statistiques-eyebrow">Historique de culture</p>
+                <h1 className="statistiques-titre">Tendances et rapports</h1>
+                <p>Comprends l’évolution de la serre et exporte les données utiles.</p>
             </header>
 
             {/* ── Section 1 : Microcontrôleur ── */}
             <section className="statistiques-section">
                 <div className="statistiques-section-heading">
-                    <h2>Microcontrôleur</h2>
-                    <p>Visualise les périodes où le microcontrôleur était allumé ou éteint.</p>
+                    <h2>Kit de serre</h2>
+                    <p>Visualise les périodes où le kit était actif ou en pause.</p>
                 </div>
 
                 <div className="statistiques-graph-wrapper">
@@ -258,8 +259,8 @@ function Statistiques() {
             {/* ── Section 2 : Capteurs ── */}
             <section className="statistiques-section">
                 <div className="statistiques-section-heading">
-                    <h2>Capteurs</h2>
-                    <p>Mesures moyennes sur les 7 derniers jours et état actuel de chaque capteur.</p>
+                    <h2>Capteurs de culture</h2>
+                    <p>Moyennes récentes et état actuel des mesures clés.</p>
                 </div>
 
                 {moyennesCapteurs && (
@@ -307,8 +308,8 @@ function Statistiques() {
             {/* ── Section 3 : Actionneurs ── */}
             <section className="statistiques-section">
                 <div className="statistiques-section-heading">
-                    <h2>Actionneurs</h2>
-                    <p>Temps d'activation moyen par jour sur les 7 derniers jours et état actuel de chaque actionneur.</p>
+                    <h2>Équipements</h2>
+                    <p>Temps moyen d’activation et état actuel des équipements.</p>
                 </div>
 
                 {tempsActionneurs && (

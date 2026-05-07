@@ -95,9 +95,10 @@ function Actionneur() {
     return (
         <div className="actionneur-root">
             <header className="actionneur-header">
-                <h1 className="actionneur-titre">Actionneur</h1>
+                <p className="actionneur-eyebrow">Contrôle doux</p>
+                <h1 className="actionneur-titre">Équipements de la serre</h1>
                 <p>
-                    Regarde l’état de tes actionneurs et garde le contrôle sur la qualité de ta terre.
+                    Vérifie la pompe, la ventilation, la lumière et la porte sans perdre le fil.
                 </p>
             </header>
             <div className="actionneur-content">

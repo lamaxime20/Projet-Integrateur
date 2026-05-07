@@ -127,8 +127,8 @@ function RapportsPompe() {
                         <span className="material-symbols-outlined" aria-hidden="true">arrow_back</span>
                         Retour
                     </button>
-                    <h1 className="rapport-titre">Rapport Pompe</h1>
-                    <p className="rapport-sous-titre">Contrôle par l'humidité du sol et le niveau d'eau (GPIO 5)</p>
+                    <h1 className="rapport-titre">Irrigation</h1>
+                    <p className="rapport-sous-titre">Temps d’arrosage, humidité du sol et niveau d’eau.</p>
                 </header>
 
                 <section className="rapport-section">

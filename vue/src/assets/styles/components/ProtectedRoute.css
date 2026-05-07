@@ -1,17 +1,1 @@
-.auth-loading-screen {
-    min-height: 100vh;
-    display: grid;
-    place-items: center;
-    padding: var(--space-xl);
-    background: linear-gradient(180deg, #f7fbf4 0%, #edf7ee 100%);
-    color: var(--text-color);
-}
-
-.auth-loading-screen p {
-    margin: 0;
-    padding: var(--space-lg) var(--space-xl);
-    border-radius: var(--radius-md);
-    background-color: var(--primary-color-strong-transparent);
-    box-shadow: var(--shadow-soft);
-    text-align: center;
-}
+@import url("../pages/login.css");

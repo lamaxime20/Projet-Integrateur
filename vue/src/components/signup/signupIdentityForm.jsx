@@ -11,8 +11,8 @@ function SignupIdentityForm({
     return (
         <form className="signup-step-form" onSubmit={onSubmit}>
             <div className="signup-step-copy">
-                <h2>Commençons par l'essentiel</h2>
-                <p>Entre uniquement les informations nécessaires pour recevoir ton code de confirmation.</p>
+                <h2>Ton identité</h2>
+                <p>Juste les informations utiles pour créer ton accès.</p>
             </div>
 
             <div className="signup-field-list">
@@ -61,7 +61,7 @@ function SignupIdentityForm({
 
             <div className="signup-step-actions">
                 <button type="submit" disabled={isSubmitting}>
-                    {isSubmitting ? "Vérification..." : "Suivant"}
+                    {isSubmitting ? "Vérification..." : "Continuer"}
                 </button>
                 <p className="signup-global-error">{globalError}</p>
             </div>

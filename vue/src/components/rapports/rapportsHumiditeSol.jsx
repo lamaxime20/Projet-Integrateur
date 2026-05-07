@@ -52,8 +52,8 @@ function RapportsHumiditeSol() {
                         <span className="material-symbols-outlined" aria-hidden="true">arrow_back</span>
                         Retour
                     </button>
-                    <h1 className="rapport-titre">Rapport Humidité du sol</h1>
-                    <p className="rapport-sous-titre">Humidité du sol — capteur YL-69 (GPIO 36)</p>
+                    <h1 className="rapport-titre">Humidité du sol</h1>
+                    <p className="rapport-sous-titre">Suivi de l’eau disponible autour des racines.</p>
                 </header>
 
                 <section className="rapport-section">

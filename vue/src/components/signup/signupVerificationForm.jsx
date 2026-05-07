@@ -14,7 +14,7 @@ function SignupVerificationForm({
     return (
         <form className="signup-step-form" onSubmit={onSubmit}>
             <div className="signup-step-copy">
-                <h2>Vérifie ton email</h2>
+                <h2>Code de confirmation</h2>
                 <p>Un code à 6 chiffres a été préparé pour <strong>{maskedEmail}</strong>.</p>
             </div>
 
@@ -44,7 +44,7 @@ function SignupVerificationForm({
                     Précédent
                 </button>
                 <button type="submit" disabled={isSubmitting}>
-                    {isSubmitting ? "Validation..." : "Suivant"}
+                    {isSubmitting ? "Validation..." : "Continuer"}
                 </button>
             </div>
 

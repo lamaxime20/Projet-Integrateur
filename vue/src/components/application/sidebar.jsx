@@ -23,11 +23,11 @@ function Sidebar({ongletActif}) {
         event.currentTarget.blur();
     };
     const onglets = [
-        { id: DASHBOARD, label: "Dashboard", href: "/application/dashboard", icon: "dashboard" },
-        { id: ACTIONNEUR, label: "Actionneur", href: "/application/actionneur", icon: "toggle_on" },
-        { id: SEUIL, label: "Seuil", href: "/application/seuil", icon: "tune" },
-        { id: STATISTIQUE, label: "Statistique", href: "/application/statistique", icon: "monitoring" },
-        { id: NOTIFICATION, label: "Notification", href: "/application/notification", icon: "notifications" },
+        { id: DASHBOARD, label: "Vue serre", href: "/application/dashboard", icon: "dashboard" },
+        { id: ACTIONNEUR, label: "Équipements", href: "/application/actionneur", icon: "toggle_on" },
+        { id: SEUIL, label: "Seuils culture", href: "/application/seuil", icon: "tune" },
+        { id: STATISTIQUE, label: "Historique", href: "/application/statistique", icon: "monitoring" },
+        { id: NOTIFICATION, label: "Alertes", href: "/application/notification", icon: "notifications" },
     ];
 
     const handleLogout = async () => {
@@ -42,6 +42,9 @@ function Sidebar({ongletActif}) {
     return (
         <nav className={`sidebar-root ${sidebarEpinglee ? "is-pinned" : ""}`} aria-label="Navigation de l'application">
             <section className="sidebar-ongletClassique">
+                <div className="sidebar-brand-mark" aria-hidden="true">
+                    <span className="material-symbols-outlined">eco</span>
+                </div>
                 <button
                     type="button"
                     className="sidebar-toggle"

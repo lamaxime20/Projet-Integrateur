@@ -17,7 +17,7 @@ function VerificationPasswordCodeForm({
     return (
         <form className="verificationPassword-step-form" onSubmit={onSubmit}>
             <div className="verificationPassword-step-copy">
-                <h2>Confirme le code reçu</h2>
+                <h2>Code reçu</h2>
                 <p>Un code à 6 chiffres a été préparé pour <strong>{maskedEmail}</strong>.</p>
             </div>
 
@@ -59,7 +59,7 @@ function VerificationPasswordCodeForm({
                     Précédent
                 </button>
                 <button type="submit" disabled={isSubmitting}>
-                    {isSubmitting ? "Validation..." : "Suivant"}
+                    {isSubmitting ? "Validation..." : "Continuer"}
                 </button>
             </div>
 

@@ -89,11 +89,12 @@ function PompeDetails({ retourner }) {
                     <span className="material-symbols-outlined" aria-hidden="true">arrow_back</span>
                     Retour
                 </button>
-                <h1 className="pompeDetails-titre">Pompe</h1>
+                <p className="pompeDetails-eyebrow">Irrigation</p>
+                <h1 className="pompeDetails-titre">Pompe d’arrosage</h1>
             </header>
             <div className="pompeDetails-content">
                 <section className="pompeDetails-state-graph">
-                    <a href="#">Voir plus</a>
+                    <a href="#">Historique complet</a>
                     <div className="pompeDetails-graph">
                         <GrapheBatonnet
                             historique={historiquePompe}
@@ -123,7 +124,7 @@ function PompeDetails({ retourner }) {
                     <div className="pompeDetails-instruction">
                         {pompeState === "running" &&
                             <>
-                                <p>La pompe est en marche</p>
+                                <p>La pompe irrigue la culture</p>
                                 <button
                                     type="button"
                                     onClick={() => handleOpenModal("arreter")}
@@ -137,7 +138,7 @@ function PompeDetails({ retourner }) {
 
                         {pompeState === "stopped" &&
                             <>
-                                <p>La pompe est arrêtée</p>
+                                <p>L’irrigation est en pause</p>
                                 <button
                                     type="button"
                                     onClick={() => handleOpenModal("allumer")}

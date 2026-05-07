@@ -56,8 +56,8 @@ function RapportsCO2() {
                         <span className="material-symbols-outlined" aria-hidden="true">arrow_back</span>
                         Retour
                     </button>
-                    <h1 className="rapport-titre">Rapport CO2</h1>
-                    <p className="rapport-sous-titre">Qualité de l'air — capteur SEN0159 (GPIO 34)</p>
+                    <h1 className="rapport-titre">Air et CO2</h1>
+                    <p className="rapport-sous-titre">Historique de la qualité de l’air dans la serre.</p>
                 </header>
 
                 <section className="rapport-section">

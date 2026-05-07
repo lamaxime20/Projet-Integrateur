@@ -127,8 +127,8 @@ function RapportsAmpoule() {
                         <span className="material-symbols-outlined" aria-hidden="true">arrow_back</span>
                         Retour
                     </button>
-                    <h1 className="rapport-titre">Rapport Ampoule</h1>
-                    <p className="rapport-sous-titre">Contrôle par la luminosité (GPIO 7) — capteur LDR</p>
+                    <h1 className="rapport-titre">Éclairage</h1>
+                    <p className="rapport-sous-titre">Temps de lumière et instructions liées à la croissance.</p>
                 </header>
 
                 <section className="rapport-section">

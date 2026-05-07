@@ -68,9 +68,9 @@ function Dashboard() {
         <div className="dashboard-root">
             <header className="dashboard-header">
                 <div>
-                    <p className="dashboard-eyebrow">Tableau de bord</p>
-                    <h1>Surveillance de l’exploitation</h1>
-                    <p>Vue synthétique des capteurs, actionneurs, alertes et tendances récentes.</p>
+                    <p className="dashboard-eyebrow">Écosystème vivant</p>
+                    <h1>État de la serre</h1>
+                    <p>Les capteurs, équipements et alertes regroupés pour agir sans chercher.</p>
                 </div>
 
                 <div className={`dashboard-status ${estEnLigne ? "vert" : "rouge"}`}>
@@ -91,7 +91,7 @@ function Dashboard() {
 
             <section className="dashboard-section dashboard-overview" aria-busy={chargement}>
                 <div className="dashboard-section-heading">
-                    <h2>Surveillance en temps réel</h2>
+                    <h2>Conditions des cultures</h2>
                     <span>Mis à jour à {formater_heure_dashboard(dashboard.updated_at)}</span>
                 </div>
 
@@ -117,7 +117,7 @@ function Dashboard() {
                             <span style={{ height: `${dashboard.niveau_eau?.pourcentage ?? 0}%` }}></span>
                         </div>
                         <div>
-                            <h3>Niveau de réservoir</h3>
+                            <h3>Niveau d’eau</h3>
                             <strong>{dashboard.niveau_eau?.etat ?? "Inconnu"}</strong>
                             <p>État hydrique pour l’irrigation.</p>
                         </div>
@@ -127,8 +127,8 @@ function Dashboard() {
 
             <section className="dashboard-section">
                 <div className="dashboard-section-heading">
-                    <h2>Contrôle et automatisation</h2>
-                    <span>État actuel des actionneurs</span>
+                    <h2>Équipements actifs</h2>
+                    <span>Pompe, ventilation, lumière et porte</span>
                 </div>
 
                 <div className="dashboard-actionneurs">
@@ -148,7 +148,7 @@ function Dashboard() {
 
             <section className="dashboard-section dashboard-analytics">
                 <div className="dashboard-section-heading">
-                    <h2>Analyses rapides</h2>
+                    <h2>Tendances utiles</h2>
                     <span>Dernières 24 heures · page {paginationMesures.page}/{paginationMesures.total_pages}</span>
                 </div>
 
@@ -224,8 +224,8 @@ function Dashboard() {
 
                 <article className="dashboard-section">
                     <div className="dashboard-section-heading">
-                        <h2>Journal</h2>
-                        <span>Événements récents</span>
+                    <h2>Activité</h2>
+                    <span>Derniers gestes du système</span>
                     </div>
 
                     <div className="dashboard-feed">

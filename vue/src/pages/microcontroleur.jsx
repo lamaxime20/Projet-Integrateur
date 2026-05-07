@@ -83,15 +83,14 @@ function Microcontroleur() {
             <section className="microcontroleur-shell">
                 <header className="microcontroleur-intro">
                     <p className="microcontroleur-kicker">Connexion du kit</p>
-                    <h1>Ajoute ton microcontrôleur</h1>
+                    <h1>Relie ton kit de serre</h1>
                     <p className="microcontroleur-lead">
-                        Sur la notice de ton kit, tu trouveras l'identifiant et le mot de passe nécessaires pour
-                        rattacher ton installation à ton espace.
+                        Utilise l’identifiant et la clé fournis avec le kit pour ouvrir la surveillance.
                     </p>
                 </header>
 
                 <div className="microcontroleur-helper">
-                    <p>Prépare simplement les deux informations fournies avec le kit.</p>
+                    <p>Deux informations suffisent pour raccorder la serre.</p>
                     <Link to="/application">Voir mes kits déjà enregistrés</Link>
                 </div>
 

@@ -129,8 +129,8 @@ function RapportsVentilateur() {
                         <span className="material-symbols-outlined" aria-hidden="true">arrow_back</span>
                         Retour
                     </button>
-                    <h1 className="rapport-titre">Rapport Ventilateur</h1>
-                    <p className="rapport-sous-titre">Contrôle par la température (GPIO 6) — capteur DHT22</p>
+                    <h1 className="rapport-titre">Ventilation</h1>
+                    <p className="rapport-sous-titre">Temps d’air brassé et instructions envoyées à la serre.</p>
                 </header>
 
                 {/* ── Section 1 : Historique ── */}

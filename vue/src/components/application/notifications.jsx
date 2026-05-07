@@ -171,8 +171,8 @@ function Notifications() {
         <div className="notifications-root">
             <header className="notifications-header">
                 <div>
-                    <h1 className="notifications-titre">Notifications</h1>
-                    <p>Consulte les alertes importantes de ton installation et traite-les rapidement.</p>
+                    <h1 className="notifications-titre">Alertes de la serre</h1>
+                    <p>Repère ce qui demande ton attention, sans bruit inutile.</p>
                 </div>
                 <button
                     type="button"
@@ -181,7 +181,7 @@ function Notifications() {
                     disabled={chargementAction || compteurs.non_lues === 0}
                 >
                     <span className="material-symbols-outlined" aria-hidden="true">done_all</span>
-                    Tout marquer comme lu
+                        Tout apaiser
                 </button>
             </header>
 
@@ -199,14 +199,14 @@ function Notifications() {
                         className={filtre === FILTRES.NON_LUES ? "is-active" : ""}
                         onClick={() => setFiltre(FILTRES.NON_LUES)}
                     >
-                        Non lues <span>{compteurs.non_lues}</span>
+                        À traiter <span>{compteurs.non_lues}</span>
                     </button>
                     <button
                         type="button"
                         className={filtre === FILTRES.LUES ? "is-active" : ""}
                         onClick={() => setFiltre(FILTRES.LUES)}
                     >
-                        Lues <span>{compteurs.lues}</span>
+                        Traitées <span>{compteurs.lues}</span>
                     </button>
                 </div>
 

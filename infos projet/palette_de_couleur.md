@@ -1,105 +1,41 @@
-🎨 Palette optimisée (Nature + Technologie)
-🟢 1. Vert principal (40%)
+# Palette Agrico-Tech
 
-👉 #2E7D32
+Direction émotionnelle : 60% blanc, 30% vert, 10% bleu.
 
-Pourquoi ce vert ?
+## Couleurs principales
 
-Vert profond (pas flashy)
-Inspire nature réelle, pas “cartoon”
-Donne une sensation de fiabilité et stabilité
+- Blanc vivant : `#FBFDF8`
+  - Arrière-plan principal, zones de lecture, respiration visuelle.
+- Blanc carte : `#FFFFFF`
+  - Cartes, formulaires, tableaux, éléments interactifs.
+- Vert profond : `#183B24`
+  - Titres, navigation active, textes à forte importance.
+- Vert culture : `#2F7142`
+  - CTA principaux, états normaux, confirmations.
+- Vert doux : `#EDF6E9`
+  - Fonds organiques, badges calmes, surfaces secondaires.
+- Bleu précision : `#2E9BC5`
+  - Données, liens, détails technologiques, focus.
+- Bleu doux : `#E8F5F9`
+  - États informatifs, surfaces de graphiques, accents discrets.
 
-Émotions ressenties :
+## Couleurs d’état
 
-🌱 Croissance
-🔒 Sécurité
-⚖️ Équilibre
-🌍 Durabilité
+- Normal / connecté : `#4D9A5F`
+- Attention : `#DBA83D`
+- Critique : `#C94A3D`
+- Erreur douce : `#FFF0ED`
+- Alerte douce : `#FFF8E6`
 
-👉 Utilisation :
+## Textes et bordures
 
-Boutons principaux
-Headers
-Éléments actifs (ON / OK / état normal)
-⚪ 2. Blanc dominant (50%)
+- Texte principal : `#17251B`
+- Texte secondaire : `#657467`
+- Texte discret : `#7D8B80`
+- Texte inversé : `#FBFDF8`
+- Bordure naturelle : `rgba(36, 87, 50, 0.14)`
+- Bordure technologique : `rgba(46, 155, 197, 0.2)`
 
-👉 #F9FAFB (blanc légèrement cassé)
+## Règles d’utilisation
 
-Pourquoi pas blanc pur (#FFFFFF) ?
-
-Le blanc pur fatigue les yeux
-Celui-ci donne un effet moderne + doux
-
-Émotions ressenties :
-
-✨ Clarté
-🧠 Simplicité
-📊 Lisibilité
-🧘 Confort visuel
-
-👉 Utilisation :
-
-Background principal
-Cartes (cards)
-Zones de lecture
-🔵 3. Couleur technologique (10%)
-
-👉 #0288D1 (bleu IoT)
-
-Pourquoi du bleu ?
-👉 C’est LA couleur universelle de la tech
-
-Réseaux
-Données
-Intelligence artificielle
-Interfaces modernes
-
-Émotions ressenties :
-
-⚡ Innovation
-📡 Connectivité
-🤖 Intelligence
-🔍 Précision
-
-👉 Utilisation :
-
-Liens
-Actions secondaires
-Indicateurs de données (graphiques, stats)
-Hover effects
-⚖️ Résultat global (ce que l’utilisateur ressent)
-
-👉 Ton design va créer une sensation de :
-
-🌿 “Je suis dans un environnement naturel”
-🤖 “Mais c’est contrôlé par une technologie avancée”
-📊 “Je peux faire confiance aux données”
-
-👉 C’est EXACTEMENT ce que ton projet veut transmettre :
-
-Nature + contrôle intelligent
-
-🔥 Bonus (très important pour un dashboard IoT)
-
-Ajoute 2 couleurs d’état :
-
-🟡 Alerte moyenne
-
-👉 #FBC02D
-
-Attention
-Surveillance
-🔴 Alerte critique
-
-👉 #D32F2F
-
-Danger
-Action immédiate
-🧠 Résumé ultra stratégique
-Vert = système vivant (les cultures)
-Bleu = cerveau du système (IoT)
-Blanc = interface propre (UX)
-
-👉 Tu racontes une histoire visuelle :
-
-“La nature est pilotée par l’intelligence.”
+Le blanc reste dominant pour réduire la charge mentale. Le vert porte la nature, la stabilité et les actions principales. Le bleu est réservé aux données, liens, focus, graphiques et signes de précision technologique.

@@ -85,11 +85,12 @@ function AmpouleDetails({ retourner }) {
                     <span className="material-symbols-outlined" aria-hidden="true">arrow_back</span>
                     Retour
                 </button>
-                <h1 className="ampouleDetails-titre">Ampoule</h1>
+                <p className="ampouleDetails-eyebrow">Luminosité</p>
+                <h1 className="ampouleDetails-titre">Lumière de culture</h1>
             </header>
             <div className="ampouleDetails-content">
                 <section className="ampouleDetails-state-graph">
-                    <a href="#">Voir plus</a>
+                    <a href="#">Historique complet</a>
                     <div className="ampouleDetails-graph">
                         <GrapheBatonnet
                             historique={historiqueAmpoule}
@@ -119,7 +120,7 @@ function AmpouleDetails({ retourner }) {
                     <div className="ampouleDetails-instruction">
                         {ampouleState === "running" &&
                             <>
-                                <p>L'ampoule est allumée</p>
+                                <p>La lumière accompagne la croissance</p>
                                 <button
                                     type="button"
                                     onClick={() => handleOpenModal("arreter")}
@@ -133,7 +134,7 @@ function AmpouleDetails({ retourner }) {
 
                         {ampouleState === "stopped" &&
                             <>
-                                <p>L'ampoule est éteinte</p>
+                                <p>La lumière est en pause</p>
                                 <button
                                     type="button"
                                     onClick={() => handleOpenModal("allumer")}

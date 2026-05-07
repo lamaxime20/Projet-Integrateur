@@ -25,12 +25,12 @@ function InstructionModal({ actionneur, action, isOpen, isSubmitting = false, on
             <div className="instructionModal-root" role="dialog" aria-modal="true" aria-labelledby="instructionModal-titre">
                 <div className="instructionModal-content">
                     <h2 id="instructionModal-titre" className="instructionModal-titre">
-                        {action === "allumer" ? "Allumer" : "Arrêter"} le {actionneur}
+                        {action === "allumer" ? "Activer" : "Mettre en pause"} le {actionneur}
                     </h2>
 
                     <div className="instructionModal-body">
                         <label htmlFor="duree-input" className="instructionModal-label">
-                            Durée de l'instruction
+                            Durée d’action
                         </label>
                         <div className="instructionModal-duree-control">
                             <button

@@ -52,8 +52,8 @@ function RapportsTemperature() {
                         <span className="material-symbols-outlined" aria-hidden="true">arrow_back</span>
                         Retour
                     </button>
-                    <h1 className="rapport-titre">Rapport Température</h1>
-                    <p className="rapport-sous-titre">Température de l'air — capteur DHT22 (GPIO 4)</p>
+                    <h1 className="rapport-titre">Température de serre</h1>
+                    <p className="rapport-sous-titre">Historique thermique pour garder des conditions stables.</p>
                 </header>
 
                 <section className="rapport-section">

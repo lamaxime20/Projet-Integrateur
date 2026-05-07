@@ -78,14 +78,15 @@ function VentilateurDetails({retourner}) {
                     <span className="material-symbols-outlined" aria-hidden="true">arrow_back</span>
                     Retour
                 </button>
-                <h1 className="ventilateurDetails-titre">Ventilateur</h1>
+                <p className="ventilateurDetails-eyebrow">Ventilation</p>
+                <h1 className="ventilateurDetails-titre">Air de la serre</h1>
             </header>
             <div className="ventilateurDetails-content">
                 <section className="ventilateurDetails-state-graph">
                     <a
                         href="#"
                     >
-                        Voir plus
+                        Historique complet
                     </a>
                     <div className="ventilateurDetails-graph">
                         <GrapheBatonnet
@@ -116,7 +117,7 @@ function VentilateurDetails({retourner}) {
                     <div className="ventilateurDetails-instruction">
                         {ventilateurState === "running" &&
                             <>
-                                <p>Le ventilateur est allumé</p>
+                                <p>La ventilation protège la culture</p>
                                 <button
                                     type="button"
                                     onClick={() => handleOpenModal("arreter")}
@@ -130,7 +131,7 @@ function VentilateurDetails({retourner}) {
 
                         {ventilateurState === "stopped" &&
                             <>
-                                <p>Le ventilateur est éteint</p>
+                                <p>La ventilation est en pause</p>
                                 <button
                                     type="button"
                                     onClick={() => handleOpenModal("allumer")}

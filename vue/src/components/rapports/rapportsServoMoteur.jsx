@@ -125,8 +125,8 @@ function RapportsServoMoteur() {
                         <span className="material-symbols-outlined" aria-hidden="true">arrow_back</span>
                         Retour
                     </button>
-                    <h1 className="rapport-titre">Rapport Porte CO2</h1>
-                    <p className="rapport-sous-titre">Contrôle par le CO2 (GPIO 18) — capteur SEN0159 · Ouverte si CO2 élevé</p>
+                    <h1 className="rapport-titre">Porte de ventilation</h1>
+                    <p className="rapport-sous-titre">Ouvertures, fermetures et suivi du CO2.</p>
                 </header>
 
                 <section className="rapport-section">

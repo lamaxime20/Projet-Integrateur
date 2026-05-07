@@ -52,8 +52,8 @@ function RapportNiveauEau() {
                         <span className="material-symbols-outlined" aria-hidden="true">arrow_back</span>
                         Retour
                     </button>
-                    <h1 className="rapport-titre">Rapport Niveau d'eau</h1>
-                    <p className="rapport-sous-titre">Niveau du réservoir d'eau — flotteur digital (GPIO 2)</p>
+                    <h1 className="rapport-titre">Réservoir d’eau</h1>
+                    <p className="rapport-sous-titre">Suivi du niveau d’eau disponible pour l’irrigation.</p>
                 </header>
 
                 <section className="rapport-section">

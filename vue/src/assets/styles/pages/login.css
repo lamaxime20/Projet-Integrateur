@@ -1,409 +1,317 @@
+.login-root,
+.signup-root,
+.verificationPassword-root,
+.microcontroleur-root,
+.auth-loading-screen {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: clamp(1rem, 4vw, 2.5rem);
+  background:
+    radial-gradient(circle at 14% 8%, rgba(77, 154, 95, 0.16), transparent 28rem),
+    radial-gradient(circle at 90% 12%, rgba(46, 155, 197, 0.1), transparent 24rem),
+    linear-gradient(180deg, var(--white-warm), var(--white-mist));
+}
+
 .login-root {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    min-height: 100vh;
-    min-height: 100dvh;
-    margin: 0;
-    padding: 0;
-    background:
-        radial-gradient(circle at top right, rgba(2, 136, 209, 0.1), transparent 28%),
-        linear-gradient(180deg, #f7faf8 0%, #edf5ef 100%);
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.login-left,
+.login-right,
+.signup-shell,
+.verificationPassword-shell,
+.microcontroleur-shell,
+.auth-loading-screen p {
+  width: min(100%, 34rem);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.84);
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(18px);
 }
 
 .login-left {
-    display: none;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 35vh;
-    margin: 0;
-    padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1rem, 4vw, 2rem);
-    background:
-        radial-gradient(circle at 20% 20%, rgba(249, 250, 251, 0.16), transparent 32%),
-        linear-gradient(165deg, #2e7d32 0%, #276d2b 52%, #1f5a23 100%);
-}
-
-.login-right {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex: 1;
-    min-height: 100vh;
-    min-height: 100dvh;
-    padding: clamp(1rem, 4vw, 2rem);
-    background:
-        linear-gradient(180deg, rgba(2, 136, 209, 0.07) 0%, rgba(249, 250, 251, 0) 18%),
-        linear-gradient(180deg, rgba(249, 250, 251, 0.96) 0%, rgba(240, 246, 241, 0.96) 100%);
+  display: none;
+  min-height: 32rem;
+  place-items: center;
+  padding: 2rem;
+  background:
+    linear-gradient(145deg, rgba(16, 36, 22, 0.92), rgba(36, 87, 50, 0.86)),
+    radial-gradient(circle at 80% 0%, rgba(46, 155, 197, 0.28), transparent 20rem);
+  color: var(--white);
 }
 
 .tree-wrapper {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: min(100%, 19rem);
-    margin: 0;
-    padding: 0;
-    filter: drop-shadow(0 26px 38px rgba(8, 24, 11, 0.22));
+  width: min(72%, 18rem);
 }
 
 .tree-svg {
-    width: 100%;
-    height: auto;
+  width: 100%;
+  filter: drop-shadow(0 22px 38px rgba(0, 0, 0, 0.18));
 }
 
 .login-left-tagline {
-    max-width: 18rem;
-    margin: var(--space-sm) 0 0;
-    color: var(--text-color-inverse);
-    font-size: 0.98rem;
-    font-weight: 600;
-    line-height: 1.55;
-    text-align: center;
-    text-wrap: balance;
-    opacity: 0.96;
+  max-width: 18rem;
+  color: rgba(251, 253, 248, 0.82);
+  text-align: center;
+  font-weight: 800;
 }
 
-.login-form {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: min(100%, 31rem);
-    margin: 0;
-    max-height: calc(100dvh - 2rem);
-    padding: clamp(1.25rem, 3vw, 2.25rem);
-    background:
-        linear-gradient(180deg, rgba(249, 250, 251, 0.98) 0%, rgba(249, 250, 251, 0.92) 100%);
-    border: 1px solid rgba(46, 125, 50, 0.12);
-    border-radius: 1.75rem;
-    box-shadow:
-        0 28px 60px rgba(20, 32, 19, 0.12),
-        0 8px 22px rgba(46, 125, 50, 0.08);
-    backdrop-filter: blur(10px);
+.login-right,
+.signup-shell,
+.verificationPassword-shell,
+.microcontroleur-shell {
+  padding: clamp(1.1rem, 4vw, 2rem);
 }
 
-.login-header {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    margin-bottom: var(--space-lg);
-    padding-top: 0.4rem;
+.login-form,
+.login-main,
+.login-input,
+.login-submit,
+.login-footer,
+.signup-shell,
+.verificationPassword-shell,
+.microcontroleur-shell,
+.microcontroleur-form,
+.microcontroleur-inputs {
+  display: grid;
+  gap: 1rem;
 }
 
-.login-title-icon {
-    position: absolute;
-    left: 50%;
-    top: -0.1rem;
-    transform: translateX(calc(-50% - 4.6rem));
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    width: 2.9rem;
-    height: 2.9rem;
-    border-radius: 999px;
-    background:
-        linear-gradient(145deg, rgba(46, 125, 50, 0.95) 0%, rgba(2, 136, 209, 0.86) 100%);
-    box-shadow:
-        0 10px 22px rgba(2, 136, 209, 0.18),
-        inset 0 1px 0 rgba(255, 255, 255, 0.35);
-    z-index: 0;
+.login-kicker,
+.signup-kicker,
+.verificationPassword-kicker,
+.microcontroleur-kicker {
+  color: var(--blue-700);
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
 }
 
-.login-title-icon::after {
-    content: "";
-    position: absolute;
-    inset: 0.22rem;
-    border-radius: inherit;
-    border: 1px solid rgba(255, 255, 255, 0.22);
+.login-title,
+.signup-intro h1,
+.verificationPassword-intro h1,
+.microcontroleur-intro h1 {
+  color: var(--green-900);
+  font-size: clamp(2rem, 7vw, 3.1rem);
+  line-height: 1.05;
 }
 
-.login-title-icon-g {
-    position: relative;
-    z-index: 1;
-    color: #ffffff;
-    font-family: var(--typography-title);
-    font-size: 1.6rem;
-    font-weight: 700;
-    line-height: 1;
+.login-input input,
+.signup-field input,
+.verificationPassword-field input,
+.microcontroleur-input input,
+.signup-code-field input,
+.verificationPassword-code-field input {
+  width: 100%;
+  min-height: 3.15rem;
+  padding: 0 0.95rem;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  background: var(--white);
+  color: var(--green-900);
 }
 
-.login-title {
-    position: relative;
-    z-index: 1;
-    color: var(--secondary-color);
-    font-family: var(--typography-title);
-    font-size: clamp(2rem, 7vw, 2.7rem);
-    font-weight: 700;
-    line-height: 1.08;
-    letter-spacing: 0;
-    text-wrap: balance;
-    margin: 0;
-    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
+.login-input input:focus,
+.signup-field input:focus,
+.verificationPassword-field input:focus,
+.microcontroleur-input input:focus,
+.signup-code-field input:focus,
+.verificationPassword-code-field input:focus {
+  outline: 3px solid rgba(46, 155, 197, 0.17);
+  border-color: var(--blue-500);
 }
 
-.login-main {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    gap: var(--space-md);
+.login-forgot-password-link,
+.login-policy,
+.login-create-account a,
+.signup-footer a,
+.verificationPassword-footer a,
+.microcontroleur-helper a,
+.verificationPassword-button-link {
+  color: var(--blue-700);
+  font-weight: 850;
 }
 
-.login-input {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--space-md);
-    width: 100%;
-}
-
-.login-input input {
-    width: 100%;
-    min-height: 3.35rem;
-    padding: 0 1.1rem;
-    margin: 0;
-    border: 1px solid rgba(46, 125, 50, 0.14);
-    background-color: rgba(255, 255, 255, 0.94);
-    color: var(--text-color);
-    font-family: var(--typography-common);
-    font-size: 0.96rem;
-    border-radius: 1.1rem;
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.9),
-        0 10px 24px rgba(20, 32, 19, 0.07);
-    transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
-}
-
-.login-input input::placeholder {
-    color: rgba(20, 32, 19, 0.48);
-}
-
-.login-input input:focus {
-    outline: none;
-    border-color: rgba(2, 136, 209, 0.5);
-    box-shadow:
-        0 0 0 4px rgba(2, 136, 209, 0.12),
-        0 14px 28px rgba(2, 136, 209, 0.12);
-    transform: translateY(-1px);
-}
-
-.login-forgot-password-link {
-    align-self: flex-start;
-    color: var(--accent-color);
-    font-family: var(--typography-common);
-    font-size: 0.84rem;
-    font-weight: 700;
-    padding: 0;
-    text-decoration: none;
-    cursor: pointer;
-    transition: color 160ms ease, opacity 160ms ease;
-}
-
-.login-forgot-password-link:hover,
-.login-forgot-password-link:focus-visible,
-.login-policy:hover,
-.login-policy:focus-visible {
-    color: var(--secondary-color);
-}
-
-.login-submit {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    padding: 0;
-    margin: 0;
-    gap: var(--space-sm);
-}
-
-.login-submit button {
-    width: 100%;
-    min-height: 3.45rem;
-    border: none;
-    border-radius: 1.15rem;
-    font: inherit;
-    font-weight: 700;
-    cursor: pointer;
-    background:
-        linear-gradient(145deg, #2e7d32 0%, #266b2a 58%, #1f5a23 100%);
-    color: var(--text-color-inverse);
-    box-shadow:
-        0 16px 28px rgba(46, 125, 50, 0.28),
-        inset 0 1px 0 rgba(255, 255, 255, 0.18);
-    transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
-}
-
-.login-submit button:hover:not(:disabled),
-.login-submit button:focus-visible:not(:disabled) {
-    transform: translateY(-1px);
-    box-shadow:
-        0 20px 34px rgba(46, 125, 50, 0.32),
-        inset 0 1px 0 rgba(255, 255, 255, 0.18);
-    filter: saturate(1.04);
-}
-
-.login-submit button:disabled {
-    cursor: progress;
-    opacity: 0.78;
-}
-
-.login-error {
-    width: 100%;
-    margin: 0;
-    padding: 0.9rem 1rem;
-    border: 1px solid rgba(211, 47, 47, 0.18);
-    border-radius: 1rem;
-    background-color: rgba(211, 47, 47, 0.08);
-    color: var(--alertes-critique);
-    font-size: 0.88rem;
-    line-height: 1.45;
-    text-align: center;
-}
-
-.login-footer {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    gap: 0.9rem;
-}
-
-.login-footer p {
-    margin: 0;
-    color: rgba(20, 32, 19, 0.7);
-    font-family: var(--typography-common);
-    font-size: 0.84rem;
-    font-weight: 600;
-    text-align: center;
+.login-submit button,
+.signup-step-actions button[type="submit"],
+.verificationPassword-step-actions button[type="submit"],
+.microcontroleur-btn-submit {
+  min-height: 3.1rem;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--green-600), var(--green-800));
+  color: var(--white);
+  font-weight: 950;
+  box-shadow: var(--shadow-lift);
 }
 
 .login-social-links {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: var(--space-sm);
-    width: 100%;
+  display: flex;
+  gap: 0.7rem;
+}
+
+.login-social-button,
+.signup-button-ghost,
+.verificationPassword-button-ghost,
+.microcontroleur-helper {
+  min-height: 3rem;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  background: var(--white);
+  color: var(--green-800);
+  font-weight: 900;
 }
 
 .login-social-button {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    width: 3.6rem;
-    height: 3.6rem;
-    border: 1px solid rgba(46, 125, 50, 0.16);
-    border-radius: 999px;
-    background: #ffffff;
-    box-shadow:
-        0 14px 24px rgba(20, 32, 19, 0.09),
-        inset 0 1px 0 rgba(255, 255, 255, 0.95);
-    cursor: pointer;
-    transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
-}
-
-.login-social-button:hover,
-.login-social-button:focus-visible {
-    transform: translateY(-1px);
-    border-color: rgba(2, 136, 209, 0.26);
-    box-shadow:
-        0 18px 28px rgba(2, 136, 209, 0.13),
-        inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  width: 3.2rem;
+  display: grid;
+  place-items: center;
 }
 
 .login-social-button-image {
-    width: 1.55rem;
-    height: 1.55rem;
-    object-fit: contain;
-    filter: brightness(0) saturate(100%) invert(34%) sepia(61%) saturate(755%) hue-rotate(76deg) brightness(92%) contrast(89%);
+  width: 1.4rem;
+  height: 1.4rem;
 }
 
-.login-policy {
-    color: rgba(20, 32, 19, 0.7);
-    font-family: var(--typography-common);
-    font-size: 0.82rem;
-    font-weight: 600;
-    text-decoration: none;
-    cursor: pointer;
-    text-align: center;
-    transition: color 160ms ease;
+.login-error,
+.signup-global-error,
+.verificationPassword-global-error,
+.microcontroleur-erreur,
+.signup-field p,
+.verificationPassword-field p {
+  color: var(--danger-500);
+  font-weight: 750;
 }
 
-.login-create-account {
-    margin: 0;
-    color: rgba(20, 32, 19, 0.72);
-    font-size: 0.84rem;
-    text-align: center;
+.signup-progress,
+.verificationPassword-progress {
+  display: grid;
+  gap: 0.55rem;
 }
 
-.login-create-account a {
-    color: var(--accent-color);
-    font-weight: 700;
-    text-decoration: none;
+.signup-progress-track,
+.verificationPassword-progress-track {
+  height: 0.5rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--green-100);
 }
 
-.login-create-account a:hover,
-.login-create-account a:focus-visible {
-    color: var(--secondary-color);
+.signup-progress-bar,
+.verificationPassword-progress-bar {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--green-500), var(--blue-500));
 }
 
-@media (min-width: 48rem) {
-    .login-root {
-        flex-direction: row;
-    }
+.signup-progress-steps,
+.verificationPassword-progress-steps {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  color: var(--text-soft);
+  font-size: 0.82rem;
+  font-weight: 850;
+}
 
-    .login-left {
-        display: flex;
-        width: 40%;
-        min-height: 100vh;
-        padding: clamp(2rem, 4vw, 3rem);
-    }
+.signup-progress-steps .is-active,
+.verificationPassword-progress-steps .is-active {
+  color: var(--green-800);
+}
 
-    .login-right {
-        width: 60%;
-        min-height: 100vh;
-        align-items: center;
-        padding: clamp(1.5rem, 4vw, 3rem);
-    }
+.signup-step-form,
+.verificationPassword-step-form {
+  display: grid;
+  gap: 1rem;
+}
 
-    .tree-wrapper {
-        width: min(100%, 22rem);
-    }
+.signup-step-copy h2,
+.verificationPassword-step-copy h2 {
+  color: var(--green-900);
+  font-size: 1.45rem;
+}
 
-    .login-left-tagline {
-        font-size: 1.04rem;
-    }
+.signup-field-list,
+.verificationPassword-field-list {
+  display: grid;
+  gap: 0.75rem;
+}
 
-    .login-form {
-        width: min(100%, 31.5rem);
-        max-height: calc(100dvh - 3rem);
-        padding: clamp(2rem, 4vw, 2.75rem);
-    }
+.signup-field,
+.verificationPassword-field,
+.microcontroleur-input {
+  display: grid;
+  gap: 0.4rem;
+  color: var(--green-900);
+  font-weight: 850;
+}
 
-    .login-header {
-        margin-bottom: var(--space-xl);
-    }
+.signup-code-list,
+.verificationPassword-code-list {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.45rem;
+}
 
-    .login-title-icon {
-        transform: translateX(calc(-50% - 5.8rem));
-        width: 3.2rem;
-        height: 3.2rem;
-    }
+.signup-code-field input,
+.verificationPassword-code-field input {
+  padding: 0;
+  text-align: center;
+  font-size: 1.35rem;
+  font-weight: 950;
+}
 
-    .login-title-icon-g {
-        font-size: 1.8rem;
-    }
+.signup-visually-hidden,
+.verificationPassword-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+}
 
-    .login-title {
-        font-size: clamp(2.3rem, 1.8rem + 1vw, 3rem);
-    }
+.signup-step-actions,
+.verificationPassword-step-actions,
+.microcontroleur-submit {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.signup-step-actions-inline,
+.verificationPassword-step-actions-inline {
+  grid-template-columns: 1fr 1fr;
+}
+
+.verificationPassword-inline-copy,
+.signup-footer,
+.verificationPassword-footer {
+  display: grid;
+  gap: 0.35rem;
+  text-align: center;
+}
+
+.microcontroleur-helper {
+  display: grid;
+  gap: 0.5rem;
+  padding: 1rem;
+}
+
+@media (min-width: 880px) {
+  .login-root {
+    grid-template-columns: minmax(20rem, 0.9fr) minmax(24rem, 1fr);
+    width: min(100%, 72rem);
+    margin: 0 auto;
+  }
+
+  .login-left {
+    display: grid;
+  }
+
+  .login-right {
+    width: min(100%, 38rem);
+  }
 }

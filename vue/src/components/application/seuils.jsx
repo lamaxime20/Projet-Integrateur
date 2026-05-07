@@ -112,9 +112,9 @@ const Seuils = ({ microcontroleurId }) => {
         <div className="seuils-container">
             <header className="seuils-header">
                 <div>
-                    <p className="seuils-eyebrow">Automatisation agricole</p>
-                    <h1>Seuils d’activation</h1>
-                    <p>Réglez les limites qui pilotent les actionneurs et synchronisez-les avec le microcontrôleur.</p>
+                    <p className="seuils-eyebrow">Zones de confort</p>
+                    <h1>Seuils de culture</h1>
+                    <p>Ajuste les limites qui déclenchent l’eau, l’air et la lumière.</p>
                 </div>
                 <button
                     type="button"
@@ -132,7 +132,7 @@ const Seuils = ({ microcontroleurId }) => {
             <div className="seuils-grid">
                 <section className="seuils-panel seuils-selection">
                     <div className="seuils-panel-heading">
-                        <h2>Capteurs</h2>
+                        <h2>Mesures suivies</h2>
                         <span>{capteurs.length} seuils</span>
                     </div>
 
@@ -174,7 +174,7 @@ const Seuils = ({ microcontroleurId }) => {
                                 </span>
                                 <div>
                                     <h2>{selectedCapteur.nom}</h2>
-                                    <p>Valeurs utilisées par les automatismes du système.</p>
+                                    <p>Plage à respecter pour garder la culture dans de bonnes conditions.</p>
                                 </div>
                             </div>
                             

@@ -78,7 +78,7 @@ function Choix_microcontroleur() {
                 <header className="choix_microcontroleur-header">
                     <p className="choix_microcontroleur-kicker">Sélection du kit</p>
                     <h1>Chargement des kits...</h1>
-                    <p>On récupère les microcontrôleurs associés à ton compte.</p>
+                    <p>On retrouve les serres liées à ton compte.</p>
                 </header>
             </section>
         );
@@ -89,7 +89,7 @@ function Choix_microcontroleur() {
             <section className="choix_microcontroleur-root">
                 <header className="choix_microcontroleur-header">
                     <p className="choix_microcontroleur-kicker">Sélection du kit</p>
-                    <h1>Impossible de charger les kits</h1>
+                    <h1>Impossible de charger les serres</h1>
                     <p>{erreur}</p>
                 </header>
                 <div className="choix_microcontroleur-empty">
@@ -105,11 +105,11 @@ function Choix_microcontroleur() {
         <section className="choix_microcontroleur-root">
             <header className="choix_microcontroleur-header">
                 <p className="choix_microcontroleur-kicker">Sélection du kit</p>
-                <h1>{listeMicrocontroleur_user.length === 0 ? "Aucun kit enregistré" : "Choisis ton microcontrôleur"}</h1>
+                <h1>{listeMicrocontroleur_user.length === 0 ? "Aucun kit enregistré" : "Choisis ta serre"}</h1>
                 <p>
                     {listeMicrocontroleur_user.length === 0
                         ? "Pour commencer à piloter ton installation, enregistre d'abord un kit."
-                        : "Retrouve ici les kits déjà liés à ton compte et ouvre celui que tu veux gérer."}
+                        : "Retrouve les kits liés à ton compte et ouvre la serre à surveiller."}
                 </p>
             </header>
 

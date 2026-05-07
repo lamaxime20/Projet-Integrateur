@@ -11,7 +11,7 @@ function VerificationPasswordEmailForm({
     return (
         <form className="verificationPassword-step-form" onSubmit={onSubmit}>
             <div className="verificationPassword-step-copy">
-                <p>Entre l'email de ton compte pour recevoir un code de vérification temporaire.</p>
+                <p>Entre l’email du compte pour recevoir un code temporaire.</p>
             </div>
 
             <div className="verificationPassword-field-list">
@@ -32,7 +32,7 @@ function VerificationPasswordEmailForm({
 
             <div className="verificationPassword-step-actions">
                 <button type="submit" disabled={isSubmitting}>
-                    {isSubmitting ? "Vérification..." : "Suivant"}
+                    {isSubmitting ? "Vérification..." : "Continuer"}
                 </button>
                 <p className="verificationPassword-global-error">{globalError}</p>
             </div>

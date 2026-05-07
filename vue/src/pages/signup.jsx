@@ -163,8 +163,8 @@ function Signup() {
         <main className="signup-root">
             <section className="signup-shell">
                 <div className="signup-intro">
-                    <p className="signup-kicker">Créer un compte</p>
-                    <h1>Ouvre ton espace</h1>
+                    <p className="signup-kicker">Créer un accès</p>
+                    <h1>Prépare ton espace serre</h1>
                 </div>
 
                 <div className="signup-progress" aria-label="Progression de l'inscription">

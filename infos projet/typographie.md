@@ -1,65 +1,30 @@
-🔤 Typographie recommandée
-🟢 1. Typographie principale (UI / Dashboard)
+# Typographie Agrico-Tech
 
-👉 Inter
+Deux polices maximum : `Poppins` et `Inter`.
 
-Pourquoi Inter ?
+## Titres et branding
 
-Ultra lisible sur écran (même petites tailles)
-Conçue pour les interfaces modernes
-Très utilisée dans les apps SaaS / dashboards
+- Police : `Poppins`
+- Usage : H1, H2, H3, marque, libellés de sections.
+- Poids : 600 à 800.
+- Rôle : donner une présence premium, douce et humaine.
 
-Émotions ressenties :
+## Interface et données
 
-🧠 Clarté mentale
-⚡ Efficacité
-🔍 Précision
-🧑‍💻 Professionnalisme
+- Police : `Inter`
+- Usage : textes, formulaires, tableaux, boutons, valeurs capteurs, navigation.
+- Poids : 400 à 900 selon l’importance.
+- Rôle : lecture rapide, précision, faible effort cognitif.
 
-👉 L’utilisateur ressent :
+## Hiérarchie
 
-“Je comprends rapidement les données, c’est sérieux”
+- H1 : `clamp(2rem, 6vw, 3.6rem)`, Poppins, 700/800.
+- H2 : `clamp(1.2rem, 3vw, 1.6rem)`, Poppins, 700.
+- H3 : `1rem` à `1.25rem`, Poppins, 700.
+- Texte courant : `1rem`, Inter, 400/500, ligne 1.6.
+- Badges, filtres, labels : `0.78rem` à `0.9rem`, Inter, 750/900.
+- Valeurs capteurs : `1.6rem` à `2.7rem`, Inter, 900.
 
-Utilisation :
+## Règles d’utilisation
 
-Texte principal
-Données capteurs
-Tableaux
-Boutons
-Navigation
-🔵 2. Typographie secondaire (Titres / Branding)
-
-👉 Poppins
-
-Pourquoi Poppins ?
-
-Formes arrondies → côté humain
-Moderne et tech à la fois
-Donne du caractère sans être agressif
-
-Émotions ressenties :
-
-🌿 Accessibilité (pas froid)
-🤝 Confiance
-🚀 Modernité
-✨ Élégance simple
-
-👉 L’utilisateur ressent :
-
-“C’est moderne, mais pas compliqué”
-
-Utilisation :
-
-Titres (H1, H2, H3)
-Sections importantes
-Hero page
-Branding
-⚖️ L’équilibre parfait
-
-👉 Inter = cerveau
-👉 Poppins = visage
-
-👉 Ensemble, ça donne :
-
-📊 Un système intelligent (Inter)
-🌱 Une interface humaine (Poppins)
+Les titres orientent. Les valeurs se lisent en premier. Les descriptions restent courtes, utiles et calmes. Aucune police décorative ou futuriste n’est utilisée afin de préserver la lisibilité mobile.

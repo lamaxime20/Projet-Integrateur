@@ -214,8 +214,8 @@ function VerificationPassword() {
         <main className="verificationPassword-root">
             <section className="verificationPassword-shell">
                 <div className="verificationPassword-intro">
-                    <p className="verificationPassword-kicker">Réinitialiser le mot de passe</p>
-                    <h1>Reprends l’accès à ton espace</h1>
+                    <p className="verificationPassword-kicker">Accès protégé</p>
+                    <h1>Récupère ton espace serre</h1>
                 </div>
 
                 <div className="verificationPassword-progress" aria-label="Progression de la réinitialisation">

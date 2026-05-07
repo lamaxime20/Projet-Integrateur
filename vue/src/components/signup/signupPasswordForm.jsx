@@ -12,8 +12,8 @@ function SignupPasswordForm({
     return (
         <form className="signup-step-form" onSubmit={onSubmit}>
             <div className="signup-step-copy">
-                <h2>Choisis ton mot de passe</h2>
-                <p>Crée un accès simple à retenir pour toi, mais difficile à deviner pour les autres.</p>
+                <h2>Sécurise l’accès</h2>
+                <p>Un mot de passe clair pour toi, solide pour protéger la serre.</p>
             </div>
 
             <div className="signup-field-list">
@@ -51,7 +51,7 @@ function SignupPasswordForm({
                     Précédent
                 </button>
                 <button type="submit" disabled={isSubmitting}>
-                    {isSubmitting ? "Création..." : "Créer son compte"}
+                    {isSubmitting ? "Création..." : "Créer l’accès"}
                 </button>
             </div>
 

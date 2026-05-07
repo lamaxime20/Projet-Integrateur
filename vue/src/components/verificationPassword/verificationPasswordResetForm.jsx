@@ -12,8 +12,8 @@ function VerificationPasswordResetForm({
     return (
         <form className="verificationPassword-step-form" onSubmit={onSubmit}>
             <div className="verificationPassword-step-copy">
-                <h2>Choisis un nouveau mot de passe</h2>
-                <p>Crée un accès simple à retenir pour toi, mais difficile à deviner pour les autres.</p>
+                <h2>Nouveau mot de passe</h2>
+                <p>Choisis un accès solide pour protéger les données de la serre.</p>
             </div>
 
             <div className="verificationPassword-field-list">

@@ -19,17 +19,19 @@ import RapportsServoMoteur from "./components/rapports/rapportsServoMoteur";
 import { DASHBOARD, ACTIONNEUR, SEUIL, STATISTIQUE, NOTIFICATION } from "./components/application/sidebar";
 import "./App.css";
 
+const applicationExperience = "agriculture-intelligente-calme";
+
 function App() {
     return (
-        <BrowserRouter>
+        <BrowserRouter basename="">
             <AuthProvider>
-                <Routes>
+                <Routes data-experience={applicationExperience}>
                     <Route path="/" element={<Principale />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/signup" element={<Signup />} />
                     <Route path="/verification-password" element={<VerificationPassword />} />
                     <Route element={<ProtectedRoute />}>
-                        <Route path="/application" element={<Application onglet={DASHBOARD}/>} />
+                        <Route path="/application" element={<Application onglet={DASHBOARD} />} />
                         <Route path="/microcontroleur" element={<Microcontroleur />} />
                         <Route path="/application/dashboard" element={<Application onglet={DASHBOARD} />} />
                         <Route path="/application/actionneur" element={<Application onglet={ACTIONNEUR} />} />

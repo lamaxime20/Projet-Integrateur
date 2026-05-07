@@ -1,42 +1,45 @@
 .constatElement-root {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    margin: 0;
-    padding: var(--space-xs) 0;
+  position: relative;
+  display: grid;
+  gap: var(--space-md);
+  align-content: start;
+  min-height: 12rem;
+  padding: 1.35rem;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-lg);
+  background: var(--surface-field);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
 }
 
-.constatElement-left {
-    border-left: var(--secondary-color) 4px solid;
-    padding-left: var(--space-md);
+.constatElement-root::after {
+  content: "";
+  position: absolute;
+  inset: auto -10% -40% 15%;
+  height: 7rem;
+  background: radial-gradient(circle, rgba(77, 154, 95, 0.22), transparent 70%);
+}
+
+.constatElement-root .material-symbols-outlined {
+  display: grid;
+  place-items: center;
+  width: 2.65rem;
+  height: 2.65rem;
+  border-radius: 0.8rem;
+  background: var(--white);
+  color: var(--green-600);
+  box-shadow: 0 10px 24px rgba(47, 113, 66, 0.12);
+}
+
+.constatElement-root p {
+  position: relative;
+  z-index: 1;
+  color: var(--green-900);
+  font-size: 1rem;
+  font-weight: 650;
+  line-height: 1.55;
 }
 
 .constatElement-right {
-    border-right: var(--secondary-color) 4px solid;
-    padding-right: var(--space-md);
-}
-
-.constatElement-left p,
-.constatElement-right p {
-    color: var(--secondary-color);
-    font-family: var(--typography-common);
-    font-size: 1.1rem;
-    font-weight: 500;
-    line-height: 1.65;
-    margin: 0;
-    max-width: 42rem;
-}
-
-@media (min-width: 768px) {
-    .constatElement-left p {
-        margin-right: 22%;
-    }
-
-    .constatElement-right {
-        align-items: flex-end;
-    }
-
-    .constatElement-right p {
-        margin-left: 22%;
-    }
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(232, 245, 249, 0.72));
 }

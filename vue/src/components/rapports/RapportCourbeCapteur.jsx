@@ -246,7 +246,7 @@ function RapportCourbeCapteur({ capteur, titre, unite: uniteFallback }) {
 
                     {chargementRapport
                         ? "Génération en cours…"
-                        : "Générer le rapport des mesures"}
+                        : "Exporter les mesures"}
                 </button>
 
                 {erreurRapport && (

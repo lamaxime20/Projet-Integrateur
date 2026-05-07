@@ -77,12 +77,13 @@ function Login() {
                     </svg>
                 </div>
                 <p className="login-left-tagline">
-                    Rejoins l'avenir de l'agriculture
+                    La serre reste lisible, même à distance.
                 </p>
             </section>
             <section className="login-right">
                 <form className="login-form" onSubmit={handleSubmit}>
                     <header className="login-header">
+                        <p className="login-kicker">Espace serre</p>
                         <h1 className="login-title">Se connecter</h1>
                     </header>
                     <div className="login-main">
@@ -105,7 +106,7 @@ function Login() {
                                 autoComplete="current-password"
                                 value={formData.password}
                                 onChange={handleChange}
-                                placeholder="Entre ton mot de passe"
+                                placeholder="Ton mot de passe"
                                 disabled={isSubmitting}
                             />
 
@@ -119,13 +120,13 @@ function Login() {
 
                         <div className="login-submit">
                             <button type="submit" disabled={isSubmitting}>
-                                {isSubmitting ? "Connexion en cours..." : "Se connecter"}
+                                {isSubmitting ? "Ouverture..." : "Ouvrir ma serre"}
                             </button>
                             {errorMessage ? <p className="login-error">{errorMessage}</p> : null}
                         </div>
 
                         <div className="login-footer">
-                            <p>Ou connecte toi avec</p>
+                            <p>Ou continuer avec</p>
                             <div className="login-social-links">
                                 <button
                                     type="button"

@@ -10,6 +10,7 @@ import '../../assets/styles/components/application/application_principale.css'
 function Application_pricipale({onglet = DASHBOARD}) {
     return (
         <section className="application_principale-root">
+            <div className="application_principale-ambient" aria-hidden="true"></div>
             <Sidebar
                 ongletActif={onglet}
             />

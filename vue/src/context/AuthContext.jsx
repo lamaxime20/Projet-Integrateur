@@ -18,6 +18,8 @@ const AuthContext = createContext({
     logout: async () => false,
 });
 
+AuthContext.displayName = "AgricoTechAuthContext";
+
 export function AuthProvider({ children }) {
     const navigate = useNavigate();
     const [isAuthenticated, setIsAuthenticated] = useState(false);

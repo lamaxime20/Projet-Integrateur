@@ -13,6 +13,7 @@ function GrapheBatonnet({ historique = [], vocabulaire = vocabulaireDefaut }) {
     return (
         <div className="grapheBatonnet-root">
             <div className="grapheBatonnet-y-axis" aria-hidden="true">
+                <span>État</span>
                 <span>1 h</span>
                 <span>30 min</span>
                 <span>0</span>

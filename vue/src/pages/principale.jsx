@@ -12,14 +12,24 @@ function Principale() {
 
     return (
         <main className="principale-root">
+            <nav className="principale-navbar" aria-label="Navigation principale">
+                <button type="button" className="principale-brand" onClick={() => navigate('/')}>
+                    <span className="material-symbols-outlined" aria-hidden="true">eco</span>
+                    <span>Agrico-Tech</span>
+                </button>
+                <div className="principale-navbar-actions">
+                    <button type="button" onClick={() => navigate('/login')}>Connexion</button>
+                    <button type="button" className="is-primary" onClick={() => navigate('/application')}>
+                        Gérer ma serre
+                    </button>
+                </div>
+            </nav>
             <section className="principale-hero">
                 <img className="principale-hero-image" src={heroImage} alt="Serre intelligente connectée" />
                 <div className='principale-overlay'></div>
                 <div className='principale-hero-content'>
                     <p className="principale-hero-copy">
-                        Suis et contrôle tes cultures en temps réel,
-                        optimise les conditions de croissance et maximise tes rendements.
-                        Rejoins-nous pour une agriculture plus connectée et productive !
+                        Surveille ta serre, pilote l’irrigation et garde des conditions stables pour tes cultures.
                     </p>
                     <div className='principale-hero-content-title'>
                         <h1>Agrico-Tech</h1>
@@ -29,7 +39,7 @@ function Principale() {
                                 className='principale-hero-cta-secondary'
                                 onClick={() => navigate('/application')}
                             >
-                                Gérer ma serre
+                                Ouvrir ma serre
                             </button>
                             <button
                                 type="button"
@@ -38,7 +48,7 @@ function Principale() {
                                     window.location.href = '/payement';
                                 }}
                             >
-                                Commander mon kit
+                                Commander le kit
                             </button>
                         </div>
                     </div>
@@ -47,23 +57,19 @@ function Principale() {
             <section className='principale-constat'>
                 <h2 className='principale-section-title'>
                     <span className="material-symbols-outlined" aria-hidden="true">eco</span>
-                    Notre Constat
+                    Le constat terrain
                 </h2>
                 <div className='principale-constat-content'>
                     <ConstatElement 
-                        text="L'agriculture traditionnelle est souvent inefficace, 
-                        avec des rendements limités et 
-                        une utilisation excessive de ressources." 
+                        text="Une culture mal suivie consomme trop d’eau et réagit trop tard aux changements." 
                         right = {false}
                     />
                     <ConstatElement
-                        text="Les agriculteurs manquent d'outils modernes pour surveiller et optimiser leurs cultures,
-                        ce qui entraîne des pertes de récoltes et des inefficacités."
+                        text="Sans données simples, l’humidité du sol, la ventilation et la température demandent trop d’attention."
                         right = {true}
                     />
                     <ConstatElement
-                        text="Il existe une demande croissante pour des solutions agricoles durables et connectées, 
-                        mais les options actuelles sont souvent coûteuses et complexes à mettre en œuvre."
+                        text="Les exploitations ont besoin d’un kit clair, fiable et rapide à comprendre au quotidien."
                         right = {false}
                     />
                 </div>
@@ -71,11 +77,10 @@ function Principale() {
             <section className='principale-solution'>
                 <h2 className='principale-section-title'>
                     <span className="material-symbols-outlined" aria-hidden="true">memory</span>
-                    Agrico-Tech, ta solution
+                    Une serre plus sereine
                 </h2>
                 <p className='principale-solution-copy'>
-                    Ce n'est pas un concept abstrait,
-                    mais une véritable solution pour
+                    Les bonnes informations au bon moment, sans bruit inutile.
                 </p>
                 <div className='principale-solution-reveal-list' role="list" aria-label="Bénéfices Agrico-Tech">
                     {solutionHighlights.map((highlight, index) => {
@@ -106,7 +111,7 @@ function Principale() {
                         className='principale-solution-cta-primary'
                         onClick={() => navigate('/application')}
                     >
-                        Gérer ma serre
+                        Ouvrir ma serre
                     </button>
                     <button
                         type="button"
@@ -115,14 +120,14 @@ function Principale() {
                             window.location.href = '/payement';
                         }}
                     >
-                        Découvrir comment
+                        Voir le kit
                     </button>
                 </div>
             </section>
             <section className='principale-faq'>
                 <h2 className='principale-section-title'>
                     <span className="material-symbols-outlined" aria-hidden="true">help</span>
-                    Au cas où tu as un doute
+                    Questions utiles
                 </h2>
                 <div className='principale-faq-grid'>
                     {faqItems.map((item) => (
@@ -137,12 +142,12 @@ function Principale() {
             </section>
             <section className='principale-final-cta'>
                 <div className='principale-final-cta-content'>
-                    <span className='principale-final-cta-kicker'>Passe à une gestion agricole plus sereine</span>
+                    <span className='principale-final-cta-kicker'>Technologie calme, cultures protégées</span>
                     <h2 className='principale-section-title principale-section-title-inverse'>
                         <span className="material-symbols-outlined" aria-hidden="true">spa</span>
-                        Tu peux continuer de laisser tes cultures périr
+                        Reprends la main sur tes parcelles
                     </h2>
-                    <p>Ou bien reprendre le contrôle maintenant, avec un suivi plus clair, plus rapide et plus fiable.</p>
+                    <p>Un suivi lisible pour agir vite sur l’eau, l’air, la lumière et la température.</p>
                 </div>
                 <div className='principale-final-cta-action'>
                     <button
@@ -152,7 +157,7 @@ function Principale() {
                             window.location.href = '/manager';
                         }}
                     >
-                        Commander mon kit
+                        Commander le kit
                     </button>
                 </div>
             </section>
