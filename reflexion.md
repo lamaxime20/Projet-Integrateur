@@ -455,4 +455,33 @@ Le flag `retain = true` indique au broker de garder en mémoire le dernier messa
 4. Laravel met à jour la base de données (champ `is_active` ou `last_seen`).
 5. Laravel broadcast un événement WebSocket vers React pour mettre à jour l'interface (ex: passage d'une icône au rouge).
 
-Ce mécanisme est bien plus efficace qu'un système de "ping" manuel car il ne consomme aucune bande passante supplémentaire et repose sur la détection native du protocole MQTT.
+Ce mécanisme est bien plus efficace qu'un système de "ping" manuel car il ne consomme aucune bande passante supplémentaire et repose sur la détection native du protocole MQTT.*
+
+
+### Structure du Dashboard
+1. Surveillance en temps réel (Le Cœur du Système)
+C'est ici que l'utilisateur voit l'état de santé immédiat de son exploitation.
+
+KPI Circulaires (Grandeurs Physiques) : Des indicateurs visuels pour l'Humidité du sol (%), la Température (°C), le Taux de CO2 (ppm) et la Luminosité (lux).
+Indicateur de Disponibilité : Un badge dynamique indiquant si le microcontrôleur est "En ligne" ou "Hors ligne" (utilisant le mécanisme LWT/Retain que tu as défini).
+Niveau de Réservoir : Une jauge visuelle pour le capteur de niveau d'eau, essentielle pour l'irrigation.
+2. Contrôle et Automatisation (Actionneurs)
+Cette section permet de passer de la lecture à l'action.
+
+État des Actionneurs : Des cartes affichant le statut actuel (Allumé/Éteint) de la pompe, du ventilateur et de l'éclairage.
+Commandes Manuelles : Des boutons permettant d'envoyer des instructions immédiates (ex: "Allumer pompe pendant 60s") via MQTT.
+Gestion des Seuils : Un formulaire pour définir les limites critiques (ex: si Humidité < 30% -> Pompe ON) qui seront synchronisées avec l'ESP32.
+3. Analyses et Rapports (Statistiques)
+Pour aider l'agriculteur à prendre des décisions basées sur les données.
+
+Graphe de Courbe Interactif : Visualisation de l'évolution des mesures (température, humidité) sur les dernières 24h ou la semaine.
+Graphe d'Activité du Microcontrôleur : Un graphique dédié indiquant les périodes d'activité/inactivité du système.
+Générateur de Rapports : Un module pour exporter les données en PDF (avec graphes) ou CSV (historique brut des états) pour une analyse externe.
+4. Alertes et Historique
+Pour la traçabilité et la réactivité.
+
+Centre de Notifications : Un flux d'alertes en temps réel (ex: "Alerte : Température trop élevée !") via WebSockets.
+Journal des Événements : Un tableau filtrable listant toutes les actions passées (ex: "Pompe activée automatiquement à 14:02").
+5. Expérience Utilisateur (UI/UX)
+Design Responsive : Une interface qui s'adapte parfaitement au mobile (pour l'agriculteur sur le terrain) et au desktop (pour l'analyse au bureau).
+Branding Nature/Tech : Utilisation de ta palette (Vert #2E7D32 pour la nature, Bleu #0288D1 pour l'IoT) pour renforcer la confiance.

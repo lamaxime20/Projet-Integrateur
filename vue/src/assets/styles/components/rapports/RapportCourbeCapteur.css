@@ -1,62 +1,107 @@
 .rapportCourbe-root {
-    gap: var(--space-lg);
+    width: 100%;
 }
 
-.rapportCourbe-graph {
+.rapportCourbe-wrapper {
     width: 100%;
-    min-height: 17rem;
-    padding: var(--space-md);
-    border-radius: var(--radius-md);
-    background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(248, 251, 248, 0.42)),
-        linear-gradient(90deg, rgba(46, 125, 50, 0.08), rgba(2, 136, 209, 0.04));
-    border: 1px solid rgba(46, 125, 50, 0.1);
     overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 10px;
+    cursor: grab;
 }
 
-.rapportCourbe-graph svg {
+.rapportCourbe-wrapper::-webkit-scrollbar {
+    height: 8px;
+}
+
+.rapportCourbe-wrapper::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.18);
+    border-radius: 999px;
+}
+
+.rapportCourbe-svg {
+    width: 1400px;
+    min-width: 1400px;
+    height: 360px;
     display: block;
-    width: 100%;
-    min-width: 34rem;
-    height: auto;
 }
 
 .rapportCourbe-axis {
-    stroke: rgba(20, 32, 19, 0.28);
-    stroke-width: 1.5;
-}
-
-.rapportCourbe-line {
-    fill: none;
-    stroke: var(--secondary-color-dark);
-    stroke-width: 3;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-}
-
-.rapportCourbe-point {
-    fill: var(--accent-color);
-    stroke: #fff;
+    stroke: rgba(255,255,255,0.15);
     stroke-width: 1.5;
 }
 
 .rapportCourbe-label {
-    fill: rgba(20, 32, 19, 0.62);
-    font-size: 0.75rem;
-    font-weight: 700;
+    fill: rgba(255,255,255,0.75);
+    font-size: 12px;
+    font-weight: 500;
 }
 
-.rapportCourbe-message {
-    margin: 0;
-    color: rgba(20, 32, 19, 0.62);
+.rapportCourbe-time {
+    fill: rgba(255,255,255,0.45);
+    font-size: 11px;
+    text-anchor: middle;
+}
+
+.rapportCourbe-line {
+    fill: none;
+    stroke: #4ade80;
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 0 10px rgba(74, 222, 128, 0.45));
+}
+
+.rapportCourbe-area {
+    fill: rgba(74, 222, 128, 0.08);
+}
+
+.rapportCourbe-point {
+    fill: #4ade80;
+    stroke: white;
+    stroke-width: 2;
+}
+
+.rapportCourbe-hoverZone {
+    fill: transparent;
+    cursor: pointer;
+}
+
+.rapportCourbe-dashed {
+    stroke: rgba(255,255,255,0.45);
+    stroke-width: 1.5;
+    stroke-dasharray: 6 6;
+}
+
+.rapportCourbe-tooltip {
+    backdrop-filter: blur(16px);
+    background: rgba(20,20,20,0.92);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 14px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    color: white;
+    font-size: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+}
+
+.rapportCourbe-tooltip strong {
+    font-size: 16px;
     font-weight: 700;
 }
 
 .rapportCourbe-meta {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-sm);
-    color: rgba(20, 32, 19, 0.62);
-    font-size: 0.86rem;
-    font-weight: 700;
+    gap: 16px;
+    margin-top: 14px;
+    color: rgba(255,255,255,0.7);
+    font-size: 14px;
+}
+
+.rapportCourbe-message {
+    padding: 24px;
+    color: rgba(255,255,255,0.75);
 }

@@ -16,8 +16,8 @@
 // ============================================================
 // CONFIGURATION
 // ============================================================
-const char* ssid        = "Orange-9173";
-const char* password    = "6NAEhdHhFR9";
+const char* ssid        = "########";
+const char* password    = "#@zEBnohINber767505@#";
 const char* apiUrl      = "https://amused-presence-production-a3ec.up.railway.app/api/device/token";
 const char* mqtt_server = "b1d946f5edb84d23ade6058bd316610b.s1.eu.hivemq.cloud";
 const int   mqtt_port   = 8883;
@@ -407,11 +407,11 @@ void appliquerActionneurs(float lum, float hum, float temp, float co2, bool eauO
   if (!instrLampe.actif) {
     Serial.print("lumiere ");
     Serial.println(lum);
-    if      (lum < seuils.lum_min) {
+    if      (lum > seuils.lum_min) {
       digitalWrite(ECLAIRE_PIN, ACTIONNEUR_OFF);
       publierSiChangement(etats[1], "eteint");
     }
-    else if (lum > seuils.lum_max) {
+    else if (lum < seuils.lum_max) {
       digitalWrite(ECLAIRE_PIN, ACTIONNEUR_ON);
       publierSiChangement(etats[1], "allume");
     }
