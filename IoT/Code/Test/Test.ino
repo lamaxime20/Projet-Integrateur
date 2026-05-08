@@ -5,8 +5,8 @@
 #include <ArduinoJson.h>
 
 // ===== WIFI =====
-const char* ssid = "Orange-9173";
-const char* password = "6NAEhdHhFR9";
+const char* ssid = "A55 de Mylena";
+const char* password = "123456788";
 
 // ===== API =====
 const char* apiUrl = "https://projet-integrateur-do3r.onrender.com/api/device/token";

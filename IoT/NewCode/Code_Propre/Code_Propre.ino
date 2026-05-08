@@ -16,8 +16,8 @@
 // ============================================================
 // CONFIGURATION
 // ============================================================
-const char* ssid        = "MTN HomeBox_964553";
-const char* password    = "25087CBF";
+const char* ssid        = "A55 de Mylena";
+const char* password    = "123456788";
 const char* apiUrl      = "https://amused-presence-production-a3ec.up.railway.app/api/device/token";
 const char* mqtt_server = "b1d946f5edb84d23ade6058bd316610b.s1.eu.hivemq.cloud";
 const int   mqtt_port   = 8883;
