@@ -123,6 +123,9 @@ class MicrocontroleurController extends Controller
         ]);
 
         try {
+            // Reset any stale aborted transaction from a pooled connection
+            try { DB::rollBack(); } catch (\Throwable) {}
+
             DB::beginTransaction();
 
             $microcontroleur = Microcontroleur::create([
@@ -247,10 +250,12 @@ class MicrocontroleurController extends Controller
             ], 201);
 
         } catch (\Exception $e) {
-            DB::rollBack();
+            try { DB::rollBack(); } catch (\Throwable) {}
+            $cause = $e->getPrevious();
             return response()->json([
                 'success' => false,
                 'message' => 'Erreur lors de la création : ' . $e->getMessage(),
+                'cause'   => $cause ? $cause->getMessage() : null,
             ], 500);
         }
     }
